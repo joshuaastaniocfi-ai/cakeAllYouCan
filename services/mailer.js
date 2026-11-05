@@ -89,8 +89,15 @@ function buildIcsEvent({ guestName, controlNo, paymentMethod }) {
 // ── Brevo REST API Sender (Port 443 / HTTPS - Unblocked on Render Free Tier) ──
 async function sendViaBrevoApi({ toEmail, guestName, subject, htmlContent, couponImagePath, icsContent, controlNo }) {
   const apiKey = (process.env.BREVO_API_KEY || '').trim();
-  const senderEmail = (process.env.GMAIL_USER || 'cfi.goldilocks.tac@gmail.com').trim();
+  const senderEmail = (process.env.BREVO_SENDER_EMAIL || process.env.GMAIL_USER || 'cfi.goldilocks.tac@gmail.com').trim();
   const senderName = 'Goldilocks Cake All You Can';
+
+  // Helpful validation: Check if user generated an SMTP key by mistake
+  if (apiKey.startsWith('xsmtpsib') || apiKey.length < 30) {
+    const err = `Invalid Brevo Key: You pasted an SMTP Key (${apiKey.substring(0, 10)}...) instead of an API Key! Please go to Brevo -> 'API keys & MCP' tab (NOT SMTP) and generate a new API key (starts with 'xkeysib-').`;
+    console.error(`❌ ${err}`);
+    throw new Error(err);
+  }
 
   const attachments = [];
   if (couponImagePath && fs.existsSync(couponImagePath)) {
@@ -129,7 +136,10 @@ async function sendViaBrevoApi({ toEmail, guestName, subject, htmlContent, coupo
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(`Brevo API Error (${response.status}): ${data.message || JSON.stringify(data)}`);
+    const errMsg = data.message || data.code || JSON.stringify(data);
+    const fullErr = `Brevo API Error (${response.status}): ${errMsg}. Sender used: ${senderEmail}`;
+    console.error(`❌ ${fullErr}`);
+    throw new Error(fullErr);
   }
 
   console.log(`✉️ [Brevo API / Port 443] Email successfully dispatched to ${toEmail}! Message ID: ${data.messageId}`);

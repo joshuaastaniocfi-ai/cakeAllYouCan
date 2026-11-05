@@ -919,6 +919,43 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'goldilocks-ecoupon.html'));
 });
 
+// ── Diagnostic: Test Email Sending & Return Exact Status Live ──
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const toEmail = (req.query.to || process.env.GMAIL_USER || 'cfi.goldilocks.tac@gmail.com').trim();
+    const brevoKey = (process.env.BREVO_API_KEY || '').trim();
+
+    const diagnostic = {
+      timestamp: new Date().toISOString(),
+      to: toEmail,
+      mode: brevoKey ? 'brevo_https_api_port_443' : 'nodemailer_smtp',
+      brevoApiKeyConfigured: Boolean(brevoKey),
+      brevoKeyPrefix: brevoKey ? brevoKey.substring(0, 10) + '...' : null,
+      brevoKeyLength: brevoKey ? brevoKey.length : 0,
+      brevoSenderEmail: process.env.BREVO_SENDER_EMAIL || process.env.GMAIL_USER || 'cfi.goldilocks.tac@gmail.com'
+    };
+
+    console.log(`🧪 [Diagnostic Test Email] Initiating test to ${toEmail}...`);
+    const emailResult = await sendCouponEmail({
+      guestName: 'Diagnostic Test User',
+      email: toEmail,
+      controlNo: 'TEST0001',
+      paymentMethod: 'Test Diagnostic'
+    });
+
+    return res.json({
+      success: emailResult.success,
+      diagnostic,
+      result: emailResult
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
 // Start the server
 const server = app.listen(PORT, () => {
   console.log(`✅ Goldilocks E-Coupon server running at http://localhost:${PORT}`);
