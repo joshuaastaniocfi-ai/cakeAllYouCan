@@ -86,13 +86,66 @@ function buildIcsEvent({ guestName, controlNo, paymentMethod }) {
   ].join('\r\n');
 }
 
+// ── Brevo REST API Sender (Port 443 / HTTPS - Unblocked on Render Free Tier) ──
+async function sendViaBrevoApi({ toEmail, guestName, subject, htmlContent, couponImagePath, icsContent, controlNo }) {
+  const apiKey = (process.env.BREVO_API_KEY || '').trim();
+  const senderEmail = (process.env.GMAIL_USER || 'cfi.goldilocks.tac@gmail.com').trim();
+  const senderName = 'Goldilocks Cake All You Can';
+
+  const attachments = [];
+  if (couponImagePath && fs.existsSync(couponImagePath)) {
+    const fileBytes = fs.readFileSync(couponImagePath);
+    attachments.push({
+      name: `goldilocks-ecoupon-${controlNo}.png`,
+      content: fileBytes.toString('base64')
+    });
+  }
+
+  if (icsContent) {
+    attachments.push({
+      name: 'goldilocks-cake-all-you-can.ics',
+      content: Buffer.from(icsContent, 'utf8').toString('base64')
+    });
+  }
+
+  const payload = {
+    sender: { name: senderName, email: senderEmail },
+    to: [{ email: toEmail, name: guestName || 'Valued Guest' }],
+    subject,
+    htmlContent,
+    attachment: attachments.length > 0 ? attachments : undefined
+  };
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(`Brevo API Error (${response.status}): ${data.message || JSON.stringify(data)}`);
+  }
+
+  console.log(`✉️ [Brevo API / Port 443] Email successfully dispatched to ${toEmail}! Message ID: ${data.messageId}`);
+  return {
+    success: true,
+    messageId: data.messageId,
+    previewUrl: null
+  };
+}
+
 /**
  * Send the official E-Coupon email to the customer's Gmail
  * Supports both Cash (at cashier) and QR payments with 1-click Google Calendar button
  */
 async function sendCouponEmail({ guestName, email, controlNo, couponImagePath, paymentMethod = 'cash' }) {
   try {
-    const mail = await getTransporter();
     const sender = process.env.GMAIL_USER || 'goldilocks.tacloban@gmail.com';
 
     const isCash = (paymentMethod || '').toLowerCase().includes('cash');
@@ -261,6 +314,22 @@ async function sendCouponEmail({ guestName, email, controlNo, couponImagePath, p
       contentType: 'text/calendar; charset=utf-8; method=REQUEST'
     });
 
+    // ── Priority 1: Brevo HTTPS REST API (Port 443 - Bypasses Render Free SMTP Block!) ──
+    if (process.env.BREVO_API_KEY) {
+      console.log('🚀 Sending via Brevo HTTPS API (Port 443) - Bypassing Render Free SMTP Block!');
+      return await sendViaBrevoApi({
+        toEmail: email,
+        guestName: cleanGuest,
+        subject: `🎟️ Your Goldilocks Cake All You Can E-Coupon is Issued! [Control No: ${controlNo}]`,
+        htmlContent,
+        couponImagePath,
+        icsContent,
+        controlNo
+      });
+    }
+
+    // ── Priority 2: Direct Nodemailer SMTP (Local / Paid Plan) ──
+    const mail = await getTransporter();
     const mailOptions = {
       from: `"Goldilocks Cake All You Can" <${sender}>`,
       to: email,
@@ -268,7 +337,6 @@ async function sendCouponEmail({ guestName, email, controlNo, couponImagePath, p
       html: htmlContent,
       attachments
     };
-
     const sendPromise = mail.sendMail(mailOptions);
     const isRealGmail = Boolean(process.env.GMAIL_USER && (process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD));
     
