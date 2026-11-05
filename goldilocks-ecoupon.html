@@ -6670,6 +6670,112 @@
 
 
     }
+    /* Cash Authorization Code Lockout & Rate-Limiting Banners */
+    .lockout-box {
+      margin-top: 14px;
+      text-align: center;
+      animation: fadeIn .25s ease;
+    }
+
+    .lockout-banner {
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lockout-banner.warning {
+      background: #fff9e6;
+      border: 1.5px solid #fed36c;
+      color: #7a3e00;
+    }
+
+    .lockout-banner.warning .lockout-badge {
+      font-weight: 800;
+      font-size: 13.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #994d00;
+    }
+
+    .lockout-banner.locked,
+    .lockout-banner.locked-extended {
+      background: #fff1f0;
+      border: 1.5px solid #ffa39e;
+      color: #820014;
+      box-shadow: 0 4px 14px rgba(255, 77, 79, 0.12);
+    }
+
+    .lockout-banner .lockout-icon {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .lockout-banner .lockout-title {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 15px;
+      color: #cf1322;
+      letter-spacing: -0.2px;
+    }
+
+    .lockout-banner .lockout-timer {
+      font-family: var(--font-head);
+      font-size: 32px;
+      font-weight: 800;
+      color: #cf1322;
+      letter-spacing: 2.5px;
+      background: #ffffff;
+      padding: 6px 18px;
+      border-radius: 10px;
+      border: 1.5px solid #ffccc7;
+      margin: 4px 0;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .lockout-banner.permanent {
+      background: linear-gradient(180deg, #2a1114 0%, #1a080a 100%);
+      border: 1.5px solid #a8071a;
+      color: #ffccc7;
+      padding: 16px 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .lockout-banner.permanent .lockout-title {
+      color: #ff4d4f;
+      font-size: 16px;
+    }
+
+    .lockout-banner.permanent .lockout-desc {
+      color: #ffbb96;
+      font-size: 12.5px;
+    }
+
+    .btn-lockout-hotline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #ffd500;
+      color: #4b2608;
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      margin-top: 8px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      transition: transform 0.15s ease;
+    }
+    .btn-lockout-hotline:hover {
+      transform: scale(1.03);
+    }
+
 
 
 
@@ -15490,13 +15596,9 @@
 
 
       <input class="code-input" id="cashCode" type="text" inputmode="numeric" maxlength="6" placeholder="••••••"
-
-
-
         autocomplete="one-time-code" />
 
-
-
+      <div id="cashLockoutBox" class="lockout-box" style="display:none;"></div>
     </div>
 
 
@@ -17121,6 +17223,7 @@
 
 
         if (name === 'home') setTimeout(centerCarousel, 50);
+        renderCashLockoutUI();
 
 
 
@@ -17643,6 +17746,219 @@
 
 
 
+      /* ---------- Cashier Authorization Lockout State & Persistent Timers ---------- */
+      const CASH_LOCKOUT_KEY = 'goldilocks_cash_auth_lockout';
+      let cashLockoutInterval = null;
+
+      function getCashLockoutState() {
+        try {
+          const raw = localStorage.getItem(CASH_LOCKOUT_KEY);
+          if (!raw) return { failedAttempts: 0, lockoutUntil: 0, isPermanent: false };
+          const parsed = JSON.parse(raw);
+          return {
+            failedAttempts: Number(parsed.failedAttempts) || 0,
+            lockoutUntil: Number(parsed.lockoutUntil) || 0,
+            isPermanent: Boolean(parsed.isPermanent)
+          };
+        } catch (e) {
+          return { failedAttempts: 0, lockoutUntil: 0, isPermanent: false };
+        }
+      }
+
+      function saveCashLockoutState(st) {
+        try {
+          localStorage.setItem(CASH_LOCKOUT_KEY, JSON.stringify(st));
+        } catch (e) {
+          console.error('Failed to save cash lockout state:', e);
+        }
+      }
+
+      function clearCashLockoutState() {
+        try {
+          localStorage.removeItem(CASH_LOCKOUT_KEY);
+        } catch (e) {}
+        if (cashLockoutInterval) {
+          clearInterval(cashLockoutInterval);
+          cashLockoutInterval = null;
+        }
+        renderCashLockoutUI();
+      }
+
+      function renderCashLockoutUI() {
+        const st = getCashLockoutState();
+        const box = document.getElementById('cashLockoutBox');
+        const input = document.getElementById('cashCode');
+        const btn = document.getElementById('cashContinue');
+        if (!box || !input || !btn) return;
+
+        if (cashLockoutInterval) {
+          clearInterval(cashLockoutInterval);
+          cashLockoutInterval = null;
+        }
+
+        const now = Date.now();
+
+        // 1. Permanent Lockout (6 failed attempts)
+        if (st.isPermanent || st.failedAttempts >= 6) {
+          input.disabled = true;
+          input.classList.add('invalid');
+          input.value = '';
+          input.placeholder = 'PERMANENTLY LOCKED';
+          input.style.backgroundColor = '#fff1f0';
+          input.style.cursor = 'not-allowed';
+
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          btn.textContent = 'Account Locked';
+
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner permanent">
+              <div class="lockout-icon">🔒</div>
+              <div class="lockout-title">Cash Authorization Locked</div>
+              <div class="lockout-desc">Maximum authorization attempts exceeded (6/6). To protect store records, code entry has been permanently locked on this session.</div>
+              <div style="font-size:11.5px; color:#ffccc7; margin-top:4px;">
+                Please present your official store receipt to the cashier or store manager for manual verification.
+              </div>
+              <a href="tel:+639464527375" class="btn-lockout-hotline">
+                📞 Call Store Support: +63 946 452 7375
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        // 2. Active temporary lockout (1 min after 3 tries, or 10 min after 5 tries)
+        if (st.lockoutUntil > now) {
+          input.disabled = true;
+          input.classList.add('invalid');
+          input.style.backgroundColor = '#fff1f0';
+          input.style.cursor = 'not-allowed';
+
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+
+          const isExtended = st.failedAttempts >= 5;
+          input.placeholder = isExtended ? 'LOCKED (10 MIN)' : 'LOCKED (1 MIN)';
+          btn.textContent = 'Please Wait...';
+
+          box.style.display = 'block';
+
+          const tick = () => {
+            const remainingMs = st.lockoutUntil - Date.now();
+            if (remainingMs <= 0) {
+              clearInterval(cashLockoutInterval);
+              cashLockoutInterval = null;
+              st.lockoutUntil = 0;
+              saveCashLockoutState(st);
+              renderCashLockoutUI();
+              toast('Lockout timer expired. You can try entering your authorization code again.');
+              return;
+            }
+            const totalSec = Math.ceil(remainingMs / 1000);
+            const mins = Math.floor(totalSec / 60);
+            const secs = totalSec % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            box.innerHTML = `
+              <div class="lockout-banner ${isExtended ? 'locked-extended' : 'locked'}">
+                <div class="lockout-icon">⏳</div>
+                <div class="lockout-title">${isExtended ? '10-Minute Security Lockout' : '1-Minute Security Lockout'}</div>
+                <div style="font-size:12px;">${isExtended ? '5 incorrect attempts recorded.' : '3 incorrect attempts recorded.'} Please wait before trying again:</div>
+                <div class="lockout-timer">${formatted}</div>
+                <div style="font-size:11px; opacity:0.85;">This security timer continues running even if you refresh or close the page.</div>
+              </div>
+            `;
+          };
+
+          tick();
+          cashLockoutInterval = setInterval(tick, 1000);
+          return;
+        }
+
+        // 3. Lock has expired or normal state
+        input.disabled = false;
+        input.style.backgroundColor = '#fff';
+        input.style.cursor = 'text';
+        input.placeholder = '••••••';
+
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.textContent = 'Continue';
+
+        if (st.failedAttempts === 3) {
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner warning">
+              <div class="lockout-badge">⚠️ 1-Minute Lockout Expired</div>
+              <div>You may now enter your code. <b>Caution:</b> 2 more failed attempts will trigger a <b>10-minute lockout</b>.</div>
+            </div>
+          `;
+        } else if (st.failedAttempts === 4) {
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner warning">
+              <div class="lockout-badge">⚠️ Attempt 4 of 5</div>
+              <div>Incorrect code. <b>1 attempt remaining</b> before a <b>10-minute lockout</b>!</div>
+            </div>
+          `;
+        } else if (st.failedAttempts === 5) {
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner warning" style="border-color:#ff7875; background:#fff2f0; color:#cf1322;">
+              <div class="lockout-badge" style="color:#cf1322;">🚨 FINAL ATTEMPT (5 of 6)</div>
+              <div><b>1 attempt remaining.</b> If the next code is wrong, this device will be <b>PERMANENTLY LOCKED</b>.</div>
+            </div>
+          `;
+        } else if (st.failedAttempts === 1) {
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner warning">
+              <div class="lockout-badge">⚠️ Attempt 1 of 3</div>
+              <div>Incorrect cashier authorization code. <b>2 attempts remaining</b> before a 1-minute lockout.</div>
+            </div>
+          `;
+        } else if (st.failedAttempts === 2) {
+          box.style.display = 'block';
+          box.innerHTML = `
+            <div class="lockout-banner warning">
+              <div class="lockout-badge">⚠️ Attempt 2 of 3</div>
+              <div>Incorrect cashier authorization code. <b>1 attempt remaining</b> before a 1-minute lockout!</div>
+            </div>
+          `;
+        } else {
+          box.style.display = 'none';
+          box.innerHTML = '';
+        }
+      }
+
+      function handleFailedCashAttempt(serverData) {
+        const st = getCashLockoutState();
+        st.failedAttempts = (st.failedAttempts || 0) + 1;
+
+        if (serverData && typeof serverData.failedAttempts === 'number') {
+          st.failedAttempts = Math.max(st.failedAttempts, serverData.failedAttempts);
+        }
+
+        if (st.failedAttempts >= 6 || (serverData && serverData.isPermanent)) {
+          st.failedAttempts = 6;
+          st.isPermanent = true;
+          st.lockoutUntil = 0;
+        } else if (st.failedAttempts >= 5 || (serverData && serverData.lockoutSeconds >= 600)) {
+          const sec = (serverData && serverData.lockoutSeconds) || (10 * 60);
+          st.lockoutUntil = Date.now() + sec * 1000;
+        } else if (st.failedAttempts >= 3 || (serverData && serverData.lockoutSeconds >= 60)) {
+          const sec = (serverData && serverData.lockoutSeconds) || 60;
+          st.lockoutUntil = Date.now() + sec * 1000;
+        }
+
+        saveCashLockoutState(st);
+        renderCashLockoutUI();
+      }
+
       $('#completePay').addEventListener('click', () => {
 
 
@@ -17655,7 +17971,16 @@
 
 
 
-        else { $('#cashCode').value = ''; openModal('modalCash'); setTimeout(() => $('#cashCode').focus(), 100); }
+        else {
+          
+      openModal('modalCash');
+          renderCashLockoutUI();
+          const st = getCashLockoutState();
+          if (!st.isPermanent && st.lockoutUntil <= Date.now()) {
+            $('#cashCode').value = '';
+            setTimeout(() => $('#cashCode').focus(), 100);
+          }
+        }
 
 
 
@@ -17663,13 +17988,31 @@
 
 
 
-      $('#cashCode').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); e.target.classList.remove('invalid'); });
+      $('#cashCode').addEventListener('input', e => {
+        const st = getCashLockoutState();
+        if (st.isPermanent || st.lockoutUntil > Date.now()) {
+          e.target.value = '';
+          return;
+        }
+        e.target.value = e.target.value.replace(/\D/g, '');
+        e.target.classList.remove('invalid');
+      });
 
 
 
       $('#cashContinue').addEventListener('click', async () => {
-
-
+        const currentLock = getCashLockoutState();
+        if (currentLock.isPermanent) {
+          toast('Cash authorization is permanently locked on this session.');
+          renderCashLockoutUI();
+          return;
+        }
+        if (currentLock.lockoutUntil > Date.now()) {
+          const remSec = Math.ceil((currentLock.lockoutUntil - Date.now()) / 1000);
+          toast(`Security lockout active. Please wait ${remSec} seconds.`);
+          renderCashLockoutUI();
+          return;
+        }
 
         const v = $('#cashCode').value.trim();
 
@@ -17784,29 +18127,12 @@
 
 
           if (!resp.ok || !data.success) {
-
-
-
             $('#cashCode').classList.add('invalid');
-
-
-
+            handleFailedCashAttempt(data);
             toast(data.message || 'Payment authorization code rejected.');
-
-
-
             btn.disabled = false;
-
-
-
             btn.textContent = origText;
-
-
-
             return;
-
-
-
           }
 
 
@@ -17816,6 +18142,7 @@
 
 
           // Successfully verified against MongoDB!
+          clearCashLockoutState();
 
 
 

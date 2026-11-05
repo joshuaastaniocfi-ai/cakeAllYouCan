@@ -43,9 +43,59 @@ app.get('/wake-up', (req, res) => {
   res.sendFile(path.join(__dirname, 'wake-up.html'));
 });
 
+// ── Cashier Code Brute-Force Rate Limiting & Lockout Store ──
+// 3 failed tries -> 1 min lockout
+// 5 failed tries -> 10 min lockout
+// 6 failed tries -> permanent lockout
+const cashLockoutStore = new Map();
+
+function getClientIdentifier(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  const ip = forwarded ? forwarded.split(',')[0].trim() : req.socket.remoteAddress;
+  return ip || 'unknown-client';
+}
+
+// Check lockout status endpoint
+app.get('/api/cash-lockout-status', (req, res) => {
+  const clientId = getClientIdentifier(req);
+  const lockRecord = cashLockoutStore.get(clientId) || { failedAttempts: 0, lockedUntil: 0, permanent: false };
+  const now = Date.now();
+  const remainingSec = lockRecord.lockedUntil > now ? Math.ceil((lockRecord.lockedUntil - now) / 1000) : 0;
+  res.json({
+    failedAttempts: lockRecord.failedAttempts,
+    isPermanent: Boolean(lockRecord.permanent),
+    lockedUntil: lockRecord.lockedUntil,
+    remainingSeconds: remainingSec
+  });
+});
+
 // ── API: Verify Cash Payment Authorization Code & Issue E-Coupon Immediately ──
 app.post('/api/verify-payment', async (req, res) => {
   try {
+    const clientId = getClientIdentifier(req);
+    const lockRecord = cashLockoutStore.get(clientId) || { failedAttempts: 0, lockedUntil: 0, permanent: false };
+    const now = Date.now();
+
+    if (lockRecord.permanent) {
+      return res.status(403).json({
+        success: false,
+        isPermanent: true,
+        failedAttempts: lockRecord.failedAttempts,
+        message: 'This device/session is permanently locked due to 6 failed authorization attempts. Please present your receipt to the cashier.'
+      });
+    }
+
+    if (lockRecord.lockedUntil > now) {
+      const remainingSec = Math.ceil((lockRecord.lockedUntil - now) / 1000);
+      return res.status(429).json({
+        success: false,
+        locked: true,
+        failedAttempts: lockRecord.failedAttempts,
+        lockoutSeconds: remainingSec,
+        message: `Too many failed authorization attempts. Please wait ${remainingSec >= 60 ? Math.ceil(remainingSec / 60) + ' minute(s)' : remainingSec + 's'} before trying again.`
+      });
+    }
+
     const { code, fullname, email, mobile, address, paymentMethod } = req.body;
 
     if (!code || typeof code !== 'string') {
@@ -61,9 +111,33 @@ app.post('/api/verify-payment', async (req, res) => {
     const record = await PaymentCode.findOne({ code: cleanCode });
 
     if (!record) {
-      return res.status(404).json({
+      lockRecord.failedAttempts = (lockRecord.failedAttempts || 0) + 1;
+      let lockoutSeconds = 0;
+      let isPermanent = false;
+
+      if (lockRecord.failedAttempts >= 6) {
+        lockRecord.permanent = true;
+        isPermanent = true;
+      } else if (lockRecord.failedAttempts >= 5) {
+        lockoutSeconds = 10 * 60; // 10 minutes
+        lockRecord.lockedUntil = Date.now() + lockoutSeconds * 1000;
+      } else if (lockRecord.failedAttempts >= 3) {
+        lockoutSeconds = 60; // 1 minute
+        lockRecord.lockedUntil = Date.now() + lockoutSeconds * 1000;
+      }
+
+      cashLockoutStore.set(clientId, lockRecord);
+
+      return res.status(isPermanent ? 403 : (lockoutSeconds > 0 ? 429 : 404)).json({
         success: false,
-        message: 'Invalid authorization code. Please verify the 6-digit code given by the cashier.'
+        failedAttempts: lockRecord.failedAttempts,
+        lockoutSeconds,
+        isPermanent,
+        message: isPermanent
+          ? 'Maximum authorization attempts exceeded (6/6). Account / device permanently locked. Please consult the cashier.'
+          : (lockoutSeconds > 0
+              ? `Incorrect authorization code. Security lockout active for ${lockoutSeconds >= 60 ? Math.round(lockoutSeconds / 60) + ' minute(s)' : lockoutSeconds + 's'}.`
+              : `Invalid authorization code. Please verify the 6-digit code given by the cashier.`)
       });
     }
 
