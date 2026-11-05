@@ -63,7 +63,7 @@ app.post('/api/verify-payment', async (req, res) => {
     if (!record) {
       return res.status(404).json({
         success: false,
-        message: 'Invalid authorization code. Please verify the 4-digit code given by the cashier.'
+        message: 'Invalid authorization code. Please verify the 6-digit code given by the cashier.'
       });
     }
 
@@ -870,7 +870,7 @@ app.post('/api/admin/codes/batch', requireAdminAuth, async (req, res) => {
     const toInsert = [];
 
     while (toInsert.length < count) {
-      const candidate = String(Math.floor(1000 + Math.random() * 9000));
+      const candidate = String(Math.floor(100000 + Math.random() * 900000));
       if (!existingCodes.has(candidate)) {
         existingCodes.add(candidate);
         toInsert.push({

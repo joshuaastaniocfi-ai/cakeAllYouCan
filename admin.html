@@ -3798,7 +3798,7 @@
 
 
 
-          <input type="text" id="codeSearch" placeholder="Search code (e.g. 1234), branch, guest name..." />
+          <input type="text" id="codeSearch" placeholder="Search code (e.g. 123456), branch, guest name..." />
 
 
 
@@ -4446,7 +4446,7 @@
 
 
 
-              <input type="text" id="newCodeVal" maxlength="8" placeholder="e.g. 1234 or 8821" required style="font-family:monospace;font-size:16px;font-weight:700;" />
+              <input type="text" id="newCodeVal" maxlength="6" placeholder="e.g. 123456 or 778899" required style="font-family:monospace;font-size:16px;font-weight:700;" />
 
 
 
@@ -5398,7 +5398,7 @@
 
 
 
-        $('#newCodeVal').value = String(Math.floor(1000 + Math.random() * 9000));
+        $('#newCodeVal').value = String(Math.floor(100000 + Math.random() * 900000));
 
 
 

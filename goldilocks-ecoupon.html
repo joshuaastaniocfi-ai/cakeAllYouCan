@@ -6602,15 +6602,15 @@
 
 
 
-      font-size: 34px;
+      font-size: clamp(24px, 5vw, 30px);
 
 
 
-      letter-spacing: 14px;
+      letter-spacing: clamp(6px, 1.2vw, 10px);
 
 
 
-      padding: 8px 0 8px 14px;
+      padding: 8px 0 8px clamp(6px, 1.2vw, 10px);
 
 
 
@@ -15462,7 +15462,7 @@
 
 
 
-      <p class="lead">Show your details to the cashier. The cashier will give you a 4-digit code after payment.</p>
+      <p class="lead">Show your details to the cashier. The cashier will give you a 6-digit code after payment.</p>
 
 
 
@@ -15474,7 +15474,7 @@
 
 
 
-      <input class="code-input" id="cashCode" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
+      <input class="code-input" id="cashCode" type="text" inputmode="numeric" maxlength="6" placeholder="••••••"
 
 
 
@@ -17626,7 +17626,7 @@
 
 
 
-        if (v.length < 4) {
+        if (v.length !== 6 || !/^\d{6}$/.test(v)) {
 
 
 
@@ -17634,7 +17634,7 @@
 
 
 
-          toast('Please enter the 4-digit cashier authorization code.');
+          toast('Please enter the 6-digit cashier authorization code.');
 
 
 

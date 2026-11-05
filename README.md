@@ -11,7 +11,7 @@ A full-stack web application designed for managing ticket reservations, payments
   - Interactive Terms & Conditions modal with mandatory scroll-to-agree logic.
   - Multi-payment support:
     - **QR Ph / GCash / Maya:** Receipt screenshot upload with automated verification queue.
-    - **Cash at Cashier:** On-the-spot verification using 8-character secure cashier authorization codes.
+    - **Cash at Cashier:** On-the-spot verification using 6-digit secure cashier authorization codes.
 - **Dynamic Anti-Tamper E-Coupon Generator:**
   - Powered by Python Pillow (PIL) and Node.js.
   - Dynamically imprints customer name, branch, event date/time, and authentic high-visibility overlay badge for the unique Control Number (`CAYCxxxx`).

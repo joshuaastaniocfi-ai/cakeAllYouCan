@@ -4,21 +4,24 @@ const connectDB = require('./config/db');
 const PaymentCode = require('./models/PaymentCode');
 
 const defaultCodes = [
-  { code: '1234', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 1' },
-  { code: '5678', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 2' },
-  { code: '7788', branch: 'Goldilocks Robinsons Tacloban', description: 'Cashier Express Code' },
-  { code: '9999', branch: 'Goldilocks Robinsons Tacloban', description: 'Manager Override Code' },
-  { code: '2026', branch: 'Goldilocks Robinsons Tacloban', description: 'Promo Anniversary Code' },
-  { code: '4321', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 3' },
-  { code: '8888', branch: 'Goldilocks Robinsons Tacloban', description: 'VIP Guest Code' },
-  { code: '1001', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 1 Code' },
-  { code: '2468', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 2 Code' },
-  { code: '1357', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 3 Code' }
+  { code: '123456', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 1' },
+  { code: '567890', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 2' },
+  { code: '778899', branch: 'Goldilocks Robinsons Tacloban', description: 'Cashier Express Code' },
+  { code: '998877', branch: 'Goldilocks Robinsons Tacloban', description: 'Manager Override Code' },
+  { code: '202611', branch: 'Goldilocks Robinsons Tacloban', description: 'Promo Anniversary Code' },
+  { code: '432100', branch: 'Goldilocks Robinsons Tacloban', description: 'Store Counter Code 3' },
+  { code: '888888', branch: 'Goldilocks Robinsons Tacloban', description: 'VIP Guest Code' },
+  { code: '100101', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 1 Code' },
+  { code: '246810', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 2 Code' },
+  { code: '135791', branch: 'Goldilocks Robinsons Tacloban', description: 'Register 3 Code' }
 ];
 
 async function seedDatabase() {
   await connectDB();
   try {
+    // Remove any unused 4-digit codes from previous testing
+    await PaymentCode.deleteMany({ isUsed: false, code: { $regex: '^[0-9]{4}$' } });
+
     for (const item of defaultCodes) {
       await PaymentCode.findOneAndUpdate(
         { code: item.code },
@@ -35,7 +38,7 @@ async function seedDatabase() {
         { upsert: true, returnDocument: 'after' }
       );
     }
-    console.log(`✅ Seeded ${defaultCodes.length} accepted number combinations into MongoDB!`);
+    console.log(`✅ Seeded ${defaultCodes.length} accepted 6-digit number combinations into MongoDB!`);
     const count = await PaymentCode.countDocuments();
     console.log(`📊 Total payment codes in database: ${count}`);
   } catch (err) {
