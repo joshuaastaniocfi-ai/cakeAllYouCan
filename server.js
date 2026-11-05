@@ -347,53 +347,98 @@ app.post('/api/track/recover', async (req, res) => {
     }
 
     const last10 = cleanDigits.slice(-10);
-    // Escape regex characters safely
-    const escapedName = fullname.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Flexible mobile regex allowing optional spaces or hyphens between digits
+    const flexibleMobile = new RegExp(last10.split('').join('[\\s-]*') + '$');
+    const trimmedName = fullname.trim();
+    const escapedName = trimmedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    // Find records matching guestName (case-insensitive) and mobile (ending with last 10 digits)
-    let records = await PaymentVerification.find({
-      guestName: new RegExp('^\\s*' + escapedName + '\\s*$', 'i'),
-      mobile: new RegExp(last10 + '$')
-    }).sort({ createdAt: -1 });
-
-    // Fallback: If no exact name match, allow substring match
-    if (!records || records.length === 0) {
-      records = await PaymentVerification.find({
-        guestName: new RegExp(escapedName, 'i'),
-        mobile: new RegExp(last10 + '$')
-      }).sort({ createdAt: -1 });
-    }
-
-    if (!records || records.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'No reservation record found matching "' + fullname.trim() + '" with mobile number provided.'
+    // Build name conditions: exact, substring, or individual word tokens
+    const nameWords = trimmedName.split(/\s+/).filter(w => w.length >= 2).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const nameMatchConditions = [
+      { guestName: new RegExp('^\\s*' + escapedName + '\\s*$', 'i') },
+      { guestName: new RegExp(escapedName, 'i') }
+    ];
+    if (nameWords.length > 1) {
+      nameWords.forEach(word => {
+        nameMatchConditions.push({ guestName: new RegExp(word, 'i') });
       });
     }
 
-    const primary = records[0];
-    const results = records.map(r => ({
-      txnNumber: r.txnNumber,
-      guestName: r.guestName,
-      email: r.email,
-      mobile: r.mobile,
-      status: r.status,
-      couponControlNo: r.couponControlNo,
-      amountPaid: r.amountPaid || 499.00,
-      referenceNo: r.referenceNo || '',
-      adminNotes: r.adminNotes || '',
-      couponImageUrl: r.couponControlNo ? `/api/coupon-image/${r.couponControlNo}` : null,
-      couponDownloadUrl: r.couponControlNo ? `/api/download-coupon/${r.couponControlNo}` : null,
-      createdAt: r.createdAt
-    }));
+    // 1. Search in PaymentVerification collection
+    let verifications = await PaymentVerification.find({
+      $and: [
+        { mobile: flexibleMobile },
+        { $or: nameMatchConditions }
+      ]
+    }).sort({ createdAt: -1 }).lean();
+
+    // 2. Search in IssuedCoupon collection (e.g. cash payments or direct issued coupons)
+    let coupons = await IssuedCoupon.find({
+      $and: [
+        { mobile: flexibleMobile },
+        { $or: nameMatchConditions }
+      ]
+    }).sort({ createdAt: -1 }).lean();
+
+    // Map known control numbers and transaction numbers from verifications to avoid duplicates
+    const knownControls = new Set(verifications.map(v => v.couponControlNo).filter(Boolean));
+    const knownTxns = new Set(verifications.map(v => v.txnNumber).filter(Boolean));
+
+    // Any issued coupons not already represented in verifications
+    const extraCoupons = coupons.filter(c => !knownControls.has(c.controlNo) && !knownTxns.has(c.txnNumber));
+
+    const combined = [
+      ...verifications.map(r => ({
+        txnNumber: r.txnNumber,
+        guestName: r.guestName,
+        email: r.email || '',
+        mobile: r.mobile,
+        status: r.status,
+        couponControlNo: r.couponControlNo || null,
+        amountPaid: r.amountPaid || 499.00,
+        paymentMethod: r.paymentMethod || 'qr',
+        referenceNo: r.referenceNo || '',
+        adminNotes: r.adminNotes || '',
+        couponImageUrl: r.couponControlNo ? `/api/coupons/${r.couponControlNo}/image` : null,
+        couponDownloadUrl: r.couponControlNo ? `/api/coupons/${r.couponControlNo}/download` : null,
+        createdAt: r.createdAt
+      })),
+      ...extraCoupons.map(c => ({
+        txnNumber: c.txnNumber || c.controlNo,
+        guestName: c.guestName,
+        email: c.email || '',
+        mobile: c.mobile,
+        status: 'approved',
+        couponControlNo: c.controlNo,
+        amountPaid: c.amountPaid || 499.00,
+        paymentMethod: c.paymentMethod || 'cash',
+        referenceNo: c.paymentCodeUsed || 'Cashier Counter Verified',
+        adminNotes: '',
+        couponImageUrl: `/api/coupons/${c.controlNo}/image`,
+        couponDownloadUrl: `/api/coupons/${c.controlNo}/download`,
+        createdAt: c.issuedAt || c.createdAt
+      }))
+    ];
+
+    // Sort by submission date (newest first)
+    combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (!combined || combined.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation record found matching "${trimmedName}" with mobile number provided.`
+      });
+    }
+
+    const primary = combined[0];
 
     return res.json({
       success: true,
       data: {
         guestName: primary.guestName,
         mobile: primary.mobile,
-        totalFound: records.length,
-        allRecords: results,
+        totalFound: combined.length,
+        allRecords: combined,
         // Kept for backward compatibility
         txnNumber: primary.txnNumber,
         status: primary.status,
@@ -405,6 +450,14 @@ app.post('/api/track/recover', async (req, res) => {
     console.error('Error recovering transaction tracking number:', error);
     return res.status(500).json({ success: false, message: 'Server error while finding tracking number.' });
   }
+});
+
+// Alias download and image routes for compatibility
+app.get('/api/download-coupon/:controlNo', (req, res) => {
+  res.redirect(`/api/coupons/${req.params.controlNo}/download`);
+});
+app.get('/api/coupon-image/:controlNo', (req, res) => {
+  res.redirect(`/api/coupons/${req.params.controlNo}/image`);
 });
 
 // ── API: Public - Download Official QRPh Payment Code Image ──
