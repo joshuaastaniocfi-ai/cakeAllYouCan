@@ -216,53 +216,103 @@ app.post('/api/submit-qr-payment', async (req, res) => {
   }
 });
 
-// ── API: Public - Track Reservation Status by Tracking Number (e.g. CAYC-TXN-80757) ──
+// ── API: Public - Track Reservation Status by Tracking Number (e.g. CAYC-TXN-80757 or CAYC0001) ──
 app.get('/api/track/:txnNumber', async (req, res) => {
   try {
-    const txn = (req.params.txnNumber || '').trim().toUpperCase();
+    const rawTxn = (req.params.txnNumber || '').trim();
+    const txn = rawTxn.toUpperCase();
     if (!txn) {
       return res.status(400).json({ success: false, message: 'Please enter a valid tracking number.' });
     }
 
-    const verification = await PaymentVerification.findOne({ txnNumber: txn });
-    if (!verification) {
-      return res.status(404).json({
-        success: false,
-        message: `No reservation record found for tracking number "${txn}". Please check the spelling and try again.`
+    // 1. Search in PaymentVerification (exact txnNumber, without prefix, or by coupon control number)
+    let verification = await PaymentVerification.findOne({
+      $or: [
+        { txnNumber: txn },
+        { txnNumber: `CAYC-TXN-${txn}` },
+        { couponControlNo: txn }
+      ]
+    });
+
+    // 2. If user typed just digits (e.g. 43713), match trailing digits
+    if (!verification && /^\d+$/.test(txn)) {
+      verification = await PaymentVerification.findOne({
+        txnNumber: new RegExp(txn + '$', 'i')
       });
     }
 
-    let couponDownloadUrl = null;
-    let couponImageUrl = null;
-    if (verification.status === 'approved' && verification.couponControlNo) {
-      couponDownloadUrl = `/api/coupons/${verification.couponControlNo}/download`;
-      couponImageUrl = `/api/coupons/${verification.couponControlNo}/image`;
+    // 3. If found in PaymentVerification
+    if (verification) {
+      let couponDownloadUrl = null;
+      let couponImageUrl = null;
+      if (verification.status === 'approved' && verification.couponControlNo) {
+        couponDownloadUrl = `/api/coupons/${verification.couponControlNo}/download`;
+        couponImageUrl = `/api/coupons/${verification.couponControlNo}/image`;
+      }
+
+      return res.json({
+        success: true,
+        data: {
+          txnNumber: verification.txnNumber,
+          guestName: verification.guestName,
+          email: verification.email,
+          mobile: verification.mobile,
+          address: verification.address,
+          amountPaid: verification.amountPaid || 499.00,
+          paymentMethod: verification.paymentMethod,
+          referenceNo: verification.referenceNo || '—',
+          status: verification.status,
+          couponControlNo: verification.couponControlNo,
+          couponDownloadUrl,
+          couponImageUrl,
+          adminNotes: verification.adminNotes || '',
+          createdAt: verification.createdAt,
+          approvedAt: verification.approvedAt
+        }
+      });
     }
 
-    return res.json({
-      success: true,
-      data: {
-        txnNumber: verification.txnNumber,
-        guestName: verification.guestName,
-        email: verification.email,
-        mobile: verification.mobile,
-        address: verification.address,
-        amountPaid: verification.amountPaid || 499.00,
-        paymentMethod: verification.paymentMethod,
-        referenceNo: verification.referenceNo || '—',
-        status: verification.status,
-        couponControlNo: verification.couponControlNo,
-        couponDownloadUrl,
-        couponImageUrl,
-        adminNotes: verification.adminNotes || '',
-        createdAt: verification.createdAt,
-        approvedAt: verification.approvedAt
-      }
+    // 4. If not found in verifications, check IssuedCoupon (e.g. cash payments or direct coupons)
+    const coupon = await IssuedCoupon.findOne({
+      $or: [
+        { controlNo: txn },
+        { controlNo: txn.startsWith('CAYC') ? txn : `CAYC${txn.padStart(4, '0')}` },
+        { txnNumber: txn }
+      ]
+    });
+
+    if (coupon) {
+      return res.json({
+        success: true,
+        data: {
+          txnNumber: coupon.txnNumber || coupon.controlNo,
+          guestName: coupon.guestName,
+          email: coupon.email,
+          mobile: coupon.mobile,
+          address: coupon.address,
+          amountPaid: coupon.amountPaid || 499.00,
+          paymentMethod: coupon.paymentMethod,
+          referenceNo: coupon.paymentCodeUsed || 'Cashier Code Verified',
+          status: 'approved',
+          couponControlNo: coupon.controlNo,
+          couponDownloadUrl: `/api/coupons/${coupon.controlNo}/download`,
+          couponImageUrl: `/api/coupons/${coupon.controlNo}/image`,
+          adminNotes: 'Directly verified and issued.',
+          createdAt: coupon.issuedAt || coupon.createdAt,
+          approvedAt: coupon.issuedAt || coupon.createdAt
+        }
+      });
+    }
+
+    return res.status(404).json({
+      success: false,
+      message: `No reservation record found for tracking number "${rawTxn}". Please check your tracking number or Gmail.`
     });
   } catch (error) {
     console.error('Error tracking transaction:', error);
     return res.status(500).json({ success: false, message: 'Server error while tracking reservation.' });
   }
+});
 });
 
 // ── API: Public - Recover / Find Transaction Reference Number by Name & Mobile ──

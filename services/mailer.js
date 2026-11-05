@@ -270,13 +270,24 @@ async function sendCouponEmail({ guestName, email, controlNo, couponImagePath, p
     };
 
     const sendPromise = mail.sendMail(mailOptions);
-    const info = await Promise.race([
-      sendPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('SMTP send timed out')), 5000))
-    ]).catch((timeoutErr) => {
-      console.warn(`⚠️ SMTP send encountered delay/failure (${timeoutErr.message}), falling back to local simulation.`);
-      return { messageId: `<mock-${Date.now()}@goldilocks.local>` };
-    });
+    const isRealGmail = Boolean(process.env.GMAIL_USER && (process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD));
+    
+    let info;
+    if (isRealGmail) {
+      // Real Gmail SMTP delivery: allow ample time (30s) to upload high-res coupon image attachments
+      info = await Promise.race([
+        sendPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Gmail SMTP delivery timed out after 30s')), 30000))
+      ]);
+    } else {
+      info = await Promise.race([
+        sendPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('SMTP send timed out')), 5000))
+      ]).catch((timeoutErr) => {
+        console.warn(`⚠️ SMTP send encountered delay/failure (${timeoutErr.message}), falling back to local simulation.`);
+        return { messageId: `<mock-${Date.now()}@goldilocks.local>` };
+      });
+    }
 
     console.log(`✉️ Email successfully dispatched to ${email}! Message ID: ${info.messageId}`);
     let previewUrl = null;
