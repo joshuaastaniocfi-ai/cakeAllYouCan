@@ -710,22 +710,60 @@
 
 
 
+    /* ═══════════════════════════════════════════════════════════════════
+       ULTRA-BEAUTIFUL GOLDILOCKS BACK BUTTON STYLING
+       ═══════════════════════════════════════════════════════════════════ */
     .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #ffffff 0%, #fffcf5 100%);
+      color: #5c3500;
+      border: 1.8px solid #d8a030;
+      font-family: var(--font-head);
+      font-weight: 750;
+      letter-spacing: 0.3px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(120, 59, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+    }
 
+    .btn-back .btn-back-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
+    .btn-back:hover {
+      background: linear-gradient(135deg, #fff9ea 0%, #ffefc2 100%);
+      color: #2b1600;
+      border-color: #f5a800;
+      box-shadow: 0 6px 18px rgba(245, 168, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
 
-      background: var(--brown-btn);
+    .btn-back:hover .btn-back-arrow {
+      transform: translateX(-4px);
+    }
 
+    .btn-back:active {
+      transform: translateY(0px) scale(0.97);
+      box-shadow: 0 2px 6px rgba(245, 168, 0, 0.18);
+    }
 
-
-      color: #fff;
-
-
-
-      box-shadow: 0 8px 16px rgba(181, 137, 74, .35)
-
-
-
+    .btn-back:focus-visible {
+      outline: 2px solid #f5a800;
+      outline-offset: 2px;
     }
 
 
@@ -4250,106 +4288,67 @@
 
 
 
-    /* Upper Left Back Button on Screens */
-
-
-
+    /* ─── Ultra-Polished Top Left Floating Back Button (.btn-top-back) ─── */
     .btn-top-back {
-
-
-
       display: inline-flex;
-
-
-
       align-items: center;
-
-
-
-      gap: 6px;
-
-
-
-      background: #b57200;
-
-
-
-      color: #ffffff;
-
-
-
-      border: none;
-
-
-
+      gap: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #fffcf5 100%);
+      color: #5c3500;
+      border: 1.6px solid #d8a030;
       font-family: var(--font-head);
-
-
-
       font-size: 12.5px;
-
-
-
-      font-weight: 700;
-
-
-
-      padding: 8px 16px;
-
-
-
+      font-weight: 750;
+      letter-spacing: 0.2px;
+      padding: 7px 16px 7px 9px;
       border-radius: 999px;
-
-
-
       cursor: pointer;
-
-
-
-      box-shadow: 0 3px 10px rgba(181, 114, 0, 0.22);
-
-
-
-      transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
-
-
-
+      box-shadow: 0 3px 12px rgba(120, 59, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       text-decoration: none;
-
-
-
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-
+    .btn-top-back .btn-back-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fff4d4;
+      color: #783b00;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
     .btn-top-back:hover {
-
-
-
-      background: #965c00;
-
-
-
-      box-shadow: 0 4px 14px rgba(181, 114, 0, 0.32);
-
-
-
-      transform: translateY(-1px);
-
-
-
+      background: linear-gradient(135deg, #fff9ea 0%, #ffefbe 100%);
+      color: #2b1600;
+      border-color: #f5a800;
+      box-shadow: 0 6px 20px rgba(245, 168, 0, 0.26), 0 2px 6px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
     }
 
-
+    .btn-top-back:hover .btn-back-arrow {
+      transform: translateX(-3px);
+      background: #f5a800;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(245, 168, 0, 0.35);
+    }
 
     .btn-top-back:active {
+      transform: scale(0.97) translateY(0);
+      box-shadow: 0 2px 6px rgba(245, 168, 0, 0.18);
+    }
 
-
-
-      transform: scale(0.97);
-
-
-
+    .btn-top-back:focus-visible {
+      outline: 2px solid #f5a800;
+      outline-offset: 2px;
     }
 
 
@@ -6739,77 +6738,49 @@
 
 
     .modal-btns .btn-back,
-
-
-
     .modal-btns .btn-small {
-
-
-
-      flex: 0 0 96px;
-
-
-
+      flex: 0 0 105px;
       min-height: 48px;
-
-
-
-      padding: 12px 16px;
-
-
-
+      padding: 11px 18px;
       font-size: 13.5px;
-
-
-
-      font-weight: 700;
-
-
-
+      font-weight: 750;
       border-radius: 999px;
-
-
-
       box-sizing: border-box;
-
-
-
-      display: flex;
-
-
-
+      display: inline-flex;
       align-items: center;
-
-
-
       justify-content: center;
-
-
-
+      gap: 6px;
       text-decoration: none;
-
-
-
-      background: var(--brown-btn);
-
-
-
-      color: #fff;
-
-
-
-      box-shadow: 0 4px 12px rgba(181, 137, 74, .25);
-
-
-
-      border: none;
-
-
-
+      background: linear-gradient(135deg, #ffffff 0%, #fffcf5 100%);
+      color: #5c3500;
+      border: 1.6px solid #d8a030;
+      box-shadow: 0 3px 10px rgba(120, 59, 0, 0.08);
       cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
+    .modal-btns .btn-back .btn-back-arrow {
+      font-size: 14px;
+      font-weight: 900;
+      transition: transform 0.22s ease;
+    }
 
+    .modal-btns .btn-back:hover,
+    .modal-btns .btn-small:hover {
+      background: linear-gradient(135deg, #fff9ea 0%, #ffefc2 100%);
+      color: #2b1600;
+      border-color: #f5a800;
+      box-shadow: 0 6px 16px rgba(245, 168, 0, 0.22);
+      transform: translateY(-1.5px);
+    }
 
+    .modal-btns .btn-back:hover .btn-back-arrow {
+      transform: translateX(-3px);
+    }
+
+    .modal-btns .btn-back:active,
+    .modal-btns .btn-small:active {
+      transform: scale(0.97);
     }
 
 
@@ -13617,7 +13588,8 @@
         <!-- Upper Left Back Button -->
         <div class="form-top-bar" style="display:flex;align-items:center;justify-content:flex-start;padding-top:14px;margin-bottom:4px;">
           <button type="button" class="btn-top-back" data-go="home" id="btnFormBackHome" title="Back to Main Page">
-            ← Back
+            <span class="btn-back-arrow">←</span>
+            <span>Back to Home</span>
           </button>
         </div>
 
@@ -13675,13 +13647,13 @@
 
 
     <section class="screen" id="screen-payment">
-
-
-
       <div class="wrap narrow">
-
-
-
+        <div class="pay-top-bar" style="display:flex;align-items:center;justify-content:flex-start;padding-top:14px;margin-bottom:4px;">
+          <button type="button" class="btn-top-back" data-go="form" title="Back to Customer Information">
+            <span class="btn-back-arrow">←</span>
+            <span>Back to Information</span>
+          </button>
+        </div>
         <h2 class="form-title">PAYMENT METHOD</h2>
 
 
@@ -13770,7 +13742,10 @@
 
 
 
-          <button class="btn btn-back" data-go="form">Back</button>
+          <button class="btn btn-back" data-go="form" title="Back to Customer Information">
+            <span class="btn-back-arrow">←</span>
+            <span>Back</span>
+          </button>
 
 
 
@@ -13799,14 +13774,14 @@
 
 
     <section class="screen" id="screen-pending">
-
-
-
       <div class="wrap wide-s">
-
-
-
-        <div class="party" style="margin-top:24px;margin-bottom:12px;">
+        <div class="pending-top-bar" style="display:flex;align-items:center;justify-content:flex-start;padding-top:14px;margin-bottom:4px;">
+          <button type="button" class="btn-top-back" data-go="home" title="Return to Main Page">
+            <span class="btn-back-arrow">←</span>
+            <span>Back to Home</span>
+          </button>
+        </div>
+        <div class="party" style="margin-top:16px;margin-bottom:12px;">
 
 
 
@@ -14219,13 +14194,8 @@
 
 
           <button type="button" class="btn-top-back" data-go="home" title="Return to Main Page">
-
-
-
-            ← Back to Main Page
-
-
-
+            <span class="btn-back-arrow">←</span>
+            <span>Back to Main Page</span>
           </button>
 
 
@@ -15406,7 +15376,10 @@
 
 
 
-        <button type="button" class="btn btn-back" data-close="modalQr">Back</button>
+        <button type="button" class="btn btn-back" data-close="modalQr" title="Back to Payment Options">
+          <span class="btn-back-arrow">←</span>
+          <span>Back</span>
+        </button>
 
 
 
@@ -15474,7 +15447,10 @@
 
 
 
-      <button type="button" class="btn btn-back" data-close="modalCash">Back</button>
+      <button type="button" class="btn btn-back" data-close="modalCash" title="Back to Payment Options">
+        <span class="btn-back-arrow">←</span>
+        <span>Back</span>
+      </button>
 
 
 
