@@ -34,30 +34,32 @@ def generate_coupon(guest_name, control_no, output_path):
             return ImageFont.load_default()
 
     font_tr = load_font(24)
-    font_stub = load_font(28)
+    font_stub = load_font(24)
     font_name = load_font(24)
 
-    # 1. Overlay Top-Right Control Number (Native, smooth, transparent with subtle depth shadow)
-    draw.text((1971, 31), f'CONTROL NUMBER: {control_no}', font=font_tr, fill=(180, 100, 0), anchor='ra')
-    draw.text((1970, 30), f'CONTROL NUMBER: {control_no}', font=font_tr, fill=(255, 255, 255), anchor='ra')
+    # 1. Overlay Top-Right Control Number (Smoothly placed right after pre-printed 'CONTROL NUMBER:')
+    # 'CONTROL NUMBER:' in template ends at x ~ 1798.
+    ctrl_str = str(control_no).strip()
+    draw.text((1806, 27), ctrl_str, font=font_tr, fill=(180, 100, 0))
+    draw.text((1805, 26), ctrl_str, font=font_tr, fill=(255, 255, 255))
 
-    # 2. Overlay Cuttable Stub Control Number (Matches Top-Right Control Number!)
-    # Positioned right under CONTROL NUMBER: without overlapping or clipping at bottom
-    stub_txt_layer = Image.new('RGBA', (180, 44), (255, 255, 255, 0))
+    # 2. Overlay Cuttable Stub Control Number (Placed right under vertical 'CONTROL NUMBER:' with zero overlap)
+    # Pre-printed colon ends at y = 749. Space extends down to y = 920.
+    stub_txt_layer = Image.new('RGBA', (150, 36), (255, 255, 255, 0))
     d_stub = ImageDraw.Draw(stub_txt_layer)
-    d_stub.text((3, 3), str(control_no), font=font_stub, fill=(160, 100, 0, 180))
-    d_stub.text((2, 2), str(control_no), font=font_stub, fill=(255, 255, 255, 255))
+    d_stub.text((2, 2), ctrl_str, font=font_stub, fill=(160, 100, 0, 180))
+    d_stub.text((1, 1), ctrl_str, font=font_stub, fill=(255, 255, 255, 255))
     rot_stub = stub_txt_layer.rotate(270, expand=True)
-    canvas.paste(rot_stub, (178, 718), rot_stub)
+    canvas.paste(rot_stub, (176, 756), rot_stub)
 
-    # 3. Overlay Guest Name inside white vertical strip on stub
-    # Strip is x: 20..68 (center ~44), y: 144..888
-    clean_name = (guest_name or 'GUEST').upper()
-    txt_layer = Image.new('RGBA', (720, 48), (255, 255, 255, 0))
+    # 3. Overlay Guest Name inside white vertical strip on stub (Dead-center inside white box)
+    # White box is x: 17..107 (center ~62), y: 135..890
+    clean_name = (guest_name or 'GUEST').upper().strip()
+    txt_layer = Image.new('RGBA', (700, 40), (255, 255, 255, 0))
     d_txt = ImageDraw.Draw(txt_layer)
-    d_txt.text((10, 8), clean_name, font=font_name, fill=(59, 31, 0))
+    d_txt.text((8, 4), clean_name, font=font_name, fill=(59, 31, 0))
     rot_txt = txt_layer.rotate(270, expand=True)
-    canvas.paste(rot_txt, (22, 148), rot_txt)
+    canvas.paste(rot_txt, (42, 142), rot_txt)
 
     # Ensure parent dir exists
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
