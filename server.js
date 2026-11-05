@@ -313,7 +313,6 @@ app.get('/api/track/:txnNumber', async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error while tracking reservation.' });
   }
 });
-});
 
 // ── API: Public - Recover / Find Transaction Reference Number by Name & Mobile ──
 app.post('/api/track/recover', async (req, res) => {
