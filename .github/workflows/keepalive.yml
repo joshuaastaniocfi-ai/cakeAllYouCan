@@ -16,3 +16,4 @@ jobs:
           RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -m 45 "https://goldilocks-cake-all-you-can.onrender.com/api/ping")
           echo "$RESPONSE"
           echo "Server ping completed successfully."
+

@@ -40,7 +40,12 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // 1. Navigation requests (Opening the site or admin portal)
+  // Never intercept admin requests
+  if (url.pathname.startsWith('/admin')) {
+    return;
+  }
+
+  // 1. Navigation requests (Opening the main customer portal)
   if (req.mode === 'navigate' || req.destination === 'document') {
     // Attempt network fetch with a 2200ms timeout for cold start detection
     const timeoutPromise = new Promise((_, reject) => {
