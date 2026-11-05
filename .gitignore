@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+
+# Generated Uploads (keep directories via .gitkeep)
+uploads/*
+!uploads/.gitkeep
+!uploads/coupons/
+uploads/coupons/*
+!uploads/coupons/.gitkeep
+
+# Temporary scratch and debug files
+scratch*
+current_form_dump.txt
+pill_crop.png
+tpl_*
+test_*
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
