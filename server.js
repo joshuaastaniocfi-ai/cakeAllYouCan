@@ -469,20 +469,50 @@ app.get('/api/coupons/:controlNo/image', async (req, res) => {
 // ============================================================================
 const ADMIN_USER = process.env.ADMIN_USERNAME || 'admin@123';
 const ADMIN_PASS = process.env.ADMIN_PASSWORD || '@cakeallyoucan2026';
-const activeAdminSessions = new Map(); // token -> { username, createdAt, expiresAt }
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || process.env.MONGODB_URI || 'goldilocks_secure_admin_jwt_secret_2026';
+const activeAdminSessions = new Map(); // token -> { username, createdAt, expiresAt } (in-memory fast cache)
 
-function cleanExpiredSessions() {
-  const now = Date.now();
-  for (const [token, session] of activeAdminSessions.entries()) {
-    if (session.expiresAt < now) {
-      activeAdminSessions.delete(token);
+function generateAdminToken(username) {
+  const payload = {
+    u: username,
+    role: 'admin',
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + (90 * 24 * 3600) // 90-day persistent session
+  };
+  const b64Payload = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(b64Payload).digest('base64url');
+  return `${b64Payload}.${signature}`;
+}
+
+function verifyAdminToken(token) {
+  if (!token || typeof token !== 'string') return null;
+
+  // 1. Check in-memory cache if present
+  if (activeAdminSessions.has(token)) {
+    const s = activeAdminSessions.get(token);
+    if (s && s.expiresAt > Date.now()) return { username: s.username };
+  }
+
+  // 2. Cryptographic signature verification (persists across server restarts & Render sleep)
+  const parts = token.split('.');
+  if (parts.length !== 2) return null;
+  const [b64Payload, signature] = parts;
+  const expectedSig = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(b64Payload).digest('base64url');
+  if (signature !== expectedSig) return null;
+
+  try {
+    const payload = JSON.parse(Buffer.from(b64Payload, 'base64url').toString('utf8'));
+    if (!payload || !payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
     }
+    return { username: payload.u || payload.username || ADMIN_USER };
+  } catch (err) {
+    return null;
   }
 }
 
 // Middleware: Require Admin Authentication for Protected Endpoints
 function requireAdminAuth(req, res, next) {
-  cleanExpiredSessions();
   const authHeader = req.headers.authorization;
   let token = null;
 
@@ -494,25 +524,15 @@ function requireAdminAuth(req, res, next) {
     token = String(req.query.admin_token).trim();
   }
 
-  if (!token || !activeAdminSessions.has(token)) {
+  const verified = verifyAdminToken(token);
+  if (!verified) {
     return res.status(401).json({
       success: false,
       message: 'Unauthorized: Admin authentication required to access this resource.'
     });
   }
 
-  const session = activeAdminSessions.get(token);
-  if (session.expiresAt < Date.now()) {
-    activeAdminSessions.delete(token);
-    return res.status(401).json({
-      success: false,
-      message: 'Admin session has expired. Please sign in again.'
-    });
-  }
-
-  // Slide session expiration (active 24 hours)
-  session.expiresAt = Date.now() + 24 * 3600 * 1000;
-  req.adminUser = session.username;
+  req.adminUser = verified.username;
   next();
 }
 
@@ -536,12 +556,11 @@ app.post('/api/admin/login', (req, res) => {
     });
   }
 
-  cleanExpiredSessions();
-  const token = crypto.randomBytes(32).toString('hex');
+  const token = generateAdminToken(ADMIN_USER);
   activeAdminSessions.set(token, {
     username: ADMIN_USER,
     createdAt: Date.now(),
-    expiresAt: Date.now() + 24 * 3600 * 1000
+    expiresAt: Date.now() + 90 * 24 * 3600 * 1000
   });
 
   res.json({
@@ -569,7 +588,6 @@ app.post('/api/admin/logout', (req, res) => {
 
 // ── API: Check Admin Authentication Status ──
 app.get('/api/admin/check-auth', (req, res) => {
-  cleanExpiredSessions();
   const authHeader = req.headers.authorization;
   let token = null;
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -578,12 +596,12 @@ app.get('/api/admin/check-auth', (req, res) => {
     token = String(req.headers['x-admin-token']).trim();
   }
 
-  if (token && activeAdminSessions.has(token)) {
-    const session = activeAdminSessions.get(token);
+  const verified = verifyAdminToken(token);
+  if (verified) {
     return res.json({
       success: true,
       authenticated: true,
-      user: { username: session.username }
+      user: { username: verified.username }
     });
   }
   return res.json({ success: false, authenticated: false });

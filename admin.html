@@ -4834,15 +4834,51 @@
 
 
 
-          localStorage.removeItem('goldilocks_admin_token');
+          // Only show login if check-auth genuinely confirms unauthenticated (not a network/wake-up 502/503)
 
 
 
-          sessionStorage.removeItem('goldilocks_admin_token');
+          try {
 
 
 
-          showAdminLogin(true, 'Session expired. Please sign in again.');
+            const chk = await originalFetch('/api/admin/check-auth', { headers: { 'Authorization': 'Bearer ' + token } });
+
+
+
+            const chkData = await chk.json();
+
+
+
+            if (chkData && chkData.authenticated === false) {
+
+
+
+              localStorage.removeItem('goldilocks_admin_token');
+
+
+
+              sessionStorage.removeItem('goldilocks_admin_token');
+
+
+
+              showAdminLogin(true, 'Session expired. Please sign in again.');
+
+
+
+            }
+
+
+
+          } catch (e) {
+
+
+
+            // Server waking up or network blip; retain session and do NOT log out!
+
+
+
+          }
 
 
 
@@ -5030,19 +5066,51 @@
 
 
 
-          const d = await res.json();
+          if (res.ok) {
 
 
 
-          if (d.success && d.authenticated) {
+            const d = await res.json();
 
 
 
-            showAdminLogin(false);
+            if (d.success && d.authenticated) {
 
 
 
-            return true;
+              showAdminLogin(false);
+
+
+
+              return true;
+
+
+
+            }
+
+
+
+          }
+
+
+
+          if (res.status === 401) {
+
+
+
+            localStorage.removeItem('goldilocks_admin_token');
+
+
+
+            sessionStorage.removeItem('goldilocks_admin_token');
+
+
+
+            showAdminLogin(true, 'Session expired. Please sign in again.');
+
+
+
+            return false;
 
 
 
@@ -5054,7 +5122,19 @@
 
 
 
-          console.warn('Auth check error:', err);
+          console.warn('Server cold-start or temporary network glitch during auth check:', err);
+
+
+
+          // Do NOT log out when server is waking from sleep! Keep user session intact!
+
+
+
+          showAdminLogin(false);
+
+
+
+          return true;
 
 
 
@@ -5062,11 +5142,15 @@
 
 
 
-        showAdminLogin(true);
+        // Default to keeping the user logged in if server returns 502/503 during wake-up
 
 
 
-        return false;
+        showAdminLogin(false);
+
+
+
+        return true;
 
 
 
@@ -7770,31 +7854,23 @@
 
 
 
-          if (remember) {
+          // Always persist admin token in localStorage so user NEVER gets auto-logged out unless clicking Logout
 
 
 
-            localStorage.setItem('goldilocks_admin_token', data.token);
+          localStorage.setItem('goldilocks_admin_token', data.token);
 
 
 
-            localStorage.setItem('goldilocks_admin_user', data.user.username);
+          localStorage.setItem('goldilocks_admin_user', data.user.username);
 
 
 
-          } else {
+          sessionStorage.setItem('goldilocks_admin_token', data.token);
 
 
 
-            sessionStorage.setItem('goldilocks_admin_token', data.token);
-
-
-
-            sessionStorage.setItem('goldilocks_admin_user', data.user.username);
-
-
-
-          }
+          sessionStorage.setItem('goldilocks_admin_user', data.user.username);
 
 
 
