@@ -295,7 +295,7 @@ async function sendCouponEmail({ guestName, email, controlNo, couponImagePath, p
 
             <!-- FOOTER -->
             <p style="font-size:12px;color:#888;text-align:center;margin-top:26px;border-top:1px solid #eee;padding-top:16px;line-height:1.5;">
-              Goldilocks Robinsons Tacloban • Store Hotline: <b>(053) 832-1234 / 0917-888-2292</b>.<br/>
+              Goldilocks Robinsons Tacloban • Store Hotline: <b>+63 946 452 7375</b>.<br/>
               Per DTI Fair Trade Permit No.____, Series of 2026.
             </p>
           </div>
