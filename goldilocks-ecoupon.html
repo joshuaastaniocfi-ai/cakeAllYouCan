@@ -1845,41 +1845,22 @@
 
 
     .section-title .dot,
-
-
-
     .section-title .info-dot {
-
-
-
       border-radius: 50%;
-
-
-
       width: 24px;
-
-
-
       height: 24px;
-
-
-
+      min-width: 24px;
+      min-height: 24px;
+      max-width: 24px;
+      max-height: 24px;
+      aspect-ratio: 1 / 1;
+      flex: 0 0 24px;
+      flex-shrink: 0;
       font-size: 13px;
-
-
-
-      display: grid;
-
-
-
-      place-items: center;
-
-
-
-      font-weight: 700
-
-
-
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
     }
 
 
@@ -1965,6 +1946,54 @@
 
 
     }
+
+    .carousel-nav-btn {
+      position: absolute;
+      top: calc(50% - 6px);
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #fed36c;
+      color: #7a3e00;
+      box-shadow: 0 4px 14px rgba(220, 140, 0, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 0;
+      outline: none;
+    }
+
+    .carousel-nav-btn:hover {
+      background: #ffd500;
+      color: #4b2608;
+      border-color: #fca727;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 8px 20px rgba(220, 140, 0, 0.35);
+    }
+
+    .carousel-nav-btn:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    .carousel-nav-prev {
+      left: 6px;
+    }
+
+    .carousel-nav-next {
+      right: 6px;
+    }
+
+    @media (max-width: 767px) {
+      .carousel-nav-btn {
+        display: none !important;
+      }
+    }
+
 
 
 
@@ -2441,41 +2470,25 @@
 
 
     .step-chip b {
-
-
-
-      flex: 0 0 26px;
-
-
-
-      height: 26px;
-
-
-
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      max-width: 28px;
+      max-height: 28px;
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
-
-
-
       background: #ffd500;
-
-
-
-      display: grid;
-
-
-
-      place-items: center;
-
-
-
+      color: #5a3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 28px;
+      flex-shrink: 0;
       font-size: 13px;
-
-
-
-      font-weight: 700
-
-
-
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(220, 140, 0, 0.22);
     }
 
 
@@ -8728,65 +8741,97 @@
 
 
       .section-title {
-
-
-
-        font-size: 22px
-
-
-
+        font-size: 22px;
+        gap: 10px;
+        margin: 38px 0 16px;
       }
 
+      .section-title .dot,
+      .section-title .info-dot {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
+        aspect-ratio: 1 / 1;
+        font-size: 15px;
+      }
 
+      .carousel-stage {
+        max-width: 980px;
+        margin: 0 auto;
+        overflow: hidden;
+        padding: 10px 18px 24px;
+        position: relative;
+      }
 
+      .carousel {
+        gap: 16px;
+        padding-top: 16px;
+        padding-bottom: 24px;
+      }
 
+      .cake-card {
+        flex: 0 0 clamp(280px, 28vw, 320px);
+        width: clamp(280px, 28vw, 320px);
+        height: 285px;
+        border-radius: 28px;
+        padding: 16px 14px 18px;
+      }
 
-
-
-      
-
-
-
-
-
-
+      .cake-card h3 {
+        font-size: clamp(19px, 2vw, 23px);
+        white-space: nowrap;
+        letter-spacing: -0.3px;
+      }
 
       .steps-grid {
-
-
-
-        grid-template-columns: repeat(4, 1fr)
-
-
-
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 14px;
       }
 
-
-
-
-
-
-
       .step-chip {
-
-
-
-        font-size: 14px;
-
-
-
+        font-size: 13.5px;
+        font-weight: 600;
         flex-direction: column;
-
-
-
         text-align: center;
+        padding: 22px 16px;
+        gap: 12px;
+        background: linear-gradient(180deg, #fffdf6 0%, #fff7de 100%);
+        border: 1.5px solid #fed36c;
+        border-radius: 18px;
+        box-shadow: 0 4px 14px rgba(220, 140, 0, 0.08);
+        transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+      }
 
+      .step-chip:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(220, 140, 0, 0.16);
+        border-color: #fca727;
+      }
 
-
-        padding: 18px 14px
-
-
-
+      .step-chip b {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        max-width: 36px;
+        max-height: 36px;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffe066 0%, #ffaa00 100%);
+        color: #4b2608;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 36px;
+        flex-shrink: 0;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1;
+        box-shadow: 0 4px 10px rgba(230, 140, 0, 0.32);
       }
 
 
@@ -13385,9 +13430,9 @@
 
 
         <div class="carousel-stage">
-
-
-
+          <button type="button" class="carousel-nav-btn carousel-nav-prev" id="btnCarouselPrev" aria-label="Previous Cake" title="Previous Cake">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
           <div class="carousel" id="carousel">
 
 
@@ -13457,16 +13502,10 @@
 
 
           </div>
-
-
-
+          <button type="button" class="carousel-nav-btn carousel-nav-next" id="btnCarouselNext" aria-label="Next Cake" title="Next Cake">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
         </div>
-
-
-
-
-
-
 
         <div class="section-title" style="margin-top:14px"><span class="info-dot">i</span> How to Avail your E-Coupon
 
@@ -16637,6 +16676,18 @@
 
 
 
+      function advancePrevSlide() {
+        if (!carouselEl) return;
+        const cards = carouselEl.querySelectorAll('.cake-card');
+        if (!cards.length) return;
+        const closest = getClosestCard();
+        const currentIdx = closest ? closest.index : CLONES_BEFORE;
+        const prevIdx = currentIdx - 1;
+        if (cards[prevIdx]) {
+          snapCardToCenter(cards[prevIdx], true);
+        }
+      }
+
       function advanceNextSlide() {
 
 
@@ -16768,6 +16819,24 @@
 
 
 
+
+        // Desktop prev / next button navigation
+        const btnPrev = document.getElementById('btnCarouselPrev');
+        const btnNext = document.getElementById('btnCarouselNext');
+        if (btnPrev) {
+          btnPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pauseAndResumeAutoSwipe(5000);
+            advancePrevSlide();
+          });
+        }
+        if (btnNext) {
+          btnNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pauseAndResumeAutoSwipe(5000);
+            advanceNextSlide();
+          });
+        }
 
         // Click on any card smoothly snaps it to center
 
