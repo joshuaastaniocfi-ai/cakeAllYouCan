@@ -7478,6 +7478,14 @@
 
 
 
+      image-rendering: -webkit-optimize-contrast;
+
+
+
+      image-rendering: crisp-edges;
+
+
+
     }
 
 
@@ -7598,11 +7606,11 @@
 
 
 
-      right: 2.8%;
+      left: 87.3%;
 
 
 
-      top: 2.9%;
+      top: 2.7%;
 
 
 
@@ -7622,15 +7630,15 @@
 
 
 
-      font-weight: 700;
+      font-weight: 800;
 
 
 
-      font-size: clamp(6.5px, 1.1vw, 11px);
+      font-size: clamp(6.5px, 1.1vw, 12px);
 
 
 
-      text-shadow: 0 1px 2px rgba(180, 100, 0, 0.45);
+      text-shadow: 0 1px 2px rgba(180, 100, 0, 0.5);
 
 
 
@@ -7638,7 +7646,7 @@
 
 
 
-      text-align: right;
+      text-align: left;
 
 
 
@@ -7666,7 +7674,7 @@
 
 
 
-    /* Cuttable Stub Control Number overlay (Seamless, perfectly positioned below CONTROL NUMBER:) */
+    /* Cuttable Stub Control Number overlay (Seamless, perfectly positioned right below vertical CONTROL NUMBER:) */
 
 
 
@@ -7678,11 +7686,11 @@
 
 
 
-      left: 8.2%;
+      left: 7.3%;
 
 
 
-      top: 76.8%;
+      top: 55.2%;
 
 
 
@@ -7690,7 +7698,7 @@
 
 
 
-      height: 17.5%;
+      height: 32%;
 
 
 
@@ -7750,7 +7758,7 @@
 
 
 
-      font-size: clamp(6px, 0.95vw, 9.5px);
+      font-size: clamp(6.5px, 1.05vw, 11px);
 
 
 
@@ -7762,7 +7770,7 @@
 
 
 
-      text-shadow: 0 1px 2px rgba(160, 100, 0, 0.4);
+      text-shadow: 0 1px 2px rgba(160, 100, 0, 0.45);
 
 
 
@@ -7774,7 +7782,7 @@
 
 
 
-      overflow: hidden;
+      overflow: visible;
 
 
 
@@ -14712,7 +14720,7 @@
 
 
 
-              CONTROL NUMBER: <span id="couponCtrlTop">CAYC0001</span>
+              <span id="couponCtrlTop">CAYC0001</span>
 
 
 
@@ -18380,7 +18388,11 @@
 
 
 
-        ctx.fillText('CONTROL NUMBER: ' + state.controlNo, 1970, 42);
+        ctx.textAlign = 'left';
+
+
+
+        ctx.fillText(state.controlNo, 1795, 42);
 
 
 
@@ -18396,7 +18408,7 @@
 
 
 
-        // Cleanly positioned right below CONTROL NUMBER: without clipping at bottom
+        // Cleanly positioned right below vertical CONTROL NUMBER: without duplicate CAY
 
 
 
@@ -18404,7 +18416,7 @@
 
 
 
-        ctx.translate(196, 718);
+        ctx.translate(178, 520);
 
 
 
@@ -18432,7 +18444,7 @@
 
 
 
-        ctx.font = '800 28px Arial, Poppins, sans-serif';
+        ctx.font = '800 30px Arial, Poppins, sans-serif';
 
 
 
