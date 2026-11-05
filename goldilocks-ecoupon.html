@@ -1917,42 +1917,27 @@
 
 
 
-    .carousel-stage {
-
-
-
+    .carousel-wrapper {
       position: relative;
-
-
-
       width: 100%;
-
-
-
-      max-width: 520px;
-
-
-
       margin: 0 auto;
+    }
 
-
-
+    .carousel-stage {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
       overflow: hidden;
-
-
-
       padding: 6px 0 16px;
-
-
-
     }
 
     .carousel-nav-btn {
       position: absolute;
-      top: calc(50% - 6px);
+      top: calc(50% - 4px);
       transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       background: #ffffff;
       border: 2px solid #fed36c;
@@ -1962,18 +1947,18 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 10;
+      z-index: 15;
       transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
       padding: 0;
       outline: none;
     }
 
     .carousel-nav-btn:hover {
-      background: #ffd500;
+      background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
       color: #4b2608;
       border-color: #fca727;
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: 0 8px 20px rgba(220, 140, 0, 0.35);
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 8px 22px rgba(220, 140, 0, 0.38);
     }
 
     .carousel-nav-btn:active {
@@ -1981,11 +1966,11 @@
     }
 
     .carousel-nav-prev {
-      left: 6px;
+      left: 0;
     }
 
     .carousel-nav-next {
-      right: 6px;
+      right: 0;
     }
 
     @media (max-width: 767px) {
@@ -8758,12 +8743,30 @@
         font-size: 15px;
       }
 
-      .carousel-stage {
-        max-width: 980px;
+      .carousel-wrapper {
+        max-width: 1040px;
         margin: 0 auto;
-        overflow: hidden;
-        padding: 10px 18px 24px;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .carousel-stage {
+        max-width: calc(100% - 110px);
+        margin: 0 55px;
+        overflow: hidden;
+        padding: 10px 0 24px;
+        position: relative;
+        width: 100%;
+      }
+
+      .carousel-nav-prev {
+        left: 0;
+      }
+
+      .carousel-nav-next {
+        right: 0;
       }
 
       .carousel {
@@ -8773,15 +8776,15 @@
       }
 
       .cake-card {
-        flex: 0 0 clamp(280px, 28vw, 320px);
-        width: clamp(280px, 28vw, 320px);
+        flex: 0 0 clamp(270px, 26vw, 305px);
+        width: clamp(270px, 26vw, 305px);
         height: 285px;
         border-radius: 28px;
         padding: 16px 14px 18px;
       }
 
       .cake-card h3 {
-        font-size: clamp(19px, 2vw, 23px);
+        font-size: clamp(18px, 1.9vw, 22px);
         white-space: nowrap;
         letter-spacing: -0.3px;
       }
@@ -13429,11 +13432,12 @@
 
 
 
-        <div class="carousel-stage">
+        <div class="carousel-wrapper">
           <button type="button" class="carousel-nav-btn carousel-nav-prev" id="btnCarouselPrev" aria-label="Previous Cake" title="Previous Cake">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
-          <div class="carousel" id="carousel">
+          <div class="carousel-stage">
+            <div class="carousel" id="carousel">
 
 
 
@@ -13501,6 +13505,7 @@
 
 
 
+            </div>
           </div>
           <button type="button" class="carousel-nav-btn carousel-nav-next" id="btnCarouselNext" aria-label="Next Cake" title="Next Cake">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -16874,11 +16879,12 @@
 
 
 
-        if (carouselEl.parentElement) {
+        const stageWrap = carouselEl.closest(".carousel-wrapper") || carouselEl.parentElement;
+        if (stageWrap) {
 
 
 
-          carouselEl.parentElement.addEventListener('mouseenter', () => {
+          stageWrap.addEventListener('mouseenter', () => {
 
 
 
@@ -16890,7 +16896,7 @@
 
 
 
-          carouselEl.parentElement.addEventListener('mouseleave', () => {
+          stageWrap.addEventListener('mouseleave', () => {
 
 
 
