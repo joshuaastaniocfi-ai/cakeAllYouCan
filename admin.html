@@ -1,4010 +1,8022 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-  <meta charset="UTF-8" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <title>Admin Portal | Goldilocks Cake All You Can</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-  <style>
-
-    :root {
-
-      --primary: #f5a800;
-
-      --primary-dark: #d88f00;
-
-      --primary-light: #fff5d6;
-
-      --brown: #4a2c00;
-
-      --brown-muted: #7d5b28;
-
-      --bg: #f8f6f0;
-
-      --card-bg: #ffffff;
-
-      --border: #ebd9b8;
-
-      --border-light: #f3ecd9;
-
-      --success-bg: #e6f9ed;
-
-      --success-text: #0d7835;
-
-      --warning-bg: #fff3db;
-
-      --warning-text: #b36300;
-
-      --danger-bg: #fde8e8;
-
-      --danger-text: #c81e1e;
-
-      --info-bg: #ebf5ff;
-
-      --info-text: #1e429f;
-
-      --shadow-sm: 0 2px 6px rgba(74, 44, 0, 0.05);
-
-      --shadow-md: 0 6px 18px rgba(74, 44, 0, 0.08);
-
-      --radius: 12px;
-
-      --font-head: 'Fredoka', sans-serif;
-
-      --font-body: 'Poppins', sans-serif;
-
-    }
-
-
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-
-      font-family: var(--font-body);
-
-      background-color: var(--bg);
-
-      color: var(--brown);
-
-      min-height: 100vh;
-
-      line-height: 1.5;
-
-      display: flex;
-
-      flex-direction: column;
-
-    }
-
-
-
-    /* TOP NAVIGATION */
-
-    .navbar {
-
-      background: linear-gradient(100deg, #ffd500 0%, #ff9a2e 100%);
-
-      padding: 12px 24px;
-
-      box-shadow: 0 4px 16px rgba(210, 130, 0, 0.2);
-
-      position: sticky;
-
-      top: 0;
-
-      z-index: 100;
-
-    }
-
-    .navbar-wrap {
-
-      max-width: 1400px;
-
-      margin: 0 auto;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 16px;
-
-    }
-
-    .brand-area { display: flex; align-items: center; gap: 12px; }
-
-    .brand-logo { height: 36px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-
-    .brand-title { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--brown); }
-
-    .brand-tag {
-
-      background: #ffffff; color: var(--brown); font-size: 11px; font-weight: 700;
-
-      padding: 2px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
-
-    }
-
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-
-    .db-badge {
-
-      display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.85);
-
-      border: 1px solid rgba(255, 255, 255, 0.9); padding: 5px 12px; border-radius: 20px;
-
-      font-size: 12px; font-weight: 600; color: #0b692e;
-
-    }
-
-    .db-dot {
-
-      width: 8px; height: 8px; background: #00c853; border-radius: 50%;
-
-      box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.25); animation: pulse 2s infinite;
-
-    }
-
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.15); } }
-
-    .btn-client {
-
-      background: #ffffff; color: var(--brown); border: 1.5px solid var(--border);
-
-      padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
-
-    }
-
-    .btn-client:hover { background: #fff8e5; border-color: var(--primary); transform: translateY(-1px); }
-
-
-
-    /* MAIN CONTAINER */
-
-    .container { max-width: 1400px; width: 100%; margin: 24px auto; padding: 0 20px; flex: 1; }
-
-
-
-    /* KPI METRIC CARDS */
-
-    .metrics-grid {
-
-      display: grid;
-
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-
-      gap: 16px;
-
-      margin-bottom: 24px;
-
-    }
-
-    .metric-card {
-
-      background: var(--card-bg); border: 1.5px solid var(--border-light);
-
-      border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm);
-
-      display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s;
-
-    }
-
-    .metric-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border); }
-
-    .metric-info h4 { font-size: 11.5px; font-weight: 600; color: var(--brown-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-
-    .metric-info .value { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--brown); line-height: 1.1; }
-
-    .metric-info .sub { font-size: 11px; font-weight: 500; color: #887050; margin-top: 4px; }
-
-    .metric-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-
-    .ic-amber  { background: #fff1d6; color: #b35900; }
-
-    .ic-yellow { background: #fff5cc; color: #b37400; }
-
-    .ic-green  { background: #e6f9ed; color: #0d7835; }
-
-    .ic-blue   { background: #ebf5ff; color: #1e429f; }
-
-    .ic-purple { background: #f3ebff; color: #6929c4; }
-
-
-
-    /* TAB NAVIGATION */
-
-    .tabs-bar {
-
-      display: flex; align-items: center; justify-content: space-between;
-
-      border-bottom: 2px solid var(--border-light); margin-bottom: 20px; gap: 16px; flex-wrap: wrap;
-
-    }
-
-    .tabs-nav { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .tab-btn {
-
-      background: transparent; border: none; padding: 10px 18px; font-family: var(--font-body);
-
-      font-size: 14px; font-weight: 600; color: var(--brown-muted); cursor: pointer;
-
-      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
-
-      display: inline-flex; align-items: center; gap: 8px;
-
-    }
-
-    .tab-btn:hover { color: var(--brown); background: rgba(245, 168, 0, 0.08); border-radius: 8px 8px 0 0; }
-
-    .tab-btn.active { color: var(--brown); border-bottom-color: var(--primary); font-weight: 700; }
-
-    .tab-badge {
-
-      background: var(--border-light); color: var(--brown); font-size: 11px; font-weight: 700;
-
-      padding: 2px 7px; border-radius: 10px;
-
-    }
-
-    .tab-btn.active .tab-badge { background: var(--primary); color: #fff; }
-
-    .tab-badge.badge-alert { background: #ff4747; color: #fff; animation: pulseAlert 2s infinite; }
-
-    @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-
-
-    /* TOOLBAR CONTROLS */
-
-    .table-toolbar {
-
-      display: flex; align-items: center; justify-content: space-between; gap: 14px;
-
-      margin-bottom: 16px; flex-wrap: wrap;
-
-    }
-
-    .search-input-wrap { position: relative; flex: 1; min-width: 260px; max-width: 440px; }
-
-    .search-input-wrap input {
-
-      width: 100%; padding: 9px 14px 9px 36px; font-family: var(--font-body); font-size: 13px;
-
-      border: 1.5px solid var(--border); border-radius: 8px; background: #ffffff; color: var(--brown); outline: none;
-
-    }
-
-    .search-input-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2); }
-
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #a0845c; pointer-events: none; }
-
-    .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-    .filter-select {
-
-      padding: 9px 12px; font-family: var(--font-body); font-size: 13px; font-weight: 500;
-
-      border: 1.5px solid var(--border); border-radius: 8px; background: #ffffff; color: var(--brown); outline: none;
-
-    }
-
-    .btn {
-
-      padding: 9px 16px; font-family: var(--font-body); font-size: 13px; font-weight: 600;
-
-      border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center;
-
-      gap: 6px; transition: all 0.2s; white-space: nowrap;
-
-    }
-
-    .btn-primary { background: var(--primary); color: var(--brown); font-weight: 700; }
-
-    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-
-    .btn-success { background: #00c853; color: #ffffff; font-weight: 700; }
-
-    .btn-success:hover { background: #00a844; transform: translateY(-1px); }
-
-    .btn-secondary { background: #ffffff; color: var(--brown); border: 1.5px solid var(--border); }
-
-    .btn-secondary:hover { background: #fff8e8; border-color: var(--primary); }
-
-    .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
-
-    .btn-danger { background: #dc2626; color: #ffffff; font-weight: 700; border: none; }
-
-    .btn-danger:hover { background: #b91c1c; transform: translateY(-1px); }
-
-    .btn-decline-act { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-
-    .btn-decline-act:hover { background: #fecaca; border-color: #f87171; }
-
-
-
-    /* DATA TABLE */
-
-    .table-card {
-
-      background: var(--card-bg); border: 1.5px solid var(--border-light);
-
-      border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;
-
-    }
-
-    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-
-    thead { background: #fffcf5; border-bottom: 2px solid var(--border-light); }
-
-    th { padding: 12px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--brown-muted); white-space: nowrap; }
-
-    td { padding: 14px 16px; border-bottom: 1px solid var(--border-light); color: var(--brown); vertical-align: middle; }
-
-    tbody tr:hover { background-color: #fffdf9; }
-
-    tbody tr:last-child td { border-bottom: none; }
-
-
-
-    /* BADGES */
-
-    .badge {
-
-      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px;
-
-      font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.4px;
-
-    }
-
-    .badge-active  { background: var(--success-bg); color: var(--success-text); border: 1px solid #b7ebd0; }
-
-    .badge-used    { background: var(--warning-bg); color: var(--warning-text); border: 1px solid #f9dab0; }
-
-    
-
-    /* Animated Rotating Hourglass */
-
-    @keyframes hourglassFlip {
-
-      0% {
-
-        transform: rotate(0deg) scale(1);
-
-      }
-
-      12% {
-
-        transform: rotate(0deg) scale(1.06);
-
-      }
-
-      42% {
-
-        transform: rotate(180deg) scale(1.14);
-
-      }
-
-      55% {
-
-        transform: rotate(180deg) scale(1);
-
-      }
-
-      68% {
-
-        transform: rotate(180deg) scale(1.06);
-
-      }
-
-      92% {
-
-        transform: rotate(360deg) scale(1.14);
-
-      }
-
-      100% {
-
-        transform: rotate(360deg) scale(1);
-
-      }
-
-    }
-
-
-
-    @keyframes hourglassPulseGlow {
-
-      0%, 100% {
-
-        box-shadow: 0 4px 16px rgba(245, 168, 0, 0.25);
-
-        transform: scale(1);
-
-      }
-
-      50% {
-
-        box-shadow: 0 8px 28px rgba(245, 168, 0, 0.45);
-
-        transform: scale(1.03);
-
-      }
-
-    }
-
-
-
-    .animated-hourglass-wrap {
-
-      display: inline-flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      width: 88px;
-
-      height: 88px;
-
-      border-radius: 50%;
-
-      background: radial-gradient(circle, #fff9e6 0%, #fff1c7 75%, #fedc84 100%);
-
-      border: 2.5px solid #f5a800;
-
-      box-shadow: 0 6px 22px rgba(245, 168, 0, 0.3);
-
-      animation: hourglassPulseGlow 2.6s ease-in-out infinite;
-
-      user-select: none;
-
-    }
-
-
-
-    .animated-hourglass {
-
-      display: inline-block;
-
-      line-height: 1;
-
-      animation: hourglassFlip 2.5s cubic-bezier(0.68, -0.4, 0.27, 1.4) infinite;
-
-      transform-origin: 50% 50%;
-
-      will-change: transform;
-
-      user-select: none;
-
-    }
-
-
-
-    .animated-hourglass.lg {
-
-      font-size: 48px;
-
-    }
-
-
-
-    .animated-hourglass.sm {
-
-      font-size: 13px;
-
-      animation-duration: 2.2s;
-
-      vertical-align: middle;
-
-      display: inline-block;
-
-    }
-
-
-
-    .badge-pending { background: #fff4d9; color: #b86200; border: 1px solid #fed288; }
-
-    .badge-revoked { background: var(--danger-bg);  color: var(--danger-text);  border: 1px solid #f8b4b4; }
-
-    .badge-ctrl {
-
-      background: #fdf5e2; color: #925400; border: 1px solid #f2c974;
-
-      font-family: var(--font-head); font-weight: 700; font-size: 12px;
-
-      letter-spacing: 0.5px; padding: 2px 8px; border-radius: 6px;
-
-    }
-
-    .badge-code {
-
-      background: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb;
-
-      font-family: monospace; font-weight: 700; font-size: 13px;
-
-      padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;
-
-    }
-
-    .badge-code .copy-icon { cursor: pointer; opacity: 0.5; }
-
-    .badge-code .copy-icon:hover { opacity: 1; }
-
-
-
-    .receipt-thumb {
-
-      width: 48px; height: 48px; border-radius: 6px; object-fit: cover;
-
-      border: 1px solid #e2cb98; cursor: pointer; transition: transform 0.2s;
-
-    }
-
-    .receipt-thumb:hover { transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-
-
-
-    .guest-name-cell { font-weight: 600; color: var(--brown); }
-
-    .guest-sub { font-size: 11px; color: var(--brown-muted); margin-top: 2px; }
-
-    .email-cell { color: #0d5cc7; font-weight: 600; font-size: 12.5px; }
-
-
-
-    .empty-state { padding: 48px 20px; text-align: center; color: var(--brown-muted); }
-
-    .empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.6; }
-
-
-
-    /* ACTION BUTTONS */
-
-    .action-btn-row { display: flex; align-items: center; gap: 6px; }
-
-    .btn-action {
-
-      background: #ffffff; border: 1px solid var(--border); border-radius: 6px;
-
-      padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--brown); transition: all 0.2s;
-
-    }
-
-    .btn-action:hover { background: #fdf4df; border-color: var(--primary); }
-
-    .btn-action.btn-verify-act { background: #00c853; color: #fff; border-color: #00a844; }
-
-    .btn-action.btn-verify-act:hover { background: #009e40; }
-
-    .btn-action.danger:hover { background: var(--danger-bg); border-color: #f98080; color: var(--danger-text); }
-
-
-
-    /* MODAL */
-
-    .modal-overlay {
-
-      position: fixed; inset: 0; background: rgba(43, 25, 0, 0.45); backdrop-filter: blur(4px);
-
-      z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px;
-
-    }
-
-    .modal-overlay.open { display: flex; }
-
-    .modal-card {
-
-      background: #ffffff; border-radius: 16px; max-width: 580px; width: 100%;
-
-      box-shadow: 0 16px 36px rgba(0,0,0,0.2); border: 1.5px solid var(--border);
-
-      overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;
-
-    }
-
-    .modal-header {
-
-      padding: 18px 20px; background: #fffcf5; border-bottom: 1.5px solid var(--border-light);
-
-      display: flex; align-items: center; justify-content: space-between;
-
-    }
-
-    .modal-header h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--brown); }
-
-    .btn-close { background: transparent; border: none; font-size: 20px; color: var(--brown-muted); cursor: pointer; }
-
-    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
-
-    .modal-footer {
-
-      padding: 14px 20px; background: #fffcf5; border-top: 1.5px solid var(--border-light);
-
-      display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; box-sizing: border-box;
-
-    }
-
-    #reviewModalFooter {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #reviewModalFooter .btn-danger {
-      flex: 0 1 auto;
-      white-space: nowrap;
-    }
-
-    #reviewModalFooter .btn-success {
-      flex: 1 1 auto;
-      text-align: center;
-      justify-content: center;
-      min-width: 220px;
-    }
-
-
-
-    .form-group { margin-bottom: 14px; }
-
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--brown); margin-bottom: 6px; }
-
-    .form-group input, .form-group select {
-
-      width: 100%; padding: 10px 12px; font-family: var(--font-body); font-size: 14px;
-
-      border: 1.5px solid var(--border); border-radius: 8px; background: #fffdf9; color: var(--brown); outline: none;
-
-    }
-
-    .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2); }
-
-
-
-    /* DETAIL GRID */
-
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-
-    .detail-box { background: #fffdf8; border: 1px solid var(--border-light); padding: 9px 12px; border-radius: 8px; }
-
-    .detail-box label { font-size: 10.5px; font-weight: 700; color: var(--brown-muted); text-transform: uppercase; display: block; margin-bottom: 2px; }
-
-    .detail-box span { font-size: 13px; font-weight: 600; color: var(--brown); display: block; word-break: break-word; }
-
-
-
-    .receipt-full-preview {
-
-      margin-top: 10px; border: 1.5px solid #ecd8af; border-radius: 10px;
-
-      background: #faf7ef; padding: 10px; text-align: center;
-
-    }
-
-    .receipt-full-preview img {
-
-      max-height: 280px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: 0 auto;
-
-    }
-
-
-
-    /* TOAST */
-
-    .toast {
-
-      position: fixed; bottom: 24px; right: 24px; background: #2b1900; color: #ffffff;
-
-      padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
-
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 300; display: none; align-items: center; gap: 8px;
-
-    }
-
-    .toast.show { display: flex; animation: toastIn 0.25s ease-out; }
-
-    @keyframes toastIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-
-
-    /* ==========================================================================
-
-       MOBILE RESPONSIVE STYLES
-
-       ========================================================================== */
-
-    .table-scroll-hint {
-
-      display: none;
-
-      background: #fff8e2;
-
-      color: #8f5200;
-
-      font-size: 11px;
-
-      font-weight: 600;
-
-      padding: 6px 14px;
-
-      border-bottom: 1px solid var(--border-light);
-
-      align-items: center;
-
-      justify-content: space-between;
-
-    }
-
-
-
-    @media (max-width: 992px) {
-
-      .navbar { padding: 12px 16px; }
-
-      .container { padding: 0 16px; margin: 18px auto; }
-
-      .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-
-    }
-
-
-
-    @media (max-width: 768px) {
-
-      /* TOP NAVIGATION */
-
-      .navbar {
-
-        padding: 10px 14px;
-
-      }
-
-      .navbar-wrap {
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 10px;
-
-      }
-
-      .brand-area {
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        width: 100%;
-
-      }
-
-      .brand-logo {
-
-        height: 30px;
-
-      }
-
-      .brand-title {
-
-        font-size: 16px;
-
-      }
-
-      .brand-tag {
-
-        font-size: 10px;
-
-        padding: 2px 6px;
-
-      }
-
-      .nav-actions {
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        width: 100%;
-
-        gap: 6px;
-
-      }
-
-      .db-badge {
-
-        font-size: 11px;
-
-        padding: 4px 8px;
-
-      }
-
-      .btn-client {
-
-        font-size: 11.5px;
-
-        padding: 6px 10px;
-
-      }
-
-
-
-      /* CONTAINER */
-
-      .container {
-
-        padding: 0 10px;
-
-        margin: 12px auto;
-
-      }
-
-
-
-      /* KPI SUMMARY METRICS (2-column mobile grid) */
-
-      .metrics-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 10px;
-
-        margin-bottom: 16px;
-
-      }
-
-      .metric-card {
-
-        padding: 12px 12px;
-
-      }
-
-      /* Featured Pending Card takes full width */
-
-      .metric-card:first-child {
-
-        grid-column: span 2;
-
-        background: #fffdf8;
-
-      }
-
-      .metric-info h4 {
-
-        font-size: 10px;
-
-        margin-bottom: 2px;
-
-      }
-
-      .metric-info .value {
-
-        font-size: 22px;
-
-      }
-
-      .metric-info .sub {
-
-        font-size: 10px;
-
-        margin-top: 2px;
-
-      }
-
-      .metric-icon {
-
-        width: 40px;
-
-        height: 40px;
-
-        font-size: 18px;
-
-        border-radius: 10px;
-
-      }
-
-
-
-      /* TABS - HORIZONTAL SMOOTH TOUCH SCROLLER */
-
-      .tabs-bar {
-
-        margin-bottom: 12px;
-
-        border-bottom: 1.5px solid var(--border-light);
-
-        padding-bottom: 0;
-
-      }
-
-      .tabs-nav {
-
-        display: flex;
-
-        flex-wrap: nowrap;
-
-        overflow-x: auto;
-
-        -webkit-overflow-scrolling: touch;
-
-        gap: 4px;
-
-        width: 100%;
-
-        padding-bottom: 4px;
-
-        scrollbar-width: none;
-
-      }
-
-      .tabs-nav::-webkit-scrollbar {
-
-        display: none;
-
-      }
-
-      .tab-btn {
-
-        padding: 8px 12px;
-
-        font-size: 12.5px;
-
-        white-space: nowrap;
-
-        flex-shrink: 0;
-
-      }
-
-      .tab-badge {
-
-        font-size: 10px;
-
-        padding: 1px 6px;
-
-      }
-
-
-
-      /* TOOLBAR */
-
-      .table-toolbar {
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 8px;
-
-        margin-bottom: 12px;
-
-      }
-
-      .search-input-wrap {
-
-        width: 100%;
-
-        max-width: 100%;
-
-        min-width: 0;
-
-      }
-
-      .search-input-wrap input {
-
-        font-size: 13px;
-
-        padding: 9px 12px 9px 34px;
-
-      }
-
-      .filter-group {
-
-        width: 100%;
-
-        display: flex;
-
-        flex-wrap: wrap;
-
-        gap: 8px;
-
-      }
-
-      .filter-select {
-
-        flex: 1;
-
-        min-width: 130px;
-
-        font-size: 12px;
-
-        padding: 8px 10px;
-
-      }
-
-      .filter-group .btn {
-
-        flex: 1;
-
-        justify-content: center;
-
-        font-size: 12px;
-
-        padding: 8px 12px;
-
-      }
-
-
-
-      /* DATA TABLE MOBILE ENHANCEMENTS */
-
-      .table-card {
-
-        border-radius: 10px;
-
-      }
-
-      .table-scroll-hint {
-
-        display: flex;
-
-      }
-
-      table {
-
-        font-size: 12px;
-
-      }
-
-      th {
-
-        padding: 10px 12px;
-
-        font-size: 10px;
-
-      }
-
-      td {
-
-        padding: 10px 12px;
-
-      }
-
-      .receipt-thumb {
-
-        width: 42px;
-
-        height: 42px;
-
-      }
-
-      .btn-action {
-
-        padding: 6px 10px;
-
-        font-size: 11.5px;
-
-      }
-
-
-
-      /* MODALS (MOBILE ADAPTIVE) */
-
-      .modal-overlay {
-
-        padding: 12px 8px;
-
-        align-items: flex-end;
-
-      }
-
-      .modal-card {
-
-        max-height: calc(100dvh - 24px);
-
-        border-radius: 16px 16px 10px 10px;
-
-        width: 100%;
-
-      }
-
-      .modal-header {
-
-        padding: 14px 16px;
-
-      }
-
-      .modal-header h3 {
-
-        font-size: 16px;
-
-      }
-
-      .modal-body {
-
-        padding: 14px 16px;
-
-      }
-
-      .detail-grid {
-
-        grid-template-columns: 1fr;
-
-        gap: 8px;
-
-      }
-
-      .detail-box label {
-
-        font-size: 10px;
-
-      }
-
-      .detail-box span {
-
-        font-size: 12.5px;
-
-      }
-
-      .receipt-full-preview img {
-
-        max-height: 220px;
-
-      }
-
-      .modal-footer {
-
-        padding: 12px 16px;
-
-        flex-direction: column-reverse;
-
-        gap: 8px;
-
-      }
-
-      .modal-footer .btn {
-
-        width: 100%;
-
-        justify-content: center;
-
-        padding: 11px 16px;
-
-        font-size: 13px;
-
-      }
-
-
-
-      /* TOAST NOTIFICATION */
-
-      .toast {
-
-        left: 12px;
-
-        right: 12px;
-
-        bottom: 12px;
-
-        width: auto;
-
-        max-width: calc(100% - 24px);
-
-        text-align: center;
-
-        justify-content: center;
-
-        font-size: 12px;
-
-        padding: 10px 16px;
-
-      }
-
-    }
-
-
-
-    @media (max-width: 400px) {
-
-      .brand-tag {
-
-        display: none;
-
-      }
-
-      .brand-title {
-
-        font-size: 15px;
-
-      }
-
-      .metrics-grid {
-
-        grid-template-columns: 1fr;
-
-      }
-
-      .metric-card:first-child {
-
-        grid-column: span 1;
-
-      }
-
-    }
-
-
-
-    /* ── ADMIN LOGIN GATEWAY MODAL ── */
-
-    .login-gate-overlay {
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 99999;
-
-      background: rgba(30, 16, 2, 0.78);
-
-      backdrop-filter: blur(14px);
-
-      -webkit-backdrop-filter: blur(14px);
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-
-    }
-
-    .login-card {
-
-      background: #ffffff;
-
-      border-radius: 24px;
-
-      max-width: 440px;
-
-      width: 100%;
-
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(245, 168, 0, 0.35);
-
-      border: 2px solid #ffd56b;
-
-      padding: 34px 30px 24px;
-
-      position: relative;
-
-      animation: popIn .25s ease-out;
-
-    }
-
-    .login-header {
-
-      text-align: center;
-
-      margin-bottom: 22px;
-
-    }
-
-    .login-logo {
-
-      height: 48px;
-
-      width: auto;
-
-      object-fit: contain;
-
-      margin-bottom: 12px;
-
-    }
-
-    .login-header h2 {
-
-      font-family: var(--font-head);
-
-      font-size: 22px;
-
-      font-weight: 800;
-
-      color: var(--brown);
-
-      margin: 0 0 4px;
-
-    }
-
-    .login-header p {
-
-      font-size: 13px;
-
-      color: var(--brown-muted);
-
-      margin: 0;
-
-      line-height: 1.4;
-
-    }
-
-    .login-error-alert {
-
-      background: #fef2f2;
-
-      border: 1.5px solid #fca5a5;
-
-      color: #b91c1c;
-
-      padding: 10px 14px;
-
-      border-radius: 12px;
-
-      font-size: 13px;
-
-      font-weight: 600;
-
-      margin-bottom: 16px;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      animation: shake .3s ease;
-
-    }
-
-    .input-with-icon {
-
-      position: relative;
-
-      display: flex;
-
-      align-items: center;
-
-    }
-
-    .input-with-icon .input-icon {
-
-      position: absolute;
-
-      left: 14px;
-
-      font-size: 15px;
-
-      pointer-events: none;
-
-      user-select: none;
-
-    }
-
-    .input-with-icon input {
-
-      width: 100%;
-
-      padding: 12px 42px 12px 42px;
-
-      border: 1.5px solid var(--border);
-
-      border-radius: 12px;
-
-      font-size: 14px;
-
-      font-family: inherit;
-
-      color: var(--brown);
-
-      background: #fffdf8;
-
-      transition: border-color .2s, box-shadow .2s;
-
-    }
-
-    .input-with-icon input:focus {
-
-      border-color: var(--gold);
-
-      outline: none;
-
-      box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2);
-
-    }
-
-    .btn-toggle-pwd {
-
-      position: absolute;
-
-      right: 12px;
-
-      background: transparent;
-
-      border: none;
-
-      cursor: pointer;
-
-      font-size: 16px;
-
-      color: var(--brown-muted);
-
-      padding: 4px;
-
-      line-height: 1;
-
-    }
-
-    .login-footer {
-
-      margin-top: 20px;
-
-      padding-top: 14px;
-
-      border-top: 1px dashed var(--border-light);
-
-      text-align: center;
-
-      font-size: 11.5px;
-
-      color: var(--brown-muted);
-
-    }
-
-    @keyframes popIn {
-
-      from { opacity: 0; transform: scale(0.95) translateY(10px); }
-
-      to { opacity: 1; transform: scale(1) translateY(0); }
-
-    }
-
-    @keyframes shake {
-
-      0%, 100% { transform: translateX(0); }
-
-      20%, 60% { transform: translateX(-6px); }
-
-      40%, 80% { transform: translateX(6px); }
-
-    }
-
-
-
-  </style>
-
-</head>
-
-<body>
-
-
-
-  <!-- TOP HEADER -->
-
-  <header class="navbar">
-
-    <div class="navbar-wrap">
-
-      <div class="brand-area">
-
-        <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="brand-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
-
-        <span class="brand-title">Cake All You Can</span>
-
-        <span class="brand-tag">Admin Verification Portal</span>
-
-      </div>
-
-      <div class="nav-actions">
-
-        <div class="db-badge" title="Live connection to MongoDB database: goldilocks_ecoupon">
-
-          <span class="db-dot"></span>
-
-          <span>MongoDB Live</span>
-
-        </div>
-
-        <button class="btn btn-secondary btn-sm" id="btnRefresh" title="Refresh Live Data">
-
-          🔄 Refresh
-
-        </button>
-
-        <a href="/" class="btn-client" target="_blank" title="Open Customer E-Coupon Screen">
-
-          🎟️ Customer App ↗
-
-        </a>
-
-        <div class="user-pill" id="adminUserPill" style="display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.7);padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:700;color:var(--brown);border:1px solid var(--border);">
-
-          <span>👤</span> <span id="adminUsernameDisplay">admin</span>
-
-        </div>
-
-        <button class="btn btn-secondary btn-sm" id="btnAdminLogout" title="Log Out from Admin Portal" style="display:none;background:#fff2f2;color:#b91c1c;border-color:#fca5a5;">
-
-          🚪 Log Out
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-
-  <main class="container">
-
-
-
-    <!-- KPI SUMMARY METRICS -->
-
-    <section class="metrics-grid">
-
-      <div class="metric-card" style="border-left: 4px solid #ff9a2e;">
-
-        <div class="metric-info">
-
-          <h4>Pending Verifications</h4>
-
-          <div class="value" id="kpiPending" style="color:#b86200;">0</div>
-
-          <div class="sub">QR receipts awaiting review</div>
-
-        </div>
-
-        <div class="metric-icon ic-amber">⏳</div>
-
-      </div>
-
-
-
-      <div class="metric-card">
-
-        <div class="metric-info">
-
-          <h4>Coupons Issued</h4>
-
-          <div class="value" id="kpiCoupons">0</div>
-
-          <div class="sub">Total registered guests</div>
-
-        </div>
-
-        <div class="metric-icon ic-yellow">🎟️</div>
-
-      </div>
-
-
-
-      <div class="metric-card">
-
-        <div class="metric-info">
-
-          <h4>Total Revenue</h4>
-
-          <div class="value" id="kpiRevenue">₱0.00</div>
-
-          <div class="sub">₱499.00 per customer</div>
-
-        </div>
-
-        <div class="metric-icon ic-green">💰</div>
-
-      </div>
-
-
-
-      <div class="metric-card">
-
-        <div class="metric-info">
-
-          <h4>Active Auth Codes</h4>
-
-          <div class="value" id="kpiActiveCodes">0</div>
-
-          <div class="sub">Ready for cashier use</div>
-
-        </div>
-
-        <div class="metric-icon ic-blue">🔑</div>
-
-      </div>
-
-
-
-      <div class="metric-card">
-
-        <div class="metric-info">
-
-          <h4>Redeemed Codes</h4>
-
-          <div class="value" id="kpiUsedCodes">0</div>
-
-          <div class="sub">Cash payments verified</div>
-
-        </div>
-
-        <div class="metric-icon ic-purple">✅</div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- TABS BAR -->
-
-    <div class="tabs-bar">
-
-      <div class="tabs-nav">
-
-        <button class="tab-btn active" data-tab="tab-pending">
-
-          <span>⏳ Pending Verifications</span>
-
-          <span class="tab-badge badge-alert" id="tabBadgePending">0</span>
-
-        </button>
-
-        <button class="tab-btn" data-tab="tab-coupons">
-
-          <span>👥 Issued E-Coupons</span>
-
-          <span class="tab-badge" id="tabBadgeCoupons">0</span>
-
-        </button>
-
-        <button class="tab-btn" data-tab="tab-codes">
-
-          <span>🔑 Authorization Codes</span>
-
-          <span class="tab-badge" id="tabBadgeCodes">0</span>
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- TAB 1: PENDING VERIFICATIONS (QR PAYMENTS AWAITING APPROVAL) -->
-
-    <section id="tab-pending" class="tab-content">
-
-      <div class="table-toolbar">
-
-        <div class="search-input-wrap">
-
-          <span class="search-icon">🔍</span>
-
-          <input type="text" id="pendingSearch" placeholder="Search by name, Gmail, mobile, tracking no..." />
-
-        </div>
-
-        <div class="filter-group">
-
-          <select class="filter-select" id="pendingStatusFilter">
-
-            <option value="pending" selected>Pending Review Only</option>
-
-            <option value="all">All Verification Records</option>
-
-            <option value="approved">Approved Only</option>
-
-            <option value="declined">Declined Only</option>
-
-          </select>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="table-card">
-
-        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
-
-        <div class="table-responsive">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>Tracking No.</th>
-
-                <th>Guest Name</th>
-
-                <th>Customer Gmail</th>
-
-                <th>Mobile Number</th>
-
-                <th>Amount</th>
-
-                <th>Payment Receipt</th>
-
-                <th>Status</th>
-
-                <th>Submitted At</th>
-
-                <th>Actions</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody id="pendingTableBody">
-
-              <tr>
-
-                <td colspan="9" class="empty-state">
-
-                  <div class="empty-icon">⏳</div>
-
-                  <div>Loading pending payments from MongoDB...</div>
-
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- TAB 2: ISSUED CUSTOMER E-COUPONS MONITOR -->
-
-    <section id="tab-coupons" class="tab-content" style="display: none;">
-
-      <div class="table-toolbar">
-
-        <div class="search-input-wrap">
-
-          <span class="search-icon">🔍</span>
-
-          <input type="text" id="couponSearch" placeholder="Search by name, Gmail, mobile, control no..." />
-
-        </div>
-
-        <div class="filter-group">
-
-          <select class="filter-select" id="couponPayFilter">
-
-            <option value="">All Payment Types</option>
-
-            <option value="cash">Cash at Store</option>
-
-            <option value="qr">QRPh Online Transfer</option>
-
-          </select>
-
-          <button class="btn btn-secondary" id="btnExportCoupons">
-
-            📥 Export CSV
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="table-card">
-
-        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
-
-        <div class="table-responsive">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>Control No.</th>
-
-                <th>Guest Name</th>
-
-                <th>Gmail Address</th>
-
-                <th>Mobile Number</th>
-
-                <th>Method</th>
-
-                <th>Auth Code / Txn</th>
-
-                <th>Amount</th>
-
-                <th>Issued At</th>
-
-                <th>Actions</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody id="couponsTableBody">
-
-              <tr>
-
-                <td colspan="9" class="empty-state">
-
-                  <div class="empty-icon">⏳</div>
-
-                  <div>Loading issued e-coupons from MongoDB...</div>
-
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- TAB 3: AUTHORIZATION CODES MANAGER -->
-
-    <section id="tab-codes" class="tab-content" style="display: none;">
-
-      <div class="table-toolbar">
-
-        <div class="search-input-wrap">
-
-          <span class="search-icon">🔍</span>
-
-          <input type="text" id="codeSearch" placeholder="Search code (e.g. 1234), branch, guest name..." />
-
-        </div>
-
-        <div class="filter-group">
-
-          <select class="filter-select" id="codeStatusFilter">
-
-            <option value="">All Statuses</option>
-
-            <option value="active">Active (Available)</option>
-
-            <option value="used">Used (Redeemed)</option>
-
-            <option value="revoked">Revoked</option>
-
-          </select>
-
-          <button class="btn btn-secondary" id="btnBatchModal">
-
-            🎲 Batch Generate
-
-          </button>
-
-          <button class="btn btn-primary" id="btnAddCodeModal">
-
-            ➕ Add Single Code
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="table-card">
-
-        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
-
-        <div class="table-responsive">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>Accepted Code</th>
-
-                <th>Status</th>
-
-                <th>Branch &amp; Notes</th>
-
-                <th>Redeemed By</th>
-
-                <th>E-Coupon Issued</th>
-
-                <th>Redeemed At</th>
-
-                <th>Actions</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody id="codesTableBody">
-
-              <tr>
-
-                <td colspan="7" class="empty-state">
-
-                  <div class="empty-icon">⏳</div>
-
-                  <div>Loading authorization codes from MongoDB...</div>
-
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-  </main>
-
-
-
-  <!-- MODAL: ADMIN LOGIN GATEWAY -->
-
-  <div class="login-gate-overlay" id="modalAdminLogin" style="display:flex;">
-
-    <div class="login-card">
-
-      <div class="login-header">
-
-        <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="login-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
-
-        <h2>Store Admin Portal</h2>
-
-        <p>Cake All You Can Verification &amp; E-Coupon Management</p>
-
-      </div>
-
-      <form id="formAdminLogin" novalidate>
-
-        <div id="loginErrorAlert" class="login-error-alert" style="display:none;">
-
-          <span>⚠️</span> <span id="loginErrorText">Invalid username or password.</span>
-
-        </div>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-
-          <label for="adminUsernameInput">Manager Username *</label>
-
-          <div class="input-with-icon">
-
-            <span class="input-icon">👤</span>
-
-            <input type="text" id="adminUsernameInput" placeholder="e.g. admin" autocomplete="username" required />
-
-          </div>
-
-        </div>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-
-          <label for="adminPasswordInput">Password *</label>
-
-          <div class="input-with-icon">
-
-            <span class="input-icon">🔒</span>
-
-            <input type="password" id="adminPasswordInput" placeholder="Enter manager password" autocomplete="current-password" required />
-
-            <button type="button" class="btn-toggle-pwd" id="btnToggleLoginPwd" title="Show/Hide Password">👁️</button>
-
-          </div>
-
-        </div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-
-          <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--brown-muted);cursor:pointer;user-select:none;">
-
-            <input type="checkbox" id="adminRememberMe" checked style="accent-color:var(--gold);" />
-
-            <span>Remember me</span>
-
-          </label>
-
-          
-
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-full" id="btnAdminLoginSubmit" style="padding:13px;font-size:14.5px;font-weight:700;box-shadow:0 6px 18px rgba(245,168,0,0.35);">
-
-          🔐 Sign In to Admin Portal
-
-        </button>
-
-      </form>
-
-      <div class="login-footer">
-
-        🔒 Authorized store managers &amp; cashiers only. All actions are logged.
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- MODAL: REVIEW PENDING VERIFICATION -->
-
-  <div class="modal-overlay" id="modalReviewPending">
-
-    <div class="modal-card" style="max-width: 680px; width: 100%;">
-
-      <div class="modal-header">
-
-        <h3 id="revModalTitle">Review Payment Proof</h3>
-
-        <button class="btn-close" data-close="modalReviewPending">&times;</button>
-
-      </div>
-
-      <div class="modal-body" id="reviewModalBody">
-
-        <!-- Dynamically injected -->
-
-      </div>
-
-      <div class="modal-footer" id="reviewModalFooter">
-
-        <!-- Dynamically injected actions -->
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- MODAL: DECLINE PAYMENT VERIFICATION -->
-
-  <div class="modal-overlay" id="modalDeclineVerification">
-
-    <div class="modal-card" style="max-width: 480px;">
-
-      <div class="modal-header">
-
-        <h3 style="color:#b91c1c;">✕ Decline Payment Verification</h3>
-
-        <button class="btn-close" data-close="modalDeclineVerification">&times;</button>
-
-      </div>
-
-      <form id="formDeclineVerification">
-
-        <input type="hidden" id="declineItemId" value="" />
-
-        <div class="modal-body">
-
-          <div style="background:#fee2e2;border:1px solid #fca5a5;padding:12px;border-radius:8px;margin-bottom:14px;font-size:12.5px;color:#991b1b;line-height:1.4;">
-
-            Setting the status to <b>Declined</b> will update the customer's reservation tracking status and save your reason note.
-
-          </div>
-
-          <div class="form-group" style="margin-bottom:14px;">
-
-            <label style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Transaction</label>
-
-            <div id="declineGuestSummary" style="font-size:13.5px;font-weight:700;color:var(--brown);background:#fbfbfb;border:1px solid #e5e7eb;padding:10px 12px;border-radius:8px;"></div>
-
-          </div>
-
-          <div class="form-group" style="margin-bottom:14px;">
-
-            <label for="declinePresetReason" style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Select Reason Preset</label>
-
-            <select class="filter-select" id="declinePresetReason" style="width:100%;font-size:13px;padding:8px 10px;">
-
-              <option value="Receipt screenshot is blurry, cropped, or unreadable.">Receipt screenshot is blurry, cropped, or unreadable</option>
-
-              <option value="Transferred amount does not match the ₱499.00 promo pass price.">Transferred amount does not match ₱499.00</option>
-
-              <option value="Invalid reference number or duplicate proof already submitted.">Invalid reference number / duplicate receipt</option>
-
-              <option value="Payment was sent to incorrect QR or non-Robinsons Tacloban account.">Incorrect QR or merchant account</option>
-
-              <option value="custom">Other reason (write custom note below)...</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="declineReasonNotes" style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Reason Note for Customer *</label>
-
-            <textarea id="declineReasonNotes" rows="3" class="filter-select" style="width:100%;resize:vertical;font-family:inherit;padding:10px;font-size:13px;line-height:1.4;" required placeholder="Enter note explaining why payment was declined..."></textarea>
-
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-secondary" data-close="modalDeclineVerification">Cancel</button>
-
-          <button type="submit" class="btn btn-danger" id="btnSubmitDecline" style="background:#dc2626;color:#ffffff;display:inline-flex;align-items:center;gap:6px;">
-
-            ✕ Set Status as Declined
-
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- MODAL: ADD SINGLE CODE -->
-
-  <div class="modal-overlay" id="modalAddCode">
-
-    <div class="modal-card" style="max-width: 480px;">
-
-      <div class="modal-header">
-
-        <h3>Add New Authorization Code</h3>
-
-        <button class="btn-close" data-close="modalAddCode">&times;</button>
-
-      </div>
-
-      <form id="formAddCode">
-
-        <div class="modal-body">
-
-          <div class="form-group">
-
-            <label for="newCodeVal">Accepted Number Combination *</label>
-
-            <div style="display:flex;gap:8px;">
-
-              <input type="text" id="newCodeVal" maxlength="8" placeholder="e.g. 1234 or 8821" required style="font-family:monospace;font-size:16px;font-weight:700;" />
-
-              <button type="button" class="btn btn-secondary btn-sm" id="btnRandomCode">🎲 Random</button>
-
-            </div>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="newCodeBranch">Branch</label>
-
-            <input type="text" id="newCodeBranch" value="Goldilocks Robinsons Tacloban" />
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="newCodeDesc">Register / Description</label>
-
-            <input type="text" id="newCodeDesc" placeholder="e.g. Counter 4 Code, Special Promo" />
-
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-secondary" data-close="modalAddCode">Cancel</button>
-
-          <button type="submit" class="btn btn-primary">Save to MongoDB</button>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- MODAL: BATCH GENERATE CODES -->
-
-  <div class="modal-overlay" id="modalBatchCode">
-
-    <div class="modal-card" style="max-width: 480px;">
-
-      <div class="modal-header">
-
-        <h3>Batch Generate Authorization Codes</h3>
-
-        <button class="btn-close" data-close="modalBatchCode">&times;</button>
-
-      </div>
-
-      <form id="formBatchCode">
-
-        <div class="modal-body">
-
-          <div class="form-group">
-
-            <label for="batchCount">How many codes to generate?</label>
-
-            <select id="batchCount">
-
-              <option value="5">5 unique 4-digit codes</option>
-
-              <option value="10" selected>10 unique 4-digit codes</option>
-
-              <option value="20">20 unique 4-digit codes</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="batchBranch">Branch</label>
-
-            <input type="text" id="batchBranch" value="Goldilocks Robinsons Tacloban" />
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="batchDesc">Batch Note</label>
-
-            <input type="text" id="batchDesc" placeholder="e.g. Promo Batch Nov 30" />
-
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-secondary" data-close="modalBatchCode">Cancel</button>
-
-          <button type="submit" class="btn btn-primary">Generate &amp; Save</button>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- MODAL: VIEW COUPON DETAILS -->
-
-  <div class="modal-overlay" id="modalCouponDetail">
-
-    <div class="modal-card" style="max-width: 540px;">
-
-      <div class="modal-header">
-
-        <h3>Customer E-Coupon Record</h3>
-
-        <button class="btn-close" data-close="modalCouponDetail">&times;</button>
-
-      </div>
-
-      <div class="modal-body" id="couponDetailBody"></div>
-
-      <div class="modal-footer">
-
-        <button type="button" class="btn btn-secondary" data-close="modalCouponDetail">Close</button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- TOAST NOTIFICATION -->
-
-  <div class="toast" id="adminToast">Notification message</div>
-
-
-
-  <script>
-
-    (() => {
-
-      let pendingData = [];
-
-      let couponsData = [];
-
-      let codesData = [];
-
-      let currentReviewItem = null;
-
-
-
-      const $ = (s, r = document) => r.querySelector(s);
-
-      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-
-
-
-      // ── AUTHENTICATED FETCH INTERCEPTOR ──
-
-      const originalFetch = window.fetch;
-
-      window.fetch = async function(url, options = {}) {
-
-        options = options || {};
-
-        options.headers = options.headers || {};
-
-        const token = localStorage.getItem('goldilocks_admin_token') || sessionStorage.getItem('goldilocks_admin_token');
-
-        if (token) {
-
-          if (options.headers instanceof Headers) {
-
-            options.headers.set('Authorization', 'Bearer ' + token);
-
-          } else {
-
-            options.headers['Authorization'] = 'Bearer ' + token;
-
-          }
-
-        }
-
-        const res = await originalFetch(url, options);
-
-        if (res.status === 401 && typeof url === 'string' && (url.includes('/api/admin') || url.includes('/api/coupons') || url.includes('/api/payment-codes'))) {
-
-          localStorage.removeItem('goldilocks_admin_token');
-
-          sessionStorage.removeItem('goldilocks_admin_token');
-
-          showAdminLogin(true, 'Session expired. Please sign in again.');
-
-        }
-
-        return res;
-
-      };
-
-
-
-      function getAdminToken() {
-
-        return localStorage.getItem('goldilocks_admin_token') || sessionStorage.getItem('goldilocks_admin_token');
-
-      }
-
-
-
-      function showAdminLogin(show, errorMsg = '') {
-
-        const modal = $('#modalAdminLogin');
-
-        const errBox = $('#loginErrorAlert');
-
-        const errText = $('#loginErrorText');
-
-        if (!modal) return;
-
-        if (show) {
-
-          modal.style.display = 'flex';
-
-          modal.classList.add('open');
-
-          if (errorMsg) {
-
-            errBox.style.display = 'flex';
-
-            errText.textContent = errorMsg;
-
-          } else {
-
-            errBox.style.display = 'none';
-
-          }
-
-          $('#adminPasswordInput').value = '';
-
-          setTimeout(() => $('#adminUsernameInput').focus(), 100);
-
-          $('#adminUserPill').style.display = 'none';
-
-          $('#btnAdminLogout').style.display = 'none';
-
-        } else {
-
-          modal.style.display = 'none';
-
-          modal.classList.remove('open');
-
-          $('#adminUserPill').style.display = 'flex';
-
-          $('#btnAdminLogout').style.display = 'inline-flex';
-
-          const username = localStorage.getItem('goldilocks_admin_user') || sessionStorage.getItem('goldilocks_admin_user') || 'admin';
-
-          $('#adminUsernameDisplay').textContent = username;
-
-        }
-
-      }
-
-
-
-      async function checkInitialAuth() {
-
-        const token = getAdminToken();
-
-        if (!token) {
-
-          showAdminLogin(true);
-
-          return false;
-
-        }
-
-        try {
-
-          const res = await originalFetch('/api/admin/check-auth', {
-
-            headers: { 'Authorization': 'Bearer ' + token }
-
-          });
-
-          const d = await res.json();
-
-          if (d.success && d.authenticated) {
-
-            showAdminLogin(false);
-
-            return true;
-
-          }
-
-        } catch (err) {
-
-          console.warn('Auth check error:', err);
-
-        }
-
-        showAdminLogin(true);
-
-        return false;
-
-      }
-
-
-
-      function toast(msg) {
-
-        const t = $('#adminToast');
-
-        t.textContent = msg;
-
-        t.classList.add('show');
-
-        clearTimeout(t._timer);
-
-        t._timer = setTimeout(() => t.classList.remove('show'), 3800);
-
-      }
-
-
-
-      function formatDateTime(d) {
-
-        if (!d) return '—';
-
-        const date = new Date(d);
-
-        if (isNaN(date.getTime())) return '—';
-
-        return date.toLocaleString('en-PH', {
-
-          month: 'short', day: 'numeric', year: 'numeric',
-
-          hour: '2-digit', minute: '2-digit', hour12: true
-
-        });
-
-      }
-
-
-
-      function formatCurrency(num) {
-
-        return '₱' + Number(num || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-      }
-
-
-
-      function escapeHtml(str) {
-
-        if (!str) return '';
-
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-      }
-
-
-
-      // ── TABS ──
-
-      $$('.tab-btn').forEach(btn => {
-
-        btn.addEventListener('click', () => {
-
-          $$('.tab-btn').forEach(b => b.classList.remove('active'));
-
-          btn.classList.add('active');
-
-          const target = btn.dataset.tab;
-
-          $$('.tab-content').forEach(c => c.style.display = 'none');
-
-          $('#' + target).style.display = 'block';
-
-        });
-
-      });
-
-
-
-      // ── MODALS ──
-
-      function openModal(id) { $('#' + id).classList.add('open'); }
-
-      function closeModal(id) { $('#' + id).classList.remove('open'); }
-
-      $$('[data-close]').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
-
-      $$('.modal-overlay').forEach(overlay => {
-
-        overlay.addEventListener('click', e => { if (e.target === overlay && overlay.id !== 'modalAdminLogin') overlay.classList.remove('open'); });
-
-      });
-
-
-
-      $('#btnAddCodeModal').addEventListener('click', () => {
-
-        $('#formAddCode').reset();
-
-        $('#newCodeBranch').value = 'Goldilocks Robinsons Tacloban';
-
-        openModal('modalAddCode');
-
-      });
-
-
-
-      $('#btnBatchModal').addEventListener('click', () => {
-
-        $('#formBatchCode').reset();
-
-        $('#batchBranch').value = 'Goldilocks Robinsons Tacloban';
-
-        openModal('modalBatchCode');
-
-      });
-
-
-
-      $('#btnRandomCode').addEventListener('click', () => {
-
-        $('#newCodeVal').value = String(Math.floor(1000 + Math.random() * 9000));
-
-      });
-
-
-
-      // ── LOAD STATS ──
-
-      async function loadStats() {
-
-        try {
-
-          const res = await fetch('/api/admin/stats');
-
-          const d = await res.json();
-
-          if (d.success) {
-
-            $('#kpiPending').textContent = d.pendingVerifications || 0;
-
-            $('#tabBadgePending').textContent = d.pendingVerifications || 0;
-
-            $('#tabBadgePending').style.display = (d.pendingVerifications > 0) ? 'inline-block' : 'none';
-
-            $('#kpiCoupons').textContent = d.totalCoupons;
-
-            $('#kpiRevenue').textContent = formatCurrency(d.totalRevenue);
-
-            $('#kpiActiveCodes').textContent = d.activeCodes;
-
-            $('#kpiUsedCodes').textContent = d.usedCodes;
-
-          }
-
-        } catch (e) { console.error('Stats error:', e); }
-
-      }
-
-
-
-      // ── LOAD PENDING VERIFICATIONS ──
-
-      async function loadPending() {
-
-        try {
-
-          const st = $('#pendingStatusFilter').value;
-
-          const res = await fetch(`/api/admin/verifications?status=${st}`);
-
-          const d = await res.json();
-
-          pendingData = d.data || [];
-
-          renderPendingTable();
-
-        } catch (e) {
-
-          console.error(e);
-
-          $('#pendingTableBody').innerHTML = `<tr><td colspan="9" class="empty-state">❌ Error loading verification records.</td></tr>`;
-
-        }
-
-      }
-
-
-
-      function renderPendingTable() {
-
-        const q = ($('#pendingSearch').value || '').trim().toLowerCase();
-
-        const sf = $('#pendingStatusFilter').value;
-
-        const filtered = pendingData.filter(p => {
-
-          let matchesStatus = true;
-
-          if (sf === 'pending') matchesStatus = p.status === 'pending';
-
-          else if (sf === 'approved') matchesStatus = p.status === 'approved';
-
-          else if (sf === 'declined' || sf === 'rejected') matchesStatus = (p.status === 'declined' || p.status === 'rejected');
-
-
-
-          const matchesQ = !q ||
-
-            (p.txnNumber && p.txnNumber.toLowerCase().includes(q)) ||
-
-            (p.guestName && p.guestName.toLowerCase().includes(q)) ||
-
-            (p.email && p.email.toLowerCase().includes(q)) ||
-
-            (p.mobile && p.mobile.includes(q)) ||
-
-            (p.referenceNo && p.referenceNo.toLowerCase().includes(q));
-
-
-
-          return matchesStatus && matchesQ;
-
-        });
-
-
-
-        const tbody = $('#pendingTableBody');
-
-        if (!filtered.length) {
-
-          tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No payment verifications found matching current filter.</td></tr>`;
-
-          return;
-
-        }
-
-
-
-        tbody.innerHTML = filtered.map(item => {
-
-          let stBadge = `<span class="badge badge-pending"><span class="animated-hourglass sm">⏳</span> Pending Review</span>`;
-
-          if (item.status === 'approved') stBadge = `<span class="badge badge-active">✓ Approved</span>`;
-
-          if (item.status === 'rejected' || item.status === 'declined') stBadge = `<span class="badge badge-revoked" style="background:#fde8e8;color:#c81e1e;border-color:#f8b4b4;">✕ Declined</span>`;
-
-
-
-          let actionButtons = '';
-
-          if (item.status === 'pending') {
-
-            actionButtons = `
-
-              <div class="action-btn-row">
-
-                <button class="btn btn-action btn-verify-act" onclick="openReviewModal('${item._id}')" title="Review verification">🔍 Review</button>
-
-                <button class="btn btn-action btn-decline-act" onclick="openDeclineModal('${item._id}')" title="Set status to Declined">✕ Decline</button>
-
-              </div>`;
-
-          } else if (item.status === 'rejected' || item.status === 'declined') {
-
-            actionButtons = `
-
-              <div class="action-btn-row">
-
-                <button class="btn btn-action" onclick="openReviewModal('${item._id}')">👁️ View</button>
-
-                <button class="btn btn-action" onclick="reopenAsPending('${item._id}')" title="Reset status back to Pending" style="font-size:11px;">⏳ Re-open</button>
-
-              </div>`;
-
-          } else {
-
-            actionButtons = `
-
-              <div class="action-btn-row">
-
-                <button class="btn btn-action" onclick="openReviewModal('${item._id}')">👁️ View</button>
-
-              </div>`;
-
-          }
-
-
-
-          return `
-
-            <tr>
-
-              <td><span class="badge-ctrl">${item.txnNumber}</span></td>
-
-              <td>
-
-                <div class="guest-name-cell">${escapeHtml(item.guestName)}</div>
-
-                <div class="guest-sub">${escapeHtml(item.address || 'Tacloban')}</div>
-
-              </td>
-
-              <td><span class="email-cell">${escapeHtml(item.email)}</span></td>
-
-              <td><b>${escapeHtml(item.mobile)}</b></td>
-
-              <td><b>${formatCurrency(item.amountPaid)}</b></td>
-
-              <td>
-
-                ${item.receiptImage ? `
-
-                  <img src="${item.receiptImage}" class="receipt-thumb" onclick="openReceiptPreview('${item._id}')" title="Click to inspect receipt screenshot" />
-
-                ` : '—'}
-
-              </td>
-
-              <td>${stBadge}</td>
-
-              <td><small>${formatDateTime(item.createdAt)}</small></td>
-
-              <td>${actionButtons}</td>
-
-            </tr>
-
-          `;
-
-        }).join('');
-
-      }
-
-
-
-      // ── REVIEW PENDING MODAL ──
-
-      window.openReviewModal = (id) => {
-
-        const item = pendingData.find(p => p._id === id);
-
-        if (!item) return;
-
-        currentReviewItem = item;
-
-
-
-        $('#revModalTitle').textContent = `Review Payment: ${item.txnNumber}`;
-
-        $('#reviewModalBody').innerHTML = `
-
-          <div class="detail-grid">
-
-            <div class="detail-box">
-
-              <label>Guest Name</label>
-
-              <span>${escapeHtml(item.guestName)}</span>
-
-            </div>
-
-            <div class="detail-box">
-
-              <label>Customer Gmail (Recipient)</label>
-
-              <span class="email-cell">${escapeHtml(item.email)}</span>
-
-            </div>
-
-            <div class="detail-box">
-
-              <label>Mobile Number</label>
-
-              <span>${escapeHtml(item.mobile)}</span>
-
-            </div>
-
-            <div class="detail-box">
-
-              <label>Amount to Verify</label>
-
-              <span style="color:#b86200;font-weight:700;">${formatCurrency(item.amountPaid)}</span>
-
-            </div>
-
-            <div class="detail-box" style="grid-column:span 2;">
-
-              <label>Payment Method &amp; Reference No.</label>
-
-              <span>QRPh Online Transfer ${item.referenceNo ? `(Ref: <b>${escapeHtml(item.referenceNo)}</b>)` : ''}</span>
-
-            </div>
-
-            <div class="detail-box" style="grid-column:span 2;">
-
-              <label>Address</label>
-
-              <span>${escapeHtml(item.address || '—')}</span>
-
-            </div>
-
-          </div>
-
-
-
-          ${(item.status === 'declined' || item.status === 'rejected') ? `
-
-          <div style="background:#fee2e2;border:1.5px solid #fca5a5;padding:12px 14px;border-radius:8px;font-size:13px;color:#991b1b;margin-top:14px;line-height:1.4;">
-
-            <b>Status:</b> Declined / Rejected<br>
-
-            <b>Decline Reason:</b> ${escapeHtml(item.adminNotes || 'No reason specified.')}
-
-          </div>` : ''}
-
-
-
-          <div style="font-size:12px;font-weight:700;color:var(--brown);margin-top:14px;">
-
-            Uploaded Payment Receipt Screenshot:
-
-          </div>
-
-          <div class="receipt-full-preview">
-
-            <img src="${item.receiptImage}" alt="Receipt Proof" id="reviewImgLarge" />
-
-            <div style="margin-top:8px;">
-
-              <a href="${item.receiptImage}" target="_blank" style="font-size:11px;color:#0d5cc7;font-weight:600;">🔍 Open receipt photo in new tab</a>
-
-            </div>
-
-          </div>
-
-        `;
-
-
-
-        if (item.status === 'pending') {
-
-          $('#reviewModalFooter').innerHTML = `
-
-            <button type="button" class="btn btn-danger" onclick="openDeclineModal('${item._id}')" style="background:#dc2626;color:#ffffff;display:inline-flex;align-items:center;gap:6px;">
-
-              ✕ Set Status as Declined
-
-            </button>
-
-            <button type="button" class="btn btn-success" id="btnApproveAction" onclick="approvePayment('${item._id}')">
-
-              ✓ Approve &amp; Send E-Coupon to Gmail
-
-            </button>
-
-          `;
-
-        } else if (item.status === 'approved') {
-
-          $('#reviewModalFooter').innerHTML = `
-
-            <span style="font-size:12px;color:#0b7835;font-weight:700;margin-right:auto;">
-
-              ✓ Approved with Control No: ${item.couponControlNo} (Email sent: ${item.emailSent ? 'Yes' : 'No'})
-
-            </span>
-
-            <button type="button" class="btn btn-secondary" data-close="modalReviewPending">Close</button>
-
-          `;
-
-        } else {
-
-          $('#reviewModalFooter').innerHTML = `
-
-            <span style="font-size:12px;color:#c81e1e;font-weight:700;margin-right:auto;">✕ Status: Declined (${escapeHtml(item.adminNotes || '')})</span>
-
-            <button type="button" class="btn btn-secondary" onclick="reopenAsPending('${item._id}')" style="font-size:12px;">⏳ Re-open to Pending</button>
-
-            <button type="button" class="btn btn-secondary" data-close="modalReviewPending">Close</button>
-
-          `;
-
-        }
-
-
-
-        openModal('modalReviewPending');
-
-      };
-
-
-
-      window.openReceiptPreview = (id) => openReviewModal(id);
-
-
-
-      // ── DECLINE PAYMENT MODAL & ACTIONS ──
-
-      window.openDeclineModal = (id) => {
-
-        const item = pendingData.find(p => p._id === id);
-
-        if (!item) return;
-
-        $('#declineItemId').value = id;
-
-        $('#declineGuestSummary').innerHTML = `
-
-          <div>Tracking: <b>${escapeHtml(item.txnNumber)}</b></div>
-
-          <div style="font-size:12px;color:#666;font-weight:normal;margin-top:2px;">Guest: <b>${escapeHtml(item.guestName)}</b> &bull; Amount: <b>${formatCurrency(item.amountPaid)}</b></div>
-
-        `;
-
-        $('#declinePresetReason').value = "Receipt screenshot is blurry, cropped, or unreadable.";
-
-        $('#declineReasonNotes').value = "Receipt screenshot is blurry, cropped, or unreadable.";
-
-        openModal('modalDeclineVerification');
-
-      };
-
-
-
-      $('#declinePresetReason').addEventListener('change', (e) => {
-
-        if (e.target.value === 'custom') {
-
-          $('#declineReasonNotes').value = '';
-
-          $('#declineReasonNotes').focus();
-
-        } else {
-
-          $('#declineReasonNotes').value = e.target.value;
-
-        }
-
-      });
-
-
-
-      $('#formDeclineVerification').addEventListener('submit', async (e) => {
-
-        e.preventDefault();
-
-        const id = $('#declineItemId').value;
-
-        const reason = $('#declineReasonNotes').value.trim();
-
-        if (!reason) {
-
-          toast('Please enter a reason for declining.');
-
-          return;
-
-        }
-
-
-
-        const btn = $('#btnSubmitDecline');
-
-        btn.disabled = true;
-
-        btn.textContent = 'Updating status...';
-
-
-
-        try {
-
-          const res = await fetch(`/api/admin/verifications/${id}/decline`, {
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'application/json' },
-
-            body: JSON.stringify({ reason })
-
-          });
-
-          const d = await res.json();
-
-          if (d.success) {
-
-            toast('Payment verification status updated to Declined.');
-
-            closeModal('modalDeclineVerification');
-
-            closeModal('modalReviewPending');
-
-            loadAll();
-
-          } else {
-
-            toast(d.message || 'Error updating status to declined.');
-
-          }
-
-        } catch (err) {
-
-          toast('Network error updating status.');
-
-        } finally {
-
-          btn.disabled = false;
-
-          btn.textContent = '✕ Set Status as Declined';
-
-        }
-
-      });
-
-
-
-      window.reopenAsPending = async (id) => {
-
-        if (!confirm('Reset this record back to Pending status?')) return;
-
-        try {
-
-          const res = await fetch(`/api/admin/verifications/${id}/pending`, { method: 'POST' });
-
-          const d = await res.json();
-
-          if (d.success) {
-
-            toast('Payment status reset to Pending.');
-
-            closeModal('modalReviewPending');
-
-            loadAll();
-
-          } else {
-
-            toast(d.message || 'Error updating status.');
-
-          }
-
-        } catch (err) {
-
-          toast('Network error.');
-
-        }
-
-      };
-
-
-
-      // ── APPROVE PAYMENT ACTION ──
-
-      window.approvePayment = async (id) => {
-
-        const item = currentReviewItem;
-
-        if (!confirm(`Confirm verification for ${item.guestName}?\n\nThis will generate a unique official E-Coupon and auto-send it directly to: ${item.email}`)) return;
-
-
-
-        const btn = $('#btnApproveAction');
-
-        if (btn) { btn.disabled = true; btn.textContent = 'Generating unique coupon & emailing...'; }
-
-
-
-        try {
-
-          const res = await fetch(`/api/admin/verifications/${id}/approve`, { method: 'POST' });
-
-          const d = await res.json();
-
-          if (d.success) {
-
-            toast(`🎉 Verified! E-Coupon ${d.controlNo} generated and auto-sent to ${item.email}`);
-
-            closeModal('modalReviewPending');
-
-            loadAll();
-
-          } else {
-
-            toast(d.message || 'Error approving payment.');
-
-            if (btn) { btn.disabled = false; btn.textContent = '✓ Set Status as Approved'; }
-
-          }
-
-        } catch (e) {
-
-          toast('Network or server error during approval.');
-
-          if (btn) { btn.disabled = false; btn.textContent = '✓ Set Status as Approved'; }
-
-        }
-
-      };
-
-
-
-      // ── LOAD ISSUED COUPONS ──
-
-      async function loadCoupons() {
-
-        try {
-
-          const res = await fetch('/api/coupons');
-
-          const d = await res.json();
-
-          couponsData = d.data || [];
-
-          $('#tabBadgeCoupons').textContent = couponsData.length;
-
-          renderCouponsTable();
-
-        } catch (e) { console.error(e); }
-
-      }
-
-
-
-      function renderCouponsTable() {
-
-        const q = ($('#couponSearch').value || '').trim().toLowerCase();
-
-        const pf = $('#couponPayFilter').value;
-
-        const filtered = couponsData.filter(c => {
-
-          const mPay = !pf || (c.paymentMethod === pf);
-
-          const mQ = !q ||
-
-            (c.guestName && c.guestName.toLowerCase().includes(q)) ||
-
-            (c.email && c.email.toLowerCase().includes(q)) ||
-
-            (c.mobile && c.mobile.toLowerCase().includes(q)) ||
-
-            (c.controlNo && c.controlNo.toLowerCase().includes(q));
-
-          return mPay && mQ;
-
-        });
-
-
-
-        const tbody = $('#couponsTableBody');
-
-        if (filtered.length === 0) {
-
-          tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No customer e-coupons found.</td></tr>`;
-
-          return;
-
-        }
-
-
-
-        tbody.innerHTML = filtered.map(c => `
-
-          <tr>
-
-            <td><span class="badge-ctrl">${c.controlNo}</span></td>
-
-            <td>
-
-              <div class="guest-name-cell">${escapeHtml(c.guestName)}</div>
-
-              <div class="guest-sub">${escapeHtml(c.branch || 'Robinsons Tacloban')}</div>
-
-            </td>
-
-            <td>
-
-              <span class="email-cell">${escapeHtml(c.email || '—')}</span>
-
-              ${c.emailSent ? '<span title="E-Coupon sent to Gmail" style="color:#0b7a36;font-size:11px;font-weight:700;margin-left:4px;">✉️✓</span>' : ''}
-
-            </td>
-
-            <td><b>${escapeHtml(c.mobile || '—')}</b></td>
-
-            <td>
-
-              <span class="badge ${c.paymentMethod === 'cash' ? 'badge-used' : 'badge-active'}">
-
-                ${c.paymentMethod === 'cash' ? '💵 Cash' : '📱 QRPh'}
-
-              </span>
-
-            </td>
-
-            <td>
-
-              ${c.paymentCodeUsed ? `<span class="badge-code">${c.paymentCodeUsed}</span>` : (c.txnNumber ? `<span class="badge-ctrl">${c.txnNumber}</span>` : '—')}
-
-            </td>
-
-            <td><b>${formatCurrency(c.amountPaid)}</b></td>
-
-            <td><small>${formatDateTime(c.issuedAt || c.createdAt)}</small></td>
-
-            <td><button class="btn-action" onclick="viewCouponDetail('${c._id}')">👁️ Details</button></td>
-
-          </tr>
-
-        `).join('');
-
-      }
-
-
-
-      // ── LOAD CODES ──
-
-      async function loadCodes() {
-
-        try {
-
-          const res = await fetch('/api/payment-codes');
-
-          const d = await res.json();
-
-          codesData = d.data || [];
-
-          $('#tabBadgeCodes').textContent = codesData.length;
-
-          renderCodesTable();
-
-        } catch (e) { console.error(e); }
-
-      }
-
-
-
-      function renderCodesTable() {
-
-        const q = ($('#codeSearch').value || '').trim().toLowerCase();
-
-        const sf = $('#codeStatusFilter').value;
-
-        const filtered = codesData.filter(c => {
-
-          const mS = !sf || (c.status === sf);
-
-          const mQ = !q || (c.code && c.code.toLowerCase().includes(q)) ||
-
-            (c.usedBy && c.usedBy.fullname && c.usedBy.fullname.toLowerCase().includes(q));
-
-          return mS && mQ;
-
-        });
-
-
-
-        const tbody = $('#codesTableBody');
-
-        if (filtered.length === 0) {
-
-          tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No authorization codes found.</td></tr>`;
-
-          return;
-
-        }
-
-
-
-        tbody.innerHTML = filtered.map(c => {
-
-          let stBadge = `<span class="badge badge-active">Active</span>`;
-
-          if (c.status === 'used' || c.isUsed) stBadge = `<span class="badge badge-used">Claimed</span>`;
-
-          if (c.status === 'revoked') stBadge = `<span class="badge badge-revoked">Revoked</span>`;
-
-
-
-          const usedByText = (c.usedBy && c.usedBy.fullname)
-
-            ? `<b>${escapeHtml(c.usedBy.fullname)}</b><div class="guest-sub">${escapeHtml(c.usedBy.mobile || '')}</div>`
-
-            : '<span style="color:#aaa;">— Available —</span>';
-
-
-
-          return `
-
-            <tr>
-
-              <td>
-
-                <span class="badge-code">
-
-                  <span>${c.code}</span>
-
-                  <span class="copy-icon" onclick="copyCode('${c.code}')" title="Copy code">📋</span>
-
-                </span>
-
-              </td>
-
-              <td>${stBadge}</td>
-
-              <td>
-
-                <div style="font-weight:600;">${escapeHtml(c.description || 'Cashier Code')}</div>
-
-                <div class="guest-sub">${escapeHtml(c.branch || '')}</div>
-
-              </td>
-
-              <td>${usedByText}</td>
-
-              <td>${c.couponControlNo ? `<span class="badge-ctrl">${c.couponControlNo}</span>` : '—'}</td>
-
-              <td><small>${formatDateTime(c.usedAt)}</small></td>
-
-              <td>
-
-                <div class="action-btn-row">
-
-                  ${c.isUsed || c.status !== 'active' ? `
-
-                    <button class="btn-action" onclick="resetCode('${c._id}', '${c.code}')">🔄 Reset</button>
-
-                  ` : `
-
-                    <button class="btn-action danger" onclick="revokeCode('${c._id}', '${c.code}')">🚫 Revoke</button>
-
-                  `}
-
-                  <button class="btn-action danger" onclick="deleteCode('${c._id}', '${c.code}')">🗑️</button>
-
-                </div>
-
-              </td>
-
-            </tr>
-
-          `;
-
-        }).join('');
-
-      }
-
-
-
-      window.copyCode = (code) => {
-
-        const clean = String(code || '').trim();
-
-        const done = () => toast('Code "' + clean + '" copied!');
-
-        if (navigator.clipboard && window.isSecureContext) {
-
-          navigator.clipboard.writeText(clean).then(done).catch(() => {
-
-            if (fallbackExecCopyAdmin(clean)) done();
-
-            else toast('Code: ' + clean);
-
-          });
-
-        } else {
-
-          if (fallbackExecCopyAdmin(clean)) done();
-
-          else toast('Code: ' + clean);
-
-        }
-
-      };
-
-
-
-      function fallbackExecCopyAdmin(str) {
-
-        try {
-
-          const el = document.createElement('textarea');
-
-          el.value = str;
-
-          el.setAttribute('readonly', '');
-
-          el.style.position = 'fixed';
-
-          el.style.left = '-9999px';
-
-          el.style.top = '0';
-
-          el.style.opacity = '0';
-
-          document.body.appendChild(el);
-
-          el.focus();
-
-          el.select();
-
-          const ok = document.execCommand('copy');
-
-          document.body.removeChild(el);
-
-          return ok;
-
-        } catch (_) {
-
-          return false;
-
-        }
-
-      };
-
-
-
-      window.resetCode = async (id, code) => {
-
-        if (!confirm(`Reset code "${code}" to Active?`)) return;
-
-        const res = await fetch(`/api/admin/codes/${id}/reset`, { method: 'PATCH' });
-
-        const d = await res.json();
-
-        if (d.success) { toast(`Code "${code}" is now Active!`); loadAll(); }
-
-      };
-
-
-
-      window.revokeCode = async (id, code) => {
-
-        if (!confirm(`Revoke code "${code}"?`)) return;
-
-        const res = await fetch(`/api/admin/codes/${id}/revoke`, { method: 'PATCH' });
-
-        const d = await res.json();
-
-        if (d.success) { toast(`Code "${code}" revoked.`); loadAll(); }
-
-      };
-
-
-
-      window.deleteCode = async (id, code) => {
-
-        if (!confirm(`Delete code "${code}" permanently?`)) return;
-
-        const res = await fetch(`/api/admin/codes/${id}`, { method: 'DELETE' });
-
-        const d = await res.json();
-
-        if (d.success) { toast(`Code "${code}" deleted.`); loadAll(); }
-
-      };
-
-
-
-      window.viewCouponDetail = (id) => {
-
-        const item = couponsData.find(c => c._id === id);
-
-        if (!item) return;
-
-        $('#couponDetailBody').innerHTML = `
-
-          <div style="text-align:center;margin-bottom:14px;">
-
-            <span class="badge-ctrl" style="font-size:16px;padding:4px 14px;">${item.controlNo}</span>
-
-          </div>
-
-          <div class="detail-grid">
-
-            <div class="detail-box"><label>Guest Name</label><span>${escapeHtml(item.guestName)}</span></div>
-
-            <div class="detail-box"><label>Gmail</label><span class="email-cell">${escapeHtml(item.email || '—')}</span></div>
-
-            <div class="detail-box"><label>Mobile</label><span>${escapeHtml(item.mobile || '—')}</span></div>
-
-            <div class="detail-box"><label>Amount</label><span>${formatCurrency(item.amountPaid)}</span></div>
-
-            <div class="detail-box"><label>Payment Method</label><span>${item.paymentMethod === 'cash' ? 'Cash at Register' : 'QRPh Transfer'}</span></div>
-
-            <div class="detail-box"><label>Code / Txn</label><span>${escapeHtml(item.paymentCodeUsed || item.txnNumber || 'N/A')}</span></div>
-
-            <div class="detail-box"><label>Email Status</label><span>${item.emailSent ? '✅ Sent to Gmail' : '❌ Not Sent'}</span></div>
-
-            <div class="detail-box" style="grid-column:span 2;"><label>Address</label><span>${escapeHtml(item.address || '—')}</span></div>
-
-          </div>
-
-          ${item.email ? `
-
-            <div style="margin-top:16px;text-align:center;">
-
-              <button type="button" class="btn btn-primary" id="btnResendCouponEmail" onclick="resendCouponEmail('${item._id}')" style="width:100%;padding:10px 16px;">
-
-                <span>✉️</span> Resend E-Coupon &amp; Calendar Invite to Gmail
-
-              </button>
-
-            </div>
-
-          ` : ''}
-
-        `;
-
-        openModal('modalCouponDetail');
-
-      };
-
-
-
-      window.resendCouponEmail = async (id) => {
-
-        const btn = document.getElementById('btnResendCouponEmail');
-
-        if (btn) { btn.disabled = true; btn.textContent = 'Sending email...'; }
-
-        try {
-
-          const res = await fetch(`/api/admin/coupons/${id}/resend-email`, { method: 'POST' });
-
-          const d = await res.json();
-
-          if (d.success) {
-
-            toast(d.message || 'E-Coupon resent successfully!');
-
-            loadAll();
-
-          } else {
-
-            toast(d.message || 'Failed to resend email.');
-
-          }
-
-        } catch (err) {
-
-          toast('Network error while resending email.');
-
-        } finally {
-
-          if (btn) { btn.disabled = false; btn.innerHTML = '<span>✉️</span> Resend E-Coupon &amp; Calendar Invite to Gmail'; }
-
-        }
-
-      };
-
-
-
-      // Form Add Code
-
-      $('#formAddCode').addEventListener('submit', async (e) => {
-
-        e.preventDefault();
-
-        const code = $('#newCodeVal').value.trim();
-
-        const branch = $('#newCodeBranch').value.trim();
-
-        const description = $('#newCodeDesc').value.trim();
-
-        const res = await fetch('/api/payment-codes', {
-
-          method: 'POST',
-
-          headers: { 'Content-Type': 'application/json' },
-
-          body: JSON.stringify({ code, branch, description })
-
-        });
-
-        const d = await res.json();
-
-        if (d.success) { toast(`Code "${code}" added!`); closeModal('modalAddCode'); loadAll(); }
-
-        else toast(d.message || 'Error');
-
-      });
-
-
-
-      // Form Batch Code
-
-      $('#formBatchCode').addEventListener('submit', async (e) => {
-
-        e.preventDefault();
-
-        const count = parseInt($('#batchCount').value, 10) || 5;
-
-        const branch = $('#batchBranch').value.trim();
-
-        const description = $('#batchDesc').value.trim();
-
-        const res = await fetch('/api/admin/codes/batch', {
-
-          method: 'POST',
-
-          headers: { 'Content-Type': 'application/json' },
-
-          body: JSON.stringify({ count, branch, description })
-
-        });
-
-        const d = await res.json();
-
-        if (d.success) { toast(`Generated ${d.createdCount} codes!`); closeModal('modalBatchCode'); loadAll(); }
-
-      });
-
-
-
-      // Export CSV
-
-      $('#btnExportCoupons').addEventListener('click', () => {
-
-        if (!couponsData.length) return toast('No data to export.');
-
-        let csv = 'Control Number,Guest Name,Gmail,Mobile,Address,Payment Method,Auth Code / Txn,Amount,Issued At\r\n';
-
-        couponsData.forEach(c => {
-
-          csv += `"${c.controlNo}","${(c.guestName||'').replace(/"/g,'""')}","${c.email||''}","${c.mobile||''}","${(c.address||'').replace(/"/g,'""')}","${c.paymentMethod}","${c.paymentCodeUsed||c.txnNumber||''}","${c.amountPaid}","${c.issuedAt||c.createdAt||''}"\r\n`;
-
-        });
-
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-
-        a.download = `goldilocks-coupons-${new Date().toISOString().slice(0, 10)}.csv`;
-
-        a.click(); a.remove();
-
-        toast('Exported to CSV!');
-
-      });
-
-
-
-      // Listeners
-
-      $('#pendingSearch').addEventListener('input', renderPendingTable);
-
-      $('#pendingStatusFilter').addEventListener('change', loadPending);
-
-      $('#couponSearch').addEventListener('input', renderCouponsTable);
-
-      $('#couponPayFilter').addEventListener('change', renderCouponsTable);
-
-      $('#codeSearch').addEventListener('input', renderCodesTable);
-
-      $('#codeStatusFilter').addEventListener('change', renderCodesTable);
-
-      $('#btnRefresh').addEventListener('click', () => { toast('Refreshing live data...'); loadAll(); });
-
-
-
-      function loadAll() {
-
-        loadStats();
-
-        loadPending();
-
-        loadCoupons();
-
-        loadCodes();
-
-      }
-
-
-
-      // ── LOGIN FORM SUBMISSION ──
-
-      $('#formAdminLogin').addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const username = $('#adminUsernameInput').value.trim();
-
-        const password = $('#adminPasswordInput').value;
-
-        const remember = $('#adminRememberMe').checked;
-
-        const btn = $('#btnAdminLoginSubmit');
-
-        const errBox = $('#loginErrorAlert');
-
-        const errText = $('#loginErrorText');
-
-
-
-        if (!username || !password) {
-
-          errBox.style.display = 'flex';
-
-          errText.textContent = 'Please enter both username and password.';
-
-          return;
-
-        }
-
-
-
-        btn.disabled = true;
-
-        btn.textContent = 'Verifying credentials...';
-
-        errBox.style.display = 'none';
-
-
-
-        try {
-
-          const res = await originalFetch('/api/admin/login', {
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'application/json' },
-
-            body: JSON.stringify({ username, password })
-
-          });
-
-          const data = await res.json();
-
-
-
-          btn.disabled = false;
-
-          btn.textContent = '🔐 Sign In to Admin Portal';
-
-
-
-          if (!res.ok || !data.success) {
-
-            errBox.style.display = 'flex';
-
-            errText.textContent = data.message || 'Invalid username or password.';
-
-            $('#adminPasswordInput').focus();
-
-            return;
-
-          }
-
-
-
-          if (remember) {
-
-            localStorage.setItem('goldilocks_admin_token', data.token);
-
-            localStorage.setItem('goldilocks_admin_user', data.user.username);
-
-          } else {
-
-            sessionStorage.setItem('goldilocks_admin_token', data.token);
-
-            sessionStorage.setItem('goldilocks_admin_user', data.user.username);
-
-          }
-
-
-
-          showAdminLogin(false);
-
-          toast('Welcome back, ' + data.user.username + '! Admin session active.');
-
-          loadAll();
-
-          if (!refreshIntervalId) {
-
-            refreshIntervalId = setInterval(() => {
-
-              if (getAdminToken()) loadAll();
-
-            }, 10000);
-
-          }
-
-        } catch (err) {
-
-          btn.disabled = false;
-
-          btn.textContent = '🔐 Sign In to Admin Portal';
-
-          errBox.style.display = 'flex';
-
-          errText.textContent = 'Connection error. Ensure the server is online.';
-
-        }
-
-      });
-
-
-
-      // Toggle Password Visibility
-
-      $('#btnToggleLoginPwd').addEventListener('click', () => {
-
-        const inp = $('#adminPasswordInput');
-
-        const isPwd = (inp.type === 'password');
-
-        inp.type = isPwd ? 'text' : 'password';
-
-        $('#btnToggleLoginPwd').textContent = isPwd ? '🙈' : '👁️';
-
-      });
-
-
-
-      // Admin Logout
-
-      $('#btnAdminLogout').addEventListener('click', async () => {
-
-        if (!confirm('Are you sure you want to log out of the Admin Portal?')) return;
-
-        try {
-
-          await fetch('/api/admin/logout', { method: 'POST' });
-
-        } catch (e) {}
-
-        localStorage.removeItem('goldilocks_admin_token');
-
-        localStorage.removeItem('goldilocks_admin_user');
-
-        sessionStorage.removeItem('goldilocks_admin_token');
-
-        sessionStorage.removeItem('goldilocks_admin_user');
-
-        showAdminLogin(true, 'You have been logged out.');
-
-        toast('Logged out successfully.');
-
-      });
-
-
-
-      let refreshIntervalId = null;
-
-      async function startDashboard() {
-
-        const authed = await checkInitialAuth();
-
-        if (authed) {
-
-          loadAll();
-
-          refreshIntervalId = setInterval(() => {
-
-            if (getAdminToken()) loadAll();
-
-          }, 10000);
-
-        }
-
-      }
-
-
-
-      startDashboard();
-
-    })();
-
-  </script>
-
-</body>
-
-</html>
-
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+
+
+
+<head>
+
+
+
+  <meta charset="UTF-8" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+
+
+  <title>Admin Portal | Goldilocks Cake All You Can</title>
+
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+
+
+  <style>
+
+
+
+    :root {
+
+
+
+      --primary: #f5a800;
+
+
+
+      --primary-dark: #d88f00;
+
+
+
+      --primary-light: #fff5d6;
+
+
+
+      --brown: #4a2c00;
+
+
+
+      --brown-muted: #7d5b28;
+
+
+
+      --bg: #f8f6f0;
+
+
+
+      --card-bg: #ffffff;
+
+
+
+      --border: #ebd9b8;
+
+
+
+      --border-light: #f3ecd9;
+
+
+
+      --success-bg: #e6f9ed;
+
+
+
+      --success-text: #0d7835;
+
+
+
+      --warning-bg: #fff3db;
+
+
+
+      --warning-text: #b36300;
+
+
+
+      --danger-bg: #fde8e8;
+
+
+
+      --danger-text: #c81e1e;
+
+
+
+      --info-bg: #ebf5ff;
+
+
+
+      --info-text: #1e429f;
+
+
+
+      --shadow-sm: 0 2px 6px rgba(74, 44, 0, 0.05);
+
+
+
+      --shadow-md: 0 6px 18px rgba(74, 44, 0, 0.08);
+
+
+
+      --radius: 12px;
+
+
+
+      --font-head: 'Fredoka', sans-serif;
+
+
+
+      --font-body: 'Poppins', sans-serif;
+
+
+
+    }
+
+
+
+
+
+
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+
+    body {
+
+
+
+      font-family: var(--font-body);
+
+
+
+      background-color: var(--bg);
+
+
+
+      color: var(--brown);
+
+
+
+      min-height: 100vh;
+
+
+
+      line-height: 1.5;
+
+
+
+      display: flex;
+
+
+
+      flex-direction: column;
+
+
+
+    }
+
+
+
+
+
+
+
+    /* TOP NAVIGATION */
+
+
+
+    .navbar {
+
+
+
+      background: linear-gradient(100deg, #ffd500 0%, #ff9a2e 100%);
+
+
+
+      padding: 12px 24px;
+
+
+
+      box-shadow: 0 4px 16px rgba(210, 130, 0, 0.2);
+
+
+
+      position: sticky;
+
+
+
+      top: 0;
+
+
+
+      z-index: 100;
+
+
+
+    }
+
+
+
+    .navbar-wrap {
+
+
+
+      max-width: 1400px;
+
+
+
+      margin: 0 auto;
+
+
+
+      display: flex;
+
+
+
+      align-items: center;
+
+
+
+      justify-content: space-between;
+
+
+
+      gap: 16px;
+
+
+
+    }
+
+
+
+    .brand-area { display: flex; align-items: center; gap: 12px; }
+
+
+
+    .brand-logo { height: 36px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
+
+
+    .brand-title { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--brown); }
+
+
+
+    .brand-tag {
+
+
+
+      background: #ffffff; color: var(--brown); font-size: 11px; font-weight: 700;
+
+
+
+      padding: 2px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+
+
+
+    }
+
+
+
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+
+
+    .db-badge {
+
+
+
+      display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.85);
+
+
+
+      border: 1px solid rgba(255, 255, 255, 0.9); padding: 5px 12px; border-radius: 20px;
+
+
+
+      font-size: 12px; font-weight: 600; color: #0b692e;
+
+
+
+    }
+
+
+
+    .db-dot {
+
+
+
+      width: 8px; height: 8px; background: #00c853; border-radius: 50%;
+
+
+
+      box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.25); animation: pulse 2s infinite;
+
+
+
+    }
+
+
+
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.15); } }
+
+
+
+    .btn-client {
+
+
+
+      background: #ffffff; color: var(--brown); border: 1.5px solid var(--border);
+
+
+
+      padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+
+
+
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+
+
+
+    }
+
+
+
+    .btn-client:hover { background: #fff8e5; border-color: var(--primary); transform: translateY(-1px); }
+
+
+
+
+
+
+
+    /* MAIN CONTAINER */
+
+
+
+    .container { max-width: 1400px; width: 100%; margin: 24px auto; padding: 0 20px; flex: 1; }
+
+
+
+
+
+
+
+    /* KPI METRIC CARDS */
+
+
+
+    .metrics-grid {
+
+
+
+      display: grid;
+
+
+
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+
+
+
+      gap: 16px;
+
+
+
+      margin-bottom: 24px;
+
+
+
+    }
+
+
+
+    .metric-card {
+
+
+
+      background: var(--card-bg); border: 1.5px solid var(--border-light);
+
+
+
+      border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm);
+
+
+
+      display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s;
+
+
+
+    }
+
+
+
+    .metric-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border); }
+
+
+
+    .metric-info h4 { font-size: 11.5px; font-weight: 600; color: var(--brown-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+
+
+
+    .metric-info .value { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--brown); line-height: 1.1; }
+
+
+
+    .metric-info .sub { font-size: 11px; font-weight: 500; color: #887050; margin-top: 4px; }
+
+
+
+    .metric-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+
+
+
+    .ic-amber  { background: #fff1d6; color: #b35900; }
+
+
+
+    .ic-yellow { background: #fff5cc; color: #b37400; }
+
+
+
+    .ic-green  { background: #e6f9ed; color: #0d7835; }
+
+
+
+    .ic-blue   { background: #ebf5ff; color: #1e429f; }
+
+
+
+    .ic-purple { background: #f3ebff; color: #6929c4; }
+
+
+
+
+
+
+
+    /* TAB NAVIGATION */
+
+
+
+    .tabs-bar {
+
+
+
+      display: flex; align-items: center; justify-content: space-between;
+
+
+
+      border-bottom: 2px solid var(--border-light); margin-bottom: 20px; gap: 16px; flex-wrap: wrap;
+
+
+
+    }
+
+
+
+    .tabs-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+
+
+    .tab-btn {
+
+
+
+      background: transparent; border: none; padding: 10px 18px; font-family: var(--font-body);
+
+
+
+      font-size: 14px; font-weight: 600; color: var(--brown-muted); cursor: pointer;
+
+
+
+      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
+
+
+
+      display: inline-flex; align-items: center; gap: 8px;
+
+
+
+    }
+
+
+
+    .tab-btn:hover { color: var(--brown); background: rgba(245, 168, 0, 0.08); border-radius: 8px 8px 0 0; }
+
+
+
+    .tab-btn.active { color: var(--brown); border-bottom-color: var(--primary); font-weight: 700; }
+
+
+
+    .tab-badge {
+
+
+
+      background: var(--border-light); color: var(--brown); font-size: 11px; font-weight: 700;
+
+
+
+      padding: 2px 7px; border-radius: 10px;
+
+
+
+    }
+
+
+
+    .tab-btn.active .tab-badge { background: var(--primary); color: #fff; }
+
+
+
+    .tab-badge.badge-alert { background: #ff4747; color: #fff; animation: pulseAlert 2s infinite; }
+
+
+
+    @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+
+
+
+
+
+
+    /* TOOLBAR CONTROLS */
+
+
+
+    .table-toolbar {
+
+
+
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+
+
+
+      margin-bottom: 16px; flex-wrap: wrap;
+
+
+
+    }
+
+
+
+    .search-input-wrap { position: relative; flex: 1; min-width: 260px; max-width: 440px; }
+
+
+
+    .search-input-wrap input {
+
+
+
+      width: 100%; padding: 9px 14px 9px 36px; font-family: var(--font-body); font-size: 13px;
+
+
+
+      border: 1.5px solid var(--border); border-radius: 8px; background: #ffffff; color: var(--brown); outline: none;
+
+
+
+    }
+
+
+
+    .search-input-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2); }
+
+
+
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #a0845c; pointer-events: none; }
+
+
+
+    .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+
+
+    .filter-select {
+
+
+
+      padding: 9px 12px; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+
+
+
+      border: 1.5px solid var(--border); border-radius: 8px; background: #ffffff; color: var(--brown); outline: none;
+
+
+
+    }
+
+
+
+    .btn {
+
+
+
+      padding: 9px 16px; font-family: var(--font-body); font-size: 13px; font-weight: 600;
+
+
+
+      border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center;
+
+
+
+      gap: 6px; transition: all 0.2s; white-space: nowrap;
+
+
+
+    }
+
+
+
+    .btn-primary { background: var(--primary); color: var(--brown); font-weight: 700; }
+
+
+
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+
+
+    .btn-success { background: #00c853; color: #ffffff; font-weight: 700; }
+
+
+
+    .btn-success:hover { background: #00a844; transform: translateY(-1px); }
+
+
+
+    .btn-secondary { background: #ffffff; color: var(--brown); border: 1.5px solid var(--border); }
+
+
+
+    .btn-secondary:hover { background: #fff8e8; border-color: var(--primary); }
+
+
+
+    .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+
+
+
+    .btn-danger { background: #dc2626; color: #ffffff; font-weight: 700; border: none; }
+
+
+
+    .btn-danger:hover { background: #b91c1c; transform: translateY(-1px); }
+
+
+
+    .btn-decline-act { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+
+
+    .btn-decline-act:hover { background: #fecaca; border-color: #f87171; }
+
+
+
+
+
+
+
+    /* DATA TABLE */
+
+
+
+    .table-card {
+
+
+
+      background: var(--card-bg); border: 1.5px solid var(--border-light);
+
+
+
+      border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;
+
+
+
+    }
+
+
+
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+
+
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+
+
+
+    thead { background: #fffcf5; border-bottom: 2px solid var(--border-light); }
+
+
+
+    th { padding: 12px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--brown-muted); white-space: nowrap; }
+
+
+
+    td { padding: 14px 16px; border-bottom: 1px solid var(--border-light); color: var(--brown); vertical-align: middle; }
+
+
+
+    tbody tr:hover { background-color: #fffdf9; }
+
+
+
+    tbody tr:last-child td { border-bottom: none; }
+
+
+
+
+
+
+
+    /* BADGES */
+
+
+
+    .badge {
+
+
+
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px;
+
+
+
+      font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.4px;
+
+
+
+    }
+
+
+
+    .badge-active  { background: var(--success-bg); color: var(--success-text); border: 1px solid #b7ebd0; }
+
+
+
+    .badge-used    { background: var(--warning-bg); color: var(--warning-text); border: 1px solid #f9dab0; }
+
+
+
+    
+
+
+
+    /* Animated Rotating Hourglass */
+
+
+
+    @keyframes hourglassFlip {
+
+
+
+      0% {
+
+
+
+        transform: rotate(0deg) scale(1);
+
+
+
+      }
+
+
+
+      12% {
+
+
+
+        transform: rotate(0deg) scale(1.06);
+
+
+
+      }
+
+
+
+      42% {
+
+
+
+        transform: rotate(180deg) scale(1.14);
+
+
+
+      }
+
+
+
+      55% {
+
+
+
+        transform: rotate(180deg) scale(1);
+
+
+
+      }
+
+
+
+      68% {
+
+
+
+        transform: rotate(180deg) scale(1.06);
+
+
+
+      }
+
+
+
+      92% {
+
+
+
+        transform: rotate(360deg) scale(1.14);
+
+
+
+      }
+
+
+
+      100% {
+
+
+
+        transform: rotate(360deg) scale(1);
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    @keyframes hourglassPulseGlow {
+
+
+
+      0%, 100% {
+
+
+
+        box-shadow: 0 4px 16px rgba(245, 168, 0, 0.25);
+
+
+
+        transform: scale(1);
+
+
+
+      }
+
+
+
+      50% {
+
+
+
+        box-shadow: 0 8px 28px rgba(245, 168, 0, 0.45);
+
+
+
+        transform: scale(1.03);
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    .animated-hourglass-wrap {
+
+
+
+      display: inline-flex;
+
+
+
+      align-items: center;
+
+
+
+      justify-content: center;
+
+
+
+      width: 88px;
+
+
+
+      height: 88px;
+
+
+
+      border-radius: 50%;
+
+
+
+      background: radial-gradient(circle, #fff9e6 0%, #fff1c7 75%, #fedc84 100%);
+
+
+
+      border: 2.5px solid #f5a800;
+
+
+
+      box-shadow: 0 6px 22px rgba(245, 168, 0, 0.3);
+
+
+
+      animation: hourglassPulseGlow 2.6s ease-in-out infinite;
+
+
+
+      user-select: none;
+
+
+
+    }
+
+
+
+
+
+
+
+    .animated-hourglass {
+
+
+
+      display: inline-block;
+
+
+
+      line-height: 1;
+
+
+
+      animation: hourglassFlip 2.5s cubic-bezier(0.68, -0.4, 0.27, 1.4) infinite;
+
+
+
+      transform-origin: 50% 50%;
+
+
+
+      will-change: transform;
+
+
+
+      user-select: none;
+
+
+
+    }
+
+
+
+
+
+
+
+    .animated-hourglass.lg {
+
+
+
+      font-size: 48px;
+
+
+
+    }
+
+
+
+
+
+
+
+    .animated-hourglass.sm {
+
+
+
+      font-size: 13px;
+
+
+
+      animation-duration: 2.2s;
+
+
+
+      vertical-align: middle;
+
+
+
+      display: inline-block;
+
+
+
+    }
+
+
+
+
+
+
+
+    .badge-pending { background: #fff4d9; color: #b86200; border: 1px solid #fed288; }
+
+
+
+    .badge-revoked { background: var(--danger-bg);  color: var(--danger-text);  border: 1px solid #f8b4b4; }
+
+
+
+    .badge-ctrl {
+
+
+
+      background: #fdf5e2; color: #925400; border: 1px solid #f2c974;
+
+
+
+      font-family: var(--font-head); font-weight: 700; font-size: 12px;
+
+
+
+      letter-spacing: 0.5px; padding: 2px 8px; border-radius: 6px;
+
+
+
+    }
+
+
+
+    .badge-code {
+
+
+
+      background: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb;
+
+
+
+      font-family: monospace; font-weight: 700; font-size: 13px;
+
+
+
+      padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;
+
+
+
+    }
+
+
+
+    .badge-code .copy-icon { cursor: pointer; opacity: 0.5; }
+
+
+
+    .badge-code .copy-icon:hover { opacity: 1; }
+
+
+
+
+
+
+
+    .receipt-thumb {
+
+
+
+      width: 48px; height: 48px; border-radius: 6px; object-fit: cover;
+
+
+
+      border: 1px solid #e2cb98; cursor: pointer; transition: transform 0.2s;
+
+
+
+    }
+
+
+
+    .receipt-thumb:hover { transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+
+
+
+
+
+
+
+    .guest-name-cell { font-weight: 600; color: var(--brown); }
+
+
+
+    .guest-sub { font-size: 11px; color: var(--brown-muted); margin-top: 2px; }
+
+
+
+    .email-cell { color: #0d5cc7; font-weight: 600; font-size: 12.5px; }
+
+
+
+
+
+
+
+    .empty-state { padding: 48px 20px; text-align: center; color: var(--brown-muted); }
+
+
+
+    .empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.6; }
+
+
+
+
+
+
+
+    /* ACTION BUTTONS */
+
+
+
+    .action-btn-row { display: flex; align-items: center; gap: 6px; }
+
+
+
+    .btn-action {
+
+
+
+      background: #ffffff; border: 1px solid var(--border); border-radius: 6px;
+
+
+
+      padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--brown); transition: all 0.2s;
+
+
+
+    }
+
+
+
+    .btn-action:hover { background: #fdf4df; border-color: var(--primary); }
+
+
+
+    .btn-action.btn-verify-act { background: #00c853; color: #fff; border-color: #00a844; }
+
+
+
+    .btn-action.btn-verify-act:hover { background: #009e40; }
+
+
+
+    .btn-action.danger:hover { background: var(--danger-bg); border-color: #f98080; color: var(--danger-text); }
+
+
+
+
+
+
+
+    /* MODAL */
+
+
+
+    .modal-overlay {
+
+
+
+      position: fixed; inset: 0; background: rgba(43, 25, 0, 0.45); backdrop-filter: blur(4px);
+
+
+
+      z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px;
+
+
+
+    }
+
+
+
+    .modal-overlay.open { display: flex; }
+
+
+
+    .modal-card {
+
+
+
+      background: #ffffff; border-radius: 16px; max-width: 580px; width: 100%;
+
+
+
+      box-shadow: 0 16px 36px rgba(0,0,0,0.2); border: 1.5px solid var(--border);
+
+
+
+      overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;
+
+
+
+    }
+
+
+
+    .modal-header {
+
+
+
+      padding: 18px 20px; background: #fffcf5; border-bottom: 1.5px solid var(--border-light);
+
+
+
+      display: flex; align-items: center; justify-content: space-between;
+
+
+
+    }
+
+
+
+    .modal-header h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--brown); }
+
+
+
+    .btn-close { background: transparent; border: none; font-size: 20px; color: var(--brown-muted); cursor: pointer; }
+
+
+
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+
+
+    .modal-footer {
+
+
+
+      padding: 14px 20px; background: #fffcf5; border-top: 1.5px solid var(--border-light);
+
+
+
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; box-sizing: border-box;
+
+
+
+    }
+
+
+
+    #reviewModalFooter {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+      width: 100%;
+
+      box-sizing: border-box;
+
+    }
+
+
+
+    #reviewModalFooter .btn-danger {
+
+      flex: 0 1 auto;
+
+      white-space: nowrap;
+
+    }
+
+
+
+    #reviewModalFooter .btn-success {
+
+      flex: 1 1 auto;
+
+      text-align: center;
+
+      justify-content: center;
+
+      min-width: 220px;
+
+    }
+
+
+
+
+
+
+
+    .form-group { margin-bottom: 14px; }
+
+
+
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--brown); margin-bottom: 6px; }
+
+
+
+    .form-group input, .form-group select {
+
+
+
+      width: 100%; padding: 10px 12px; font-family: var(--font-body); font-size: 14px;
+
+
+
+      border: 1.5px solid var(--border); border-radius: 8px; background: #fffdf9; color: var(--brown); outline: none;
+
+
+
+    }
+
+
+
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2); }
+
+
+
+
+
+
+
+    /* DETAIL GRID */
+
+
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+
+
+    .detail-box { background: #fffdf8; border: 1px solid var(--border-light); padding: 9px 12px; border-radius: 8px; }
+
+
+
+    .detail-box label { font-size: 10.5px; font-weight: 700; color: var(--brown-muted); text-transform: uppercase; display: block; margin-bottom: 2px; }
+
+
+
+    .detail-box span { font-size: 13px; font-weight: 600; color: var(--brown); display: block; word-break: break-word; }
+
+
+
+
+
+
+
+    .receipt-full-preview {
+
+
+
+      margin-top: 10px; border: 1.5px solid #ecd8af; border-radius: 10px;
+
+
+
+      background: #faf7ef; padding: 10px; text-align: center;
+
+
+
+    }
+
+
+
+    .receipt-full-preview img {
+
+
+
+      max-height: 280px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: 0 auto;
+
+
+
+    }
+
+
+
+
+
+
+
+    /* TOAST */
+
+
+
+    .toast {
+
+
+
+      position: fixed; bottom: 24px; right: 24px; background: #2b1900; color: #ffffff;
+
+
+
+      padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
+
+
+
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 300; display: none; align-items: center; gap: 8px;
+
+
+
+    }
+
+
+
+    .toast.show { display: flex; animation: toastIn 0.25s ease-out; }
+
+
+
+    @keyframes toastIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+
+
+
+
+
+    /* ==========================================================================
+
+
+
+       MOBILE RESPONSIVE STYLES
+
+
+
+       ========================================================================== */
+
+
+
+    .table-scroll-hint {
+
+
+
+      display: none;
+
+
+
+      background: #fff8e2;
+
+
+
+      color: #8f5200;
+
+
+
+      font-size: 11px;
+
+
+
+      font-weight: 600;
+
+
+
+      padding: 6px 14px;
+
+
+
+      border-bottom: 1px solid var(--border-light);
+
+
+
+      align-items: center;
+
+
+
+      justify-content: space-between;
+
+
+
+    }
+
+
+
+
+
+
+
+    @media (max-width: 992px) {
+
+
+
+      .navbar { padding: 12px 16px; }
+
+
+
+      .container { padding: 0 16px; margin: 18px auto; }
+
+
+
+      .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+
+
+
+    }
+
+
+
+
+
+
+
+    @media (max-width: 768px) {
+
+
+
+      /* TOP NAVIGATION */
+
+
+
+      .navbar {
+
+
+
+        padding: 10px 14px;
+
+
+
+      }
+
+
+
+      .navbar-wrap {
+
+
+
+        flex-direction: column;
+
+
+
+        align-items: stretch;
+
+
+
+        gap: 10px;
+
+
+
+      }
+
+
+
+      .brand-area {
+
+
+
+        display: flex;
+
+
+
+        align-items: center;
+
+
+
+        justify-content: space-between;
+
+
+
+        width: 100%;
+
+
+
+      }
+
+
+
+      .brand-logo {
+
+
+
+        height: 30px;
+
+
+
+      }
+
+
+
+      .brand-title {
+
+
+
+        font-size: 16px;
+
+
+
+      }
+
+
+
+      .brand-tag {
+
+
+
+        font-size: 10px;
+
+
+
+        padding: 2px 6px;
+
+
+
+      }
+
+
+
+      .nav-actions {
+
+
+
+        display: flex;
+
+
+
+        justify-content: space-between;
+
+
+
+        align-items: center;
+
+
+
+        width: 100%;
+
+
+
+        gap: 6px;
+
+
+
+      }
+
+
+
+      .db-badge {
+
+
+
+        font-size: 11px;
+
+
+
+        padding: 4px 8px;
+
+
+
+      }
+
+
+
+      .btn-client {
+
+
+
+        font-size: 11.5px;
+
+
+
+        padding: 6px 10px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* CONTAINER */
+
+
+
+      .container {
+
+
+
+        padding: 0 10px;
+
+
+
+        margin: 12px auto;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* KPI SUMMARY METRICS (2-column mobile grid) */
+
+
+
+      .metrics-grid {
+
+
+
+        grid-template-columns: repeat(2, 1fr);
+
+
+
+        gap: 10px;
+
+
+
+        margin-bottom: 16px;
+
+
+
+      }
+
+
+
+      .metric-card {
+
+
+
+        padding: 12px 12px;
+
+
+
+      }
+
+
+
+      /* Featured Pending Card takes full width */
+
+
+
+      .metric-card:first-child {
+
+
+
+        grid-column: span 2;
+
+
+
+        background: #fffdf8;
+
+
+
+      }
+
+
+
+      .metric-info h4 {
+
+
+
+        font-size: 10px;
+
+
+
+        margin-bottom: 2px;
+
+
+
+      }
+
+
+
+      .metric-info .value {
+
+
+
+        font-size: 22px;
+
+
+
+      }
+
+
+
+      .metric-info .sub {
+
+
+
+        font-size: 10px;
+
+
+
+        margin-top: 2px;
+
+
+
+      }
+
+
+
+      .metric-icon {
+
+
+
+        width: 40px;
+
+
+
+        height: 40px;
+
+
+
+        font-size: 18px;
+
+
+
+        border-radius: 10px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* TABS - HORIZONTAL SMOOTH TOUCH SCROLLER */
+
+
+
+      .tabs-bar {
+
+
+
+        margin-bottom: 12px;
+
+
+
+        border-bottom: 1.5px solid var(--border-light);
+
+
+
+        padding-bottom: 0;
+
+
+
+      }
+
+
+
+      .tabs-nav {
+
+
+
+        display: flex;
+
+
+
+        flex-wrap: nowrap;
+
+
+
+        overflow-x: auto;
+
+
+
+        -webkit-overflow-scrolling: touch;
+
+
+
+        gap: 4px;
+
+
+
+        width: 100%;
+
+
+
+        padding-bottom: 4px;
+
+
+
+        scrollbar-width: none;
+
+
+
+      }
+
+
+
+      .tabs-nav::-webkit-scrollbar {
+
+
+
+        display: none;
+
+
+
+      }
+
+
+
+      .tab-btn {
+
+
+
+        padding: 8px 12px;
+
+
+
+        font-size: 12.5px;
+
+
+
+        white-space: nowrap;
+
+
+
+        flex-shrink: 0;
+
+
+
+      }
+
+
+
+      .tab-badge {
+
+
+
+        font-size: 10px;
+
+
+
+        padding: 1px 6px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* TOOLBAR */
+
+
+
+      .table-toolbar {
+
+
+
+        flex-direction: column;
+
+
+
+        align-items: stretch;
+
+
+
+        gap: 8px;
+
+
+
+        margin-bottom: 12px;
+
+
+
+      }
+
+
+
+      .search-input-wrap {
+
+
+
+        width: 100%;
+
+
+
+        max-width: 100%;
+
+
+
+        min-width: 0;
+
+
+
+      }
+
+
+
+      .search-input-wrap input {
+
+
+
+        font-size: 13px;
+
+
+
+        padding: 9px 12px 9px 34px;
+
+
+
+      }
+
+
+
+      .filter-group {
+
+
+
+        width: 100%;
+
+
+
+        display: flex;
+
+
+
+        flex-wrap: wrap;
+
+
+
+        gap: 8px;
+
+
+
+      }
+
+
+
+      .filter-select {
+
+
+
+        flex: 1;
+
+
+
+        min-width: 130px;
+
+
+
+        font-size: 12px;
+
+
+
+        padding: 8px 10px;
+
+
+
+      }
+
+
+
+      .filter-group .btn {
+
+
+
+        flex: 1;
+
+
+
+        justify-content: center;
+
+
+
+        font-size: 12px;
+
+
+
+        padding: 8px 12px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* DATA TABLE MOBILE ENHANCEMENTS */
+
+
+
+      .table-card {
+
+
+
+        border-radius: 10px;
+
+
+
+      }
+
+
+
+      .table-scroll-hint {
+
+
+
+        display: flex;
+
+
+
+      }
+
+
+
+      table {
+
+
+
+        font-size: 12px;
+
+
+
+      }
+
+
+
+      th {
+
+
+
+        padding: 10px 12px;
+
+
+
+        font-size: 10px;
+
+
+
+      }
+
+
+
+      td {
+
+
+
+        padding: 10px 12px;
+
+
+
+      }
+
+
+
+      .receipt-thumb {
+
+
+
+        width: 42px;
+
+
+
+        height: 42px;
+
+
+
+      }
+
+
+
+      .btn-action {
+
+
+
+        padding: 6px 10px;
+
+
+
+        font-size: 11.5px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* MODALS (MOBILE ADAPTIVE) */
+
+
+
+      .modal-overlay {
+
+
+
+        padding: 12px 8px;
+
+
+
+        align-items: flex-end;
+
+
+
+      }
+
+
+
+      .modal-card {
+
+
+
+        max-height: calc(100dvh - 24px);
+
+
+
+        border-radius: 16px 16px 10px 10px;
+
+
+
+        width: 100%;
+
+
+
+      }
+
+
+
+      .modal-header {
+
+
+
+        padding: 14px 16px;
+
+
+
+      }
+
+
+
+      .modal-header h3 {
+
+
+
+        font-size: 16px;
+
+
+
+      }
+
+
+
+      .modal-body {
+
+
+
+        padding: 14px 16px;
+
+
+
+      }
+
+
+
+      .detail-grid {
+
+
+
+        grid-template-columns: 1fr;
+
+
+
+        gap: 8px;
+
+
+
+      }
+
+
+
+      .detail-box label {
+
+
+
+        font-size: 10px;
+
+
+
+      }
+
+
+
+      .detail-box span {
+
+
+
+        font-size: 12.5px;
+
+
+
+      }
+
+
+
+      .receipt-full-preview img {
+
+
+
+        max-height: 220px;
+
+
+
+      }
+
+
+
+      .modal-footer {
+
+
+
+        padding: 12px 16px;
+
+
+
+        flex-direction: column-reverse;
+
+
+
+        gap: 8px;
+
+
+
+      }
+
+
+
+      .modal-footer .btn {
+
+
+
+        width: 100%;
+
+
+
+        justify-content: center;
+
+
+
+        padding: 11px 16px;
+
+
+
+        font-size: 13px;
+
+
+
+      }
+
+
+
+
+
+
+
+      /* TOAST NOTIFICATION */
+
+
+
+      .toast {
+
+
+
+        left: 12px;
+
+
+
+        right: 12px;
+
+
+
+        bottom: 12px;
+
+
+
+        width: auto;
+
+
+
+        max-width: calc(100% - 24px);
+
+
+
+        text-align: center;
+
+
+
+        justify-content: center;
+
+
+
+        font-size: 12px;
+
+
+
+        padding: 10px 16px;
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    @media (max-width: 400px) {
+
+
+
+      .brand-tag {
+
+
+
+        display: none;
+
+
+
+      }
+
+
+
+      .brand-title {
+
+
+
+        font-size: 15px;
+
+
+
+      }
+
+
+
+      .metrics-grid {
+
+
+
+        grid-template-columns: 1fr;
+
+
+
+      }
+
+
+
+      .metric-card:first-child {
+
+
+
+        grid-column: span 1;
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    /* ── ADMIN LOGIN GATEWAY MODAL ── */
+
+
+
+    .login-gate-overlay {
+
+
+
+      position: fixed;
+
+
+
+      inset: 0;
+
+
+
+      z-index: 99999;
+
+
+
+      background: rgba(30, 16, 2, 0.78);
+
+
+
+      backdrop-filter: blur(14px);
+
+
+
+      -webkit-backdrop-filter: blur(14px);
+
+
+
+      display: flex;
+
+
+
+      align-items: center;
+
+
+
+      justify-content: center;
+
+
+
+      padding: 20px;
+
+
+
+    }
+
+
+
+    .login-card {
+
+
+
+      background: #ffffff;
+
+
+
+      border-radius: 24px;
+
+
+
+      max-width: 440px;
+
+
+
+      width: 100%;
+
+
+
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(245, 168, 0, 0.35);
+
+
+
+      border: 2px solid #ffd56b;
+
+
+
+      padding: 34px 30px 24px;
+
+
+
+      position: relative;
+
+
+
+      animation: popIn .25s ease-out;
+
+
+
+    }
+
+
+
+    .login-header {
+
+
+
+      text-align: center;
+
+
+
+      margin-bottom: 22px;
+
+
+
+    }
+
+
+
+    .login-logo {
+
+
+
+      height: 48px;
+
+
+
+      width: auto;
+
+
+
+      object-fit: contain;
+
+
+
+      margin-bottom: 12px;
+
+
+
+    }
+
+
+
+    .login-header h2 {
+
+
+
+      font-family: var(--font-head);
+
+
+
+      font-size: 22px;
+
+
+
+      font-weight: 800;
+
+
+
+      color: var(--brown);
+
+
+
+      margin: 0 0 4px;
+
+
+
+    }
+
+
+
+    .login-header p {
+
+
+
+      font-size: 13px;
+
+
+
+      color: var(--brown-muted);
+
+
+
+      margin: 0;
+
+
+
+      line-height: 1.4;
+
+
+
+    }
+
+
+
+    .login-error-alert {
+
+
+
+      background: #fef2f2;
+
+
+
+      border: 1.5px solid #fca5a5;
+
+
+
+      color: #b91c1c;
+
+
+
+      padding: 10px 14px;
+
+
+
+      border-radius: 12px;
+
+
+
+      font-size: 13px;
+
+
+
+      font-weight: 600;
+
+
+
+      margin-bottom: 16px;
+
+
+
+      display: flex;
+
+
+
+      align-items: center;
+
+
+
+      gap: 8px;
+
+
+
+      animation: shake .3s ease;
+
+
+
+    }
+
+
+
+    .input-with-icon {
+
+
+
+      position: relative;
+
+
+
+      display: flex;
+
+
+
+      align-items: center;
+
+
+
+    }
+
+
+
+    .input-with-icon .input-icon {
+
+
+
+      position: absolute;
+
+
+
+      left: 14px;
+
+
+
+      font-size: 15px;
+
+
+
+      pointer-events: none;
+
+
+
+      user-select: none;
+
+
+
+    }
+
+
+
+    .input-with-icon input {
+
+
+
+      width: 100%;
+
+
+
+      padding: 12px 42px 12px 42px;
+
+
+
+      border: 1.5px solid var(--border);
+
+
+
+      border-radius: 12px;
+
+
+
+      font-size: 14px;
+
+
+
+      font-family: inherit;
+
+
+
+      color: var(--brown);
+
+
+
+      background: #fffdf8;
+
+
+
+      transition: border-color .2s, box-shadow .2s;
+
+
+
+    }
+
+
+
+    .input-with-icon input:focus {
+
+
+
+      border-color: var(--gold);
+
+
+
+      outline: none;
+
+
+
+      box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2);
+
+
+
+    }
+
+
+
+    .btn-toggle-pwd {
+
+
+
+      position: absolute;
+
+
+
+      right: 12px;
+
+
+
+      background: transparent;
+
+
+
+      border: none;
+
+
+
+      cursor: pointer;
+
+
+
+      font-size: 16px;
+
+
+
+      color: var(--brown-muted);
+
+
+
+      padding: 4px;
+
+
+
+      line-height: 1;
+
+
+
+    }
+
+
+
+    .login-footer {
+
+
+
+      margin-top: 20px;
+
+
+
+      padding-top: 14px;
+
+
+
+      border-top: 1px dashed var(--border-light);
+
+
+
+      text-align: center;
+
+
+
+      font-size: 11.5px;
+
+
+
+      color: var(--brown-muted);
+
+
+
+    }
+
+
+
+    @keyframes popIn {
+
+
+
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+
+
+
+      to { opacity: 1; transform: scale(1) translateY(0); }
+
+
+
+    }
+
+
+
+    @keyframes shake {
+
+
+
+      0%, 100% { transform: translateX(0); }
+
+
+
+      20%, 60% { transform: translateX(-6px); }
+
+
+
+      40%, 80% { transform: translateX(6px); }
+
+
+
+    }
+
+
+
+
+
+
+
+  </style>
+
+
+
+  <link rel="stylesheet" href="server-wakeup.css">
+  <script src="server-wakeup.js"></script>
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+
+  <!-- TOP HEADER -->
+
+
+
+  <header class="navbar">
+
+
+
+    <div class="navbar-wrap">
+
+
+
+      <div class="brand-area">
+
+
+
+        <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="brand-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
+
+
+
+        <span class="brand-title">Cake All You Can</span>
+
+
+
+        <span class="brand-tag">Admin Verification Portal</span>
+
+
+
+      </div>
+
+
+
+      <div class="nav-actions">
+
+
+
+        <div class="db-badge" title="Live connection to MongoDB database: goldilocks_ecoupon">
+
+
+
+          <span class="db-dot"></span>
+
+
+
+          <span>MongoDB Live</span>
+
+
+
+        </div>
+
+
+
+        <button class="btn btn-secondary btn-sm" id="btnRefresh" title="Refresh Live Data">
+
+
+
+          🔄 Refresh
+
+
+
+        </button>
+
+
+
+        <a href="/" class="btn-client" target="_blank" title="Open Customer E-Coupon Screen">
+
+
+
+          🎟️ Customer App ↗
+
+
+
+        </a>
+
+
+
+        <div class="user-pill" id="adminUserPill" style="display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.7);padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:700;color:var(--brown);border:1px solid var(--border);">
+
+
+
+          <span>👤</span> <span id="adminUsernameDisplay">admin</span>
+
+
+
+        </div>
+
+
+
+        <button class="btn btn-secondary btn-sm" id="btnAdminLogout" title="Log Out from Admin Portal" style="display:none;background:#fff2f2;color:#b91c1c;border-color:#fca5a5;">
+
+
+
+          🚪 Log Out
+
+
+
+        </button>
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </header>
+
+
+
+
+
+
+
+  <main class="container">
+
+
+
+
+
+
+
+    <!-- KPI SUMMARY METRICS -->
+
+
+
+    <section class="metrics-grid">
+
+
+
+      <div class="metric-card" style="border-left: 4px solid #ff9a2e;">
+
+
+
+        <div class="metric-info">
+
+
+
+          <h4>Pending Verifications</h4>
+
+
+
+          <div class="value" id="kpiPending" style="color:#b86200;">0</div>
+
+
+
+          <div class="sub">QR receipts awaiting review</div>
+
+
+
+        </div>
+
+
+
+        <div class="metric-icon ic-amber">⏳</div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="metric-card">
+
+
+
+        <div class="metric-info">
+
+
+
+          <h4>Coupons Issued</h4>
+
+
+
+          <div class="value" id="kpiCoupons">0</div>
+
+
+
+          <div class="sub">Total registered guests</div>
+
+
+
+        </div>
+
+
+
+        <div class="metric-icon ic-yellow">🎟️</div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="metric-card">
+
+
+
+        <div class="metric-info">
+
+
+
+          <h4>Total Revenue</h4>
+
+
+
+          <div class="value" id="kpiRevenue">₱0.00</div>
+
+
+
+          <div class="sub">₱499.00 per customer</div>
+
+
+
+        </div>
+
+
+
+        <div class="metric-icon ic-green">💰</div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="metric-card">
+
+
+
+        <div class="metric-info">
+
+
+
+          <h4>Active Auth Codes</h4>
+
+
+
+          <div class="value" id="kpiActiveCodes">0</div>
+
+
+
+          <div class="sub">Ready for cashier use</div>
+
+
+
+        </div>
+
+
+
+        <div class="metric-icon ic-blue">🔑</div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="metric-card">
+
+
+
+        <div class="metric-info">
+
+
+
+          <h4>Redeemed Codes</h4>
+
+
+
+          <div class="value" id="kpiUsedCodes">0</div>
+
+
+
+          <div class="sub">Cash payments verified</div>
+
+
+
+        </div>
+
+
+
+        <div class="metric-icon ic-purple">✅</div>
+
+
+
+      </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- TABS BAR -->
+
+
+
+    <div class="tabs-bar">
+
+
+
+      <div class="tabs-nav">
+
+
+
+        <button class="tab-btn active" data-tab="tab-pending">
+
+
+
+          <span>⏳ Pending Verifications</span>
+
+
+
+          <span class="tab-badge badge-alert" id="tabBadgePending">0</span>
+
+
+
+        </button>
+
+
+
+        <button class="tab-btn" data-tab="tab-coupons">
+
+
+
+          <span>👥 Issued E-Coupons</span>
+
+
+
+          <span class="tab-badge" id="tabBadgeCoupons">0</span>
+
+
+
+        </button>
+
+
+
+        <button class="tab-btn" data-tab="tab-codes">
+
+
+
+          <span>🔑 Authorization Codes</span>
+
+
+
+          <span class="tab-badge" id="tabBadgeCodes">0</span>
+
+
+
+        </button>
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <!-- TAB 1: PENDING VERIFICATIONS (QR PAYMENTS AWAITING APPROVAL) -->
+
+
+
+    <section id="tab-pending" class="tab-content">
+
+
+
+      <div class="table-toolbar">
+
+
+
+        <div class="search-input-wrap">
+
+
+
+          <span class="search-icon">🔍</span>
+
+
+
+          <input type="text" id="pendingSearch" placeholder="Search by name, Gmail, mobile, tracking no..." />
+
+
+
+        </div>
+
+
+
+        <div class="filter-group">
+
+
+
+          <select class="filter-select" id="pendingStatusFilter">
+
+
+
+            <option value="pending" selected>Pending Review Only</option>
+
+
+
+            <option value="all">All Verification Records</option>
+
+
+
+            <option value="approved">Approved Only</option>
+
+
+
+            <option value="declined">Declined Only</option>
+
+
+
+          </select>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="table-card">
+
+
+
+        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
+
+
+
+        <div class="table-responsive">
+
+
+
+          <table>
+
+
+
+            <thead>
+
+
+
+              <tr>
+
+
+
+                <th>Tracking No.</th>
+
+
+
+                <th>Guest Name</th>
+
+
+
+                <th>Customer Gmail</th>
+
+
+
+                <th>Mobile Number</th>
+
+
+
+                <th>Amount</th>
+
+
+
+                <th>Payment Receipt</th>
+
+
+
+                <th>Status</th>
+
+
+
+                <th>Submitted At</th>
+
+
+
+                <th>Actions</th>
+
+
+
+              </tr>
+
+
+
+            </thead>
+
+
+
+            <tbody id="pendingTableBody">
+
+
+
+              <tr>
+
+
+
+                <td colspan="9" class="empty-state">
+
+
+
+                  <div class="empty-icon">⏳</div>
+
+
+
+                  <div>Loading pending payments from MongoDB...</div>
+
+
+
+                </td>
+
+
+
+              </tr>
+
+
+
+            </tbody>
+
+
+
+          </table>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- TAB 2: ISSUED CUSTOMER E-COUPONS MONITOR -->
+
+
+
+    <section id="tab-coupons" class="tab-content" style="display: none;">
+
+
+
+      <div class="table-toolbar">
+
+
+
+        <div class="search-input-wrap">
+
+
+
+          <span class="search-icon">🔍</span>
+
+
+
+          <input type="text" id="couponSearch" placeholder="Search by name, Gmail, mobile, control no..." />
+
+
+
+        </div>
+
+
+
+        <div class="filter-group">
+
+
+
+          <select class="filter-select" id="couponPayFilter">
+
+
+
+            <option value="">All Payment Types</option>
+
+
+
+            <option value="cash">Cash at Store</option>
+
+
+
+            <option value="qr">QRPh Online Transfer</option>
+
+
+
+          </select>
+
+
+
+          <button class="btn btn-secondary" id="btnExportCoupons">
+
+
+
+            📥 Export CSV
+
+
+
+          </button>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="table-card">
+
+
+
+        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
+
+
+
+        <div class="table-responsive">
+
+
+
+          <table>
+
+
+
+            <thead>
+
+
+
+              <tr>
+
+
+
+                <th>Control No.</th>
+
+
+
+                <th>Guest Name</th>
+
+
+
+                <th>Gmail Address</th>
+
+
+
+                <th>Mobile Number</th>
+
+
+
+                <th>Method</th>
+
+
+
+                <th>Auth Code / Txn</th>
+
+
+
+                <th>Amount</th>
+
+
+
+                <th>Issued At</th>
+
+
+
+                <th>Actions</th>
+
+
+
+              </tr>
+
+
+
+            </thead>
+
+
+
+            <tbody id="couponsTableBody">
+
+
+
+              <tr>
+
+
+
+                <td colspan="9" class="empty-state">
+
+
+
+                  <div class="empty-icon">⏳</div>
+
+
+
+                  <div>Loading issued e-coupons from MongoDB...</div>
+
+
+
+                </td>
+
+
+
+              </tr>
+
+
+
+            </tbody>
+
+
+
+          </table>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- TAB 3: AUTHORIZATION CODES MANAGER -->
+
+
+
+    <section id="tab-codes" class="tab-content" style="display: none;">
+
+
+
+      <div class="table-toolbar">
+
+
+
+        <div class="search-input-wrap">
+
+
+
+          <span class="search-icon">🔍</span>
+
+
+
+          <input type="text" id="codeSearch" placeholder="Search code (e.g. 1234), branch, guest name..." />
+
+
+
+        </div>
+
+
+
+        <div class="filter-group">
+
+
+
+          <select class="filter-select" id="codeStatusFilter">
+
+
+
+            <option value="">All Statuses</option>
+
+
+
+            <option value="active">Active (Available)</option>
+
+
+
+            <option value="used">Used (Redeemed)</option>
+
+
+
+            <option value="revoked">Revoked</option>
+
+
+
+          </select>
+
+
+
+          <button class="btn btn-secondary" id="btnBatchModal">
+
+
+
+            🎲 Batch Generate
+
+
+
+          </button>
+
+
+
+          <button class="btn btn-primary" id="btnAddCodeModal">
+
+
+
+            ➕ Add Single Code
+
+
+
+          </button>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="table-card">
+
+
+
+        <div class="table-scroll-hint"><span>👉 Swipe table horizontally to view all columns</span> <span>➔</span></div>
+
+
+
+        <div class="table-responsive">
+
+
+
+          <table>
+
+
+
+            <thead>
+
+
+
+              <tr>
+
+
+
+                <th>Accepted Code</th>
+
+
+
+                <th>Status</th>
+
+
+
+                <th>Branch &amp; Notes</th>
+
+
+
+                <th>Redeemed By</th>
+
+
+
+                <th>E-Coupon Issued</th>
+
+
+
+                <th>Redeemed At</th>
+
+
+
+                <th>Actions</th>
+
+
+
+              </tr>
+
+
+
+            </thead>
+
+
+
+            <tbody id="codesTableBody">
+
+
+
+              <tr>
+
+
+
+                <td colspan="7" class="empty-state">
+
+
+
+                  <div class="empty-icon">⏳</div>
+
+
+
+                  <div>Loading authorization codes from MongoDB...</div>
+
+
+
+                </td>
+
+
+
+              </tr>
+
+
+
+            </tbody>
+
+
+
+          </table>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+  </main>
+
+
+
+
+
+
+
+  <!-- MODAL: ADMIN LOGIN GATEWAY -->
+
+
+
+  <div class="login-gate-overlay" id="modalAdminLogin" style="display:flex;">
+
+
+
+    <div class="login-card">
+
+
+
+      <div class="login-header">
+
+
+
+        <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="login-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
+
+
+
+        <h2>Store Admin Portal</h2>
+
+
+
+        <p>Cake All You Can Verification &amp; E-Coupon Management</p>
+
+
+
+      </div>
+
+
+
+      <form id="formAdminLogin" novalidate>
+
+
+
+        <div id="loginErrorAlert" class="login-error-alert" style="display:none;">
+
+
+
+          <span>⚠️</span> <span id="loginErrorText">Invalid username or password.</span>
+
+
+
+        </div>
+
+
+
+        <div class="form-group" style="margin-bottom: 14px;">
+
+
+
+          <label for="adminUsernameInput">Manager Username *</label>
+
+
+
+          <div class="input-with-icon">
+
+
+
+            <span class="input-icon">👤</span>
+
+
+
+            <input type="text" id="adminUsernameInput" placeholder="e.g. admin" autocomplete="username" required />
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <div class="form-group" style="margin-bottom: 14px;">
+
+
+
+          <label for="adminPasswordInput">Password *</label>
+
+
+
+          <div class="input-with-icon">
+
+
+
+            <span class="input-icon">🔒</span>
+
+
+
+            <input type="password" id="adminPasswordInput" placeholder="Enter manager password" autocomplete="current-password" required />
+
+
+
+            <button type="button" class="btn-toggle-pwd" id="btnToggleLoginPwd" title="Show/Hide Password">👁️</button>
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+
+
+
+          <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--brown-muted);cursor:pointer;user-select:none;">
+
+
+
+            <input type="checkbox" id="adminRememberMe" checked style="accent-color:var(--gold);" />
+
+
+
+            <span>Remember me</span>
+
+
+
+          </label>
+
+
+
+          
+
+
+
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary btn-full" id="btnAdminLoginSubmit" style="padding:13px;font-size:14.5px;font-weight:700;box-shadow:0 6px 18px rgba(245,168,0,0.35);">
+
+
+
+          🔐 Sign In to Admin Portal
+
+
+
+        </button>
+
+
+
+      </form>
+
+
+
+      <div class="login-footer">
+
+
+
+        🔒 Authorized store managers &amp; cashiers only. All actions are logged.
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- MODAL: REVIEW PENDING VERIFICATION -->
+
+
+
+  <div class="modal-overlay" id="modalReviewPending">
+
+
+
+    <div class="modal-card" style="max-width: 680px; width: 100%;">
+
+
+
+      <div class="modal-header">
+
+
+
+        <h3 id="revModalTitle">Review Payment Proof</h3>
+
+
+
+        <button class="btn-close" data-close="modalReviewPending">&times;</button>
+
+
+
+      </div>
+
+
+
+      <div class="modal-body" id="reviewModalBody">
+
+
+
+        <!-- Dynamically injected -->
+
+
+
+      </div>
+
+
+
+      <div class="modal-footer" id="reviewModalFooter">
+
+
+
+        <!-- Dynamically injected actions -->
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- MODAL: DECLINE PAYMENT VERIFICATION -->
+
+
+
+  <div class="modal-overlay" id="modalDeclineVerification">
+
+
+
+    <div class="modal-card" style="max-width: 480px;">
+
+
+
+      <div class="modal-header">
+
+
+
+        <h3 style="color:#b91c1c;">✕ Decline Payment Verification</h3>
+
+
+
+        <button class="btn-close" data-close="modalDeclineVerification">&times;</button>
+
+
+
+      </div>
+
+
+
+      <form id="formDeclineVerification">
+
+
+
+        <input type="hidden" id="declineItemId" value="" />
+
+
+
+        <div class="modal-body">
+
+
+
+          <div style="background:#fee2e2;border:1px solid #fca5a5;padding:12px;border-radius:8px;margin-bottom:14px;font-size:12.5px;color:#991b1b;line-height:1.4;">
+
+
+
+            Setting the status to <b>Declined</b> will update the customer's reservation tracking status and save your reason note.
+
+
+
+          </div>
+
+
+
+          <div class="form-group" style="margin-bottom:14px;">
+
+
+
+            <label style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Transaction</label>
+
+
+
+            <div id="declineGuestSummary" style="font-size:13.5px;font-weight:700;color:var(--brown);background:#fbfbfb;border:1px solid #e5e7eb;padding:10px 12px;border-radius:8px;"></div>
+
+
+
+          </div>
+
+
+
+          <div class="form-group" style="margin-bottom:14px;">
+
+
+
+            <label for="declinePresetReason" style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Select Reason Preset</label>
+
+
+
+            <select class="filter-select" id="declinePresetReason" style="width:100%;font-size:13px;padding:8px 10px;">
+
+
+
+              <option value="Receipt screenshot is blurry, cropped, or unreadable.">Receipt screenshot is blurry, cropped, or unreadable</option>
+
+
+
+              <option value="Transferred amount does not match the ₱499.00 promo pass price.">Transferred amount does not match ₱499.00</option>
+
+
+
+              <option value="Invalid reference number or duplicate proof already submitted.">Invalid reference number / duplicate receipt</option>
+
+
+
+              <option value="Payment was sent to incorrect QR or non-Robinsons Tacloban account.">Incorrect QR or merchant account</option>
+
+
+
+              <option value="custom">Other reason (write custom note below)...</option>
+
+
+
+            </select>
+
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="declineReasonNotes" style="font-size:12px;font-weight:700;color:var(--brown-muted);margin-bottom:4px;display:block;">Reason Note for Customer *</label>
+
+
+
+            <textarea id="declineReasonNotes" rows="3" class="filter-select" style="width:100%;resize:vertical;font-family:inherit;padding:10px;font-size:13px;line-height:1.4;" required placeholder="Enter note explaining why payment was declined..."></textarea>
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <div class="modal-footer">
+
+
+
+          <button type="button" class="btn btn-secondary" data-close="modalDeclineVerification">Cancel</button>
+
+
+
+          <button type="submit" class="btn btn-danger" id="btnSubmitDecline" style="background:#dc2626;color:#ffffff;display:inline-flex;align-items:center;gap:6px;">
+
+
+
+            ✕ Set Status as Declined
+
+
+
+          </button>
+
+
+
+        </div>
+
+
+
+      </form>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- MODAL: ADD SINGLE CODE -->
+
+
+
+  <div class="modal-overlay" id="modalAddCode">
+
+
+
+    <div class="modal-card" style="max-width: 480px;">
+
+
+
+      <div class="modal-header">
+
+
+
+        <h3>Add New Authorization Code</h3>
+
+
+
+        <button class="btn-close" data-close="modalAddCode">&times;</button>
+
+
+
+      </div>
+
+
+
+      <form id="formAddCode">
+
+
+
+        <div class="modal-body">
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="newCodeVal">Accepted Number Combination *</label>
+
+
+
+            <div style="display:flex;gap:8px;">
+
+
+
+              <input type="text" id="newCodeVal" maxlength="8" placeholder="e.g. 1234 or 8821" required style="font-family:monospace;font-size:16px;font-weight:700;" />
+
+
+
+              <button type="button" class="btn btn-secondary btn-sm" id="btnRandomCode">🎲 Random</button>
+
+
+
+            </div>
+
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="newCodeBranch">Branch</label>
+
+
+
+            <input type="text" id="newCodeBranch" value="Goldilocks Robinsons Tacloban" />
+
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="newCodeDesc">Register / Description</label>
+
+
+
+            <input type="text" id="newCodeDesc" placeholder="e.g. Counter 4 Code, Special Promo" />
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <div class="modal-footer">
+
+
+
+          <button type="button" class="btn btn-secondary" data-close="modalAddCode">Cancel</button>
+
+
+
+          <button type="submit" class="btn btn-primary">Save to MongoDB</button>
+
+
+
+        </div>
+
+
+
+      </form>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- MODAL: BATCH GENERATE CODES -->
+
+
+
+  <div class="modal-overlay" id="modalBatchCode">
+
+
+
+    <div class="modal-card" style="max-width: 480px;">
+
+
+
+      <div class="modal-header">
+
+
+
+        <h3>Batch Generate Authorization Codes</h3>
+
+
+
+        <button class="btn-close" data-close="modalBatchCode">&times;</button>
+
+
+
+      </div>
+
+
+
+      <form id="formBatchCode">
+
+
+
+        <div class="modal-body">
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="batchCount">How many codes to generate?</label>
+
+
+
+            <select id="batchCount">
+
+
+
+              <option value="5">5 unique 4-digit codes</option>
+
+
+
+              <option value="10" selected>10 unique 4-digit codes</option>
+
+
+
+              <option value="20">20 unique 4-digit codes</option>
+
+
+
+            </select>
+
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="batchBranch">Branch</label>
+
+
+
+            <input type="text" id="batchBranch" value="Goldilocks Robinsons Tacloban" />
+
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+
+            <label for="batchDesc">Batch Note</label>
+
+
+
+            <input type="text" id="batchDesc" placeholder="e.g. Promo Batch Nov 30" />
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <div class="modal-footer">
+
+
+
+          <button type="button" class="btn btn-secondary" data-close="modalBatchCode">Cancel</button>
+
+
+
+          <button type="submit" class="btn btn-primary">Generate &amp; Save</button>
+
+
+
+        </div>
+
+
+
+      </form>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- MODAL: VIEW COUPON DETAILS -->
+
+
+
+  <div class="modal-overlay" id="modalCouponDetail">
+
+
+
+    <div class="modal-card" style="max-width: 540px;">
+
+
+
+      <div class="modal-header">
+
+
+
+        <h3>Customer E-Coupon Record</h3>
+
+
+
+        <button class="btn-close" data-close="modalCouponDetail">&times;</button>
+
+
+
+      </div>
+
+
+
+      <div class="modal-body" id="couponDetailBody"></div>
+
+
+
+      <div class="modal-footer">
+
+
+
+        <button type="button" class="btn btn-secondary" data-close="modalCouponDetail">Close</button>
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+  <!-- TOAST NOTIFICATION -->
+
+
+
+  <div class="toast" id="adminToast">Notification message</div>
+
+
+
+
+
+
+
+  <script>
+
+
+
+    (() => {
+
+
+
+      let pendingData = [];
+
+
+
+      let couponsData = [];
+
+
+
+      let codesData = [];
+
+
+
+      let currentReviewItem = null;
+
+
+
+
+
+
+
+      const $ = (s, r = document) => r.querySelector(s);
+
+
+
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+
+
+
+
+
+
+      // ── AUTHENTICATED FETCH INTERCEPTOR ──
+
+
+
+      const originalFetch = window.fetch;
+
+
+
+      window.fetch = async function(url, options = {}) {
+
+
+
+        options = options || {};
+
+
+
+        options.headers = options.headers || {};
+
+
+
+        const token = localStorage.getItem('goldilocks_admin_token') || sessionStorage.getItem('goldilocks_admin_token');
+
+
+
+        if (token) {
+
+
+
+          if (options.headers instanceof Headers) {
+
+
+
+            options.headers.set('Authorization', 'Bearer ' + token);
+
+
+
+          } else {
+
+
+
+            options.headers['Authorization'] = 'Bearer ' + token;
+
+
+
+          }
+
+
+
+        }
+
+
+
+        const res = await originalFetch(url, options);
+
+
+
+        if (res.status === 401 && typeof url === 'string' && (url.includes('/api/admin') || url.includes('/api/coupons') || url.includes('/api/payment-codes'))) {
+
+
+
+          localStorage.removeItem('goldilocks_admin_token');
+
+
+
+          sessionStorage.removeItem('goldilocks_admin_token');
+
+
+
+          showAdminLogin(true, 'Session expired. Please sign in again.');
+
+
+
+        }
+
+
+
+        return res;
+
+
+
+      };
+
+
+
+
+
+
+
+      function getAdminToken() {
+
+
+
+        return localStorage.getItem('goldilocks_admin_token') || sessionStorage.getItem('goldilocks_admin_token');
+
+
+
+      }
+
+
+
+
+
+
+
+      function showAdminLogin(show, errorMsg = '') {
+
+
+
+        const modal = $('#modalAdminLogin');
+
+
+
+        const errBox = $('#loginErrorAlert');
+
+
+
+        const errText = $('#loginErrorText');
+
+
+
+        if (!modal) return;
+
+
+
+        if (show) {
+
+
+
+          modal.style.display = 'flex';
+
+
+
+          modal.classList.add('open');
+
+
+
+          if (errorMsg) {
+
+
+
+            errBox.style.display = 'flex';
+
+
+
+            errText.textContent = errorMsg;
+
+
+
+          } else {
+
+
+
+            errBox.style.display = 'none';
+
+
+
+          }
+
+
+
+          $('#adminPasswordInput').value = '';
+
+
+
+          setTimeout(() => $('#adminUsernameInput').focus(), 100);
+
+
+
+          $('#adminUserPill').style.display = 'none';
+
+
+
+          $('#btnAdminLogout').style.display = 'none';
+
+
+
+        } else {
+
+
+
+          modal.style.display = 'none';
+
+
+
+          modal.classList.remove('open');
+
+
+
+          $('#adminUserPill').style.display = 'flex';
+
+
+
+          $('#btnAdminLogout').style.display = 'inline-flex';
+
+
+
+          const username = localStorage.getItem('goldilocks_admin_user') || sessionStorage.getItem('goldilocks_admin_user') || 'admin';
+
+
+
+          $('#adminUsernameDisplay').textContent = username;
+
+
+
+        }
+
+
+
+      }
+
+
+
+
+
+
+
+      async function checkInitialAuth() {
+
+
+
+        const token = getAdminToken();
+
+
+
+        if (!token) {
+
+
+
+          showAdminLogin(true);
+
+
+
+          return false;
+
+
+
+        }
+
+
+
+        try {
+
+
+
+          const res = await originalFetch('/api/admin/check-auth', {
+
+
+
+            headers: { 'Authorization': 'Bearer ' + token }
+
+
+
+          });
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success && d.authenticated) {
+
+
+
+            showAdminLogin(false);
+
+
+
+            return true;
+
+
+
+          }
+
+
+
+        } catch (err) {
+
+
+
+          console.warn('Auth check error:', err);
+
+
+
+        }
+
+
+
+        showAdminLogin(true);
+
+
+
+        return false;
+
+
+
+      }
+
+
+
+
+
+
+
+      function toast(msg) {
+
+
+
+        const t = $('#adminToast');
+
+
+
+        t.textContent = msg;
+
+
+
+        t.classList.add('show');
+
+
+
+        clearTimeout(t._timer);
+
+
+
+        t._timer = setTimeout(() => t.classList.remove('show'), 3800);
+
+
+
+      }
+
+
+
+
+
+
+
+      function formatDateTime(d) {
+
+
+
+        if (!d) return '—';
+
+
+
+        const date = new Date(d);
+
+
+
+        if (isNaN(date.getTime())) return '—';
+
+
+
+        return date.toLocaleString('en-PH', {
+
+
+
+          month: 'short', day: 'numeric', year: 'numeric',
+
+
+
+          hour: '2-digit', minute: '2-digit', hour12: true
+
+
+
+        });
+
+
+
+      }
+
+
+
+
+
+
+
+      function formatCurrency(num) {
+
+
+
+        return '₱' + Number(num || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+
+
+      }
+
+
+
+
+
+
+
+      function escapeHtml(str) {
+
+
+
+        if (!str) return '';
+
+
+
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+
+
+      }
+
+
+
+
+
+
+
+      // ── TABS ──
+
+
+
+      $$('.tab-btn').forEach(btn => {
+
+
+
+        btn.addEventListener('click', () => {
+
+
+
+          $$('.tab-btn').forEach(b => b.classList.remove('active'));
+
+
+
+          btn.classList.add('active');
+
+
+
+          const target = btn.dataset.tab;
+
+
+
+          $$('.tab-content').forEach(c => c.style.display = 'none');
+
+
+
+          $('#' + target).style.display = 'block';
+
+
+
+        });
+
+
+
+      });
+
+
+
+
+
+
+
+      // ── MODALS ──
+
+
+
+      function openModal(id) { $('#' + id).classList.add('open'); }
+
+
+
+      function closeModal(id) { $('#' + id).classList.remove('open'); }
+
+
+
+      $$('[data-close]').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
+
+
+
+      $$('.modal-overlay').forEach(overlay => {
+
+
+
+        overlay.addEventListener('click', e => { if (e.target === overlay && overlay.id !== 'modalAdminLogin') overlay.classList.remove('open'); });
+
+
+
+      });
+
+
+
+
+
+
+
+      $('#btnAddCodeModal').addEventListener('click', () => {
+
+
+
+        $('#formAddCode').reset();
+
+
+
+        $('#newCodeBranch').value = 'Goldilocks Robinsons Tacloban';
+
+
+
+        openModal('modalAddCode');
+
+
+
+      });
+
+
+
+
+
+
+
+      $('#btnBatchModal').addEventListener('click', () => {
+
+
+
+        $('#formBatchCode').reset();
+
+
+
+        $('#batchBranch').value = 'Goldilocks Robinsons Tacloban';
+
+
+
+        openModal('modalBatchCode');
+
+
+
+      });
+
+
+
+
+
+
+
+      $('#btnRandomCode').addEventListener('click', () => {
+
+
+
+        $('#newCodeVal').value = String(Math.floor(1000 + Math.random() * 9000));
+
+
+
+      });
+
+
+
+
+
+
+
+      // ── LOAD STATS ──
+
+
+
+      async function loadStats() {
+
+
+
+        try {
+
+
+
+          const res = await fetch('/api/admin/stats');
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success) {
+
+
+
+            $('#kpiPending').textContent = d.pendingVerifications || 0;
+
+
+
+            $('#tabBadgePending').textContent = d.pendingVerifications || 0;
+
+
+
+            $('#tabBadgePending').style.display = (d.pendingVerifications > 0) ? 'inline-block' : 'none';
+
+
+
+            $('#kpiCoupons').textContent = d.totalCoupons;
+
+
+
+            $('#kpiRevenue').textContent = formatCurrency(d.totalRevenue);
+
+
+
+            $('#kpiActiveCodes').textContent = d.activeCodes;
+
+
+
+            $('#kpiUsedCodes').textContent = d.usedCodes;
+
+
+
+          }
+
+
+
+        } catch (e) { console.error('Stats error:', e); }
+
+
+
+      }
+
+
+
+
+
+
+
+      // ── LOAD PENDING VERIFICATIONS ──
+
+
+
+      async function loadPending() {
+
+
+
+        try {
+
+
+
+          const st = $('#pendingStatusFilter').value;
+
+
+
+          const res = await fetch(`/api/admin/verifications?status=${st}`);
+
+
+
+          const d = await res.json();
+
+
+
+          pendingData = d.data || [];
+
+
+
+          renderPendingTable();
+
+
+
+        } catch (e) {
+
+
+
+          console.error(e);
+
+
+
+          $('#pendingTableBody').innerHTML = `<tr><td colspan="9" class="empty-state">❌ Error loading verification records.</td></tr>`;
+
+
+
+        }
+
+
+
+      }
+
+
+
+
+
+
+
+      function renderPendingTable() {
+
+
+
+        const q = ($('#pendingSearch').value || '').trim().toLowerCase();
+
+
+
+        const sf = $('#pendingStatusFilter').value;
+
+
+
+        const filtered = pendingData.filter(p => {
+
+
+
+          let matchesStatus = true;
+
+
+
+          if (sf === 'pending') matchesStatus = p.status === 'pending';
+
+
+
+          else if (sf === 'approved') matchesStatus = p.status === 'approved';
+
+
+
+          else if (sf === 'declined' || sf === 'rejected') matchesStatus = (p.status === 'declined' || p.status === 'rejected');
+
+
+
+
+
+
+
+          const matchesQ = !q ||
+
+
+
+            (p.txnNumber && p.txnNumber.toLowerCase().includes(q)) ||
+
+
+
+            (p.guestName && p.guestName.toLowerCase().includes(q)) ||
+
+
+
+            (p.email && p.email.toLowerCase().includes(q)) ||
+
+
+
+            (p.mobile && p.mobile.includes(q)) ||
+
+
+
+            (p.referenceNo && p.referenceNo.toLowerCase().includes(q));
+
+
+
+
+
+
+
+          return matchesStatus && matchesQ;
+
+
+
+        });
+
+
+
+
+
+
+
+        const tbody = $('#pendingTableBody');
+
+
+
+        if (!filtered.length) {
+
+
+
+          tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No payment verifications found matching current filter.</td></tr>`;
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        tbody.innerHTML = filtered.map(item => {
+
+
+
+          let stBadge = `<span class="badge badge-pending"><span class="animated-hourglass sm">⏳</span> Pending Review</span>`;
+
+
+
+          if (item.status === 'approved') stBadge = `<span class="badge badge-active">✓ Approved</span>`;
+
+
+
+          if (item.status === 'rejected' || item.status === 'declined') stBadge = `<span class="badge badge-revoked" style="background:#fde8e8;color:#c81e1e;border-color:#f8b4b4;">✕ Declined</span>`;
+
+
+
+
+
+
+
+          let actionButtons = '';
+
+
+
+          if (item.status === 'pending') {
+
+
+
+            actionButtons = `
+
+
+
+              <div class="action-btn-row">
+
+
+
+                <button class="btn btn-action btn-verify-act" onclick="openReviewModal('${item._id}')" title="Review verification">🔍 Review</button>
+
+
+
+                <button class="btn btn-action btn-decline-act" onclick="openDeclineModal('${item._id}')" title="Set status to Declined">✕ Decline</button>
+
+
+
+              </div>`;
+
+
+
+          } else if (item.status === 'rejected' || item.status === 'declined') {
+
+
+
+            actionButtons = `
+
+
+
+              <div class="action-btn-row">
+
+
+
+                <button class="btn btn-action" onclick="openReviewModal('${item._id}')">👁️ View</button>
+
+
+
+                <button class="btn btn-action" onclick="reopenAsPending('${item._id}')" title="Reset status back to Pending" style="font-size:11px;">⏳ Re-open</button>
+
+
+
+              </div>`;
+
+
+
+          } else {
+
+
+
+            actionButtons = `
+
+
+
+              <div class="action-btn-row">
+
+
+
+                <button class="btn btn-action" onclick="openReviewModal('${item._id}')">👁️ View</button>
+
+
+
+              </div>`;
+
+
+
+          }
+
+
+
+
+
+
+
+          return `
+
+
+
+            <tr>
+
+
+
+              <td><span class="badge-ctrl">${item.txnNumber}</span></td>
+
+
+
+              <td>
+
+
+
+                <div class="guest-name-cell">${escapeHtml(item.guestName)}</div>
+
+
+
+                <div class="guest-sub">${escapeHtml(item.address || 'Tacloban')}</div>
+
+
+
+              </td>
+
+
+
+              <td><span class="email-cell">${escapeHtml(item.email)}</span></td>
+
+
+
+              <td><b>${escapeHtml(item.mobile)}</b></td>
+
+
+
+              <td><b>${formatCurrency(item.amountPaid)}</b></td>
+
+
+
+              <td>
+
+
+
+                ${item.receiptImage ? `
+
+
+
+                  <img src="${item.receiptImage}" class="receipt-thumb" onclick="openReceiptPreview('${item._id}')" title="Click to inspect receipt screenshot" />
+
+
+
+                ` : '—'}
+
+
+
+              </td>
+
+
+
+              <td>${stBadge}</td>
+
+
+
+              <td><small>${formatDateTime(item.createdAt)}</small></td>
+
+
+
+              <td>${actionButtons}</td>
+
+
+
+            </tr>
+
+
+
+          `;
+
+
+
+        }).join('');
+
+
+
+      }
+
+
+
+
+
+
+
+      // ── REVIEW PENDING MODAL ──
+
+
+
+      window.openReviewModal = (id) => {
+
+
+
+        const item = pendingData.find(p => p._id === id);
+
+
+
+        if (!item) return;
+
+
+
+        currentReviewItem = item;
+
+
+
+
+
+
+
+        $('#revModalTitle').textContent = `Review Payment: ${item.txnNumber}`;
+
+
+
+        $('#reviewModalBody').innerHTML = `
+
+
+
+          <div class="detail-grid">
+
+
+
+            <div class="detail-box">
+
+
+
+              <label>Guest Name</label>
+
+
+
+              <span>${escapeHtml(item.guestName)}</span>
+
+
+
+            </div>
+
+
+
+            <div class="detail-box">
+
+
+
+              <label>Customer Gmail (Recipient)</label>
+
+
+
+              <span class="email-cell">${escapeHtml(item.email)}</span>
+
+
+
+            </div>
+
+
+
+            <div class="detail-box">
+
+
+
+              <label>Mobile Number</label>
+
+
+
+              <span>${escapeHtml(item.mobile)}</span>
+
+
+
+            </div>
+
+
+
+            <div class="detail-box">
+
+
+
+              <label>Amount to Verify</label>
+
+
+
+              <span style="color:#b86200;font-weight:700;">${formatCurrency(item.amountPaid)}</span>
+
+
+
+            </div>
+
+
+
+            <div class="detail-box" style="grid-column:span 2;">
+
+
+
+              <label>Payment Method &amp; Reference No.</label>
+
+
+
+              <span>QRPh Online Transfer ${item.referenceNo ? `(Ref: <b>${escapeHtml(item.referenceNo)}</b>)` : ''}</span>
+
+
+
+            </div>
+
+
+
+            <div class="detail-box" style="grid-column:span 2;">
+
+
+
+              <label>Address</label>
+
+
+
+              <span>${escapeHtml(item.address || '—')}</span>
+
+
+
+            </div>
+
+
+
+          </div>
+
+
+
+
+
+
+
+          ${(item.status === 'declined' || item.status === 'rejected') ? `
+
+
+
+          <div style="background:#fee2e2;border:1.5px solid #fca5a5;padding:12px 14px;border-radius:8px;font-size:13px;color:#991b1b;margin-top:14px;line-height:1.4;">
+
+
+
+            <b>Status:</b> Declined / Rejected<br>
+
+
+
+            <b>Decline Reason:</b> ${escapeHtml(item.adminNotes || 'No reason specified.')}
+
+
+
+          </div>` : ''}
+
+
+
+
+
+
+
+          <div style="font-size:12px;font-weight:700;color:var(--brown);margin-top:14px;">
+
+
+
+            Uploaded Payment Receipt Screenshot:
+
+
+
+          </div>
+
+
+
+          <div class="receipt-full-preview">
+
+
+
+            <img src="${item.receiptImage}" alt="Receipt Proof" id="reviewImgLarge" />
+
+
+
+            <div style="margin-top:8px;">
+
+
+
+              <a href="${item.receiptImage}" target="_blank" style="font-size:11px;color:#0d5cc7;font-weight:600;">🔍 Open receipt photo in new tab</a>
+
+
+
+            </div>
+
+
+
+          </div>
+
+
+
+        `;
+
+
+
+
+
+
+
+        if (item.status === 'pending') {
+
+
+
+          $('#reviewModalFooter').innerHTML = `
+
+
+
+            <button type="button" class="btn btn-danger" onclick="openDeclineModal('${item._id}')" style="background:#dc2626;color:#ffffff;display:inline-flex;align-items:center;gap:6px;">
+
+
+
+              ✕ Set Status as Declined
+
+
+
+            </button>
+
+
+
+            <button type="button" class="btn btn-success" id="btnApproveAction" onclick="approvePayment('${item._id}')">
+
+
+
+              ✓ Approve &amp; Send E-Coupon to Gmail
+
+
+
+            </button>
+
+
+
+          `;
+
+
+
+        } else if (item.status === 'approved') {
+
+
+
+          $('#reviewModalFooter').innerHTML = `
+
+
+
+            <span style="font-size:12px;color:#0b7835;font-weight:700;margin-right:auto;">
+
+
+
+              ✓ Approved with Control No: ${item.couponControlNo} (Email sent: ${item.emailSent ? 'Yes' : 'No'})
+
+
+
+            </span>
+
+
+
+            <button type="button" class="btn btn-secondary" data-close="modalReviewPending">Close</button>
+
+
+
+          `;
+
+
+
+        } else {
+
+
+
+          $('#reviewModalFooter').innerHTML = `
+
+
+
+            <span style="font-size:12px;color:#c81e1e;font-weight:700;margin-right:auto;">✕ Status: Declined (${escapeHtml(item.adminNotes || '')})</span>
+
+
+
+            <button type="button" class="btn btn-secondary" onclick="reopenAsPending('${item._id}')" style="font-size:12px;">⏳ Re-open to Pending</button>
+
+
+
+            <button type="button" class="btn btn-secondary" data-close="modalReviewPending">Close</button>
+
+
+
+          `;
+
+
+
+        }
+
+
+
+
+
+
+
+        openModal('modalReviewPending');
+
+
+
+      };
+
+
+
+
+
+
+
+      window.openReceiptPreview = (id) => openReviewModal(id);
+
+
+
+
+
+
+
+      // ── DECLINE PAYMENT MODAL & ACTIONS ──
+
+
+
+      window.openDeclineModal = (id) => {
+
+
+
+        const item = pendingData.find(p => p._id === id);
+
+
+
+        if (!item) return;
+
+
+
+        $('#declineItemId').value = id;
+
+
+
+        $('#declineGuestSummary').innerHTML = `
+
+
+
+          <div>Tracking: <b>${escapeHtml(item.txnNumber)}</b></div>
+
+
+
+          <div style="font-size:12px;color:#666;font-weight:normal;margin-top:2px;">Guest: <b>${escapeHtml(item.guestName)}</b> &bull; Amount: <b>${formatCurrency(item.amountPaid)}</b></div>
+
+
+
+        `;
+
+
+
+        $('#declinePresetReason').value = "Receipt screenshot is blurry, cropped, or unreadable.";
+
+
+
+        $('#declineReasonNotes').value = "Receipt screenshot is blurry, cropped, or unreadable.";
+
+
+
+        openModal('modalDeclineVerification');
+
+
+
+      };
+
+
+
+
+
+
+
+      $('#declinePresetReason').addEventListener('change', (e) => {
+
+
+
+        if (e.target.value === 'custom') {
+
+
+
+          $('#declineReasonNotes').value = '';
+
+
+
+          $('#declineReasonNotes').focus();
+
+
+
+        } else {
+
+
+
+          $('#declineReasonNotes').value = e.target.value;
+
+
+
+        }
+
+
+
+      });
+
+
+
+
+
+
+
+      $('#formDeclineVerification').addEventListener('submit', async (e) => {
+
+
+
+        e.preventDefault();
+
+
+
+        const id = $('#declineItemId').value;
+
+
+
+        const reason = $('#declineReasonNotes').value.trim();
+
+
+
+        if (!reason) {
+
+
+
+          toast('Please enter a reason for declining.');
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        const btn = $('#btnSubmitDecline');
+
+
+
+        btn.disabled = true;
+
+
+
+        btn.textContent = 'Updating status...';
+
+
+
+
+
+
+
+        try {
+
+
+
+          const res = await fetch(`/api/admin/verifications/${id}/decline`, {
+
+
+
+            method: 'POST',
+
+
+
+            headers: { 'Content-Type': 'application/json' },
+
+
+
+            body: JSON.stringify({ reason })
+
+
+
+          });
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success) {
+
+
+
+            toast('Payment verification status updated to Declined.');
+
+
+
+            closeModal('modalDeclineVerification');
+
+
+
+            closeModal('modalReviewPending');
+
+
+
+            loadAll();
+
+
+
+          } else {
+
+
+
+            toast(d.message || 'Error updating status to declined.');
+
+
+
+          }
+
+
+
+        } catch (err) {
+
+
+
+          toast('Network error updating status.');
+
+
+
+        } finally {
+
+
+
+          btn.disabled = false;
+
+
+
+          btn.textContent = '✕ Set Status as Declined';
+
+
+
+        }
+
+
+
+      });
+
+
+
+
+
+
+
+      window.reopenAsPending = async (id) => {
+
+
+
+        if (!confirm('Reset this record back to Pending status?')) return;
+
+
+
+        try {
+
+
+
+          const res = await fetch(`/api/admin/verifications/${id}/pending`, { method: 'POST' });
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success) {
+
+
+
+            toast('Payment status reset to Pending.');
+
+
+
+            closeModal('modalReviewPending');
+
+
+
+            loadAll();
+
+
+
+          } else {
+
+
+
+            toast(d.message || 'Error updating status.');
+
+
+
+          }
+
+
+
+        } catch (err) {
+
+
+
+          toast('Network error.');
+
+
+
+        }
+
+
+
+      };
+
+
+
+
+
+
+
+      // ── APPROVE PAYMENT ACTION ──
+
+
+
+      window.approvePayment = async (id) => {
+
+
+
+        const item = currentReviewItem;
+
+
+
+        if (!confirm(`Confirm verification for ${item.guestName}?\n\nThis will generate a unique official E-Coupon and auto-send it directly to: ${item.email}`)) return;
+
+
+
+
+
+
+
+        const btn = $('#btnApproveAction');
+
+
+
+        if (btn) { btn.disabled = true; btn.textContent = 'Generating unique coupon & emailing...'; }
+
+
+
+
+
+
+
+        try {
+
+
+
+          const res = await fetch(`/api/admin/verifications/${id}/approve`, { method: 'POST' });
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success) {
+
+
+
+            toast(`🎉 Verified! E-Coupon ${d.controlNo} generated and auto-sent to ${item.email}`);
+
+
+
+            closeModal('modalReviewPending');
+
+
+
+            loadAll();
+
+
+
+          } else {
+
+
+
+            toast(d.message || 'Error approving payment.');
+
+
+
+            if (btn) { btn.disabled = false; btn.textContent = '✓ Set Status as Approved'; }
+
+
+
+          }
+
+
+
+        } catch (e) {
+
+
+
+          toast('Network or server error during approval.');
+
+
+
+          if (btn) { btn.disabled = false; btn.textContent = '✓ Set Status as Approved'; }
+
+
+
+        }
+
+
+
+      };
+
+
+
+
+
+
+
+      // ── LOAD ISSUED COUPONS ──
+
+
+
+      async function loadCoupons() {
+
+
+
+        try {
+
+
+
+          const res = await fetch('/api/coupons');
+
+
+
+          const d = await res.json();
+
+
+
+          couponsData = d.data || [];
+
+
+
+          $('#tabBadgeCoupons').textContent = couponsData.length;
+
+
+
+          renderCouponsTable();
+
+
+
+        } catch (e) { console.error(e); }
+
+
+
+      }
+
+
+
+
+
+
+
+      function renderCouponsTable() {
+
+
+
+        const q = ($('#couponSearch').value || '').trim().toLowerCase();
+
+
+
+        const pf = $('#couponPayFilter').value;
+
+
+
+        const filtered = couponsData.filter(c => {
+
+
+
+          const mPay = !pf || (c.paymentMethod === pf);
+
+
+
+          const mQ = !q ||
+
+
+
+            (c.guestName && c.guestName.toLowerCase().includes(q)) ||
+
+
+
+            (c.email && c.email.toLowerCase().includes(q)) ||
+
+
+
+            (c.mobile && c.mobile.toLowerCase().includes(q)) ||
+
+
+
+            (c.controlNo && c.controlNo.toLowerCase().includes(q));
+
+
+
+          return mPay && mQ;
+
+
+
+        });
+
+
+
+
+
+
+
+        const tbody = $('#couponsTableBody');
+
+
+
+        if (filtered.length === 0) {
+
+
+
+          tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No customer e-coupons found.</td></tr>`;
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        tbody.innerHTML = filtered.map(c => `
+
+
+
+          <tr>
+
+
+
+            <td><span class="badge-ctrl">${c.controlNo}</span></td>
+
+
+
+            <td>
+
+
+
+              <div class="guest-name-cell">${escapeHtml(c.guestName)}</div>
+
+
+
+              <div class="guest-sub">${escapeHtml(c.branch || 'Robinsons Tacloban')}</div>
+
+
+
+            </td>
+
+
+
+            <td>
+
+
+
+              <span class="email-cell">${escapeHtml(c.email || '—')}</span>
+
+
+
+              ${c.emailSent ? '<span title="E-Coupon sent to Gmail" style="color:#0b7a36;font-size:11px;font-weight:700;margin-left:4px;">✉️✓</span>' : ''}
+
+
+
+            </td>
+
+
+
+            <td><b>${escapeHtml(c.mobile || '—')}</b></td>
+
+
+
+            <td>
+
+
+
+              <span class="badge ${c.paymentMethod === 'cash' ? 'badge-used' : 'badge-active'}">
+
+
+
+                ${c.paymentMethod === 'cash' ? '💵 Cash' : '📱 QRPh'}
+
+
+
+              </span>
+
+
+
+            </td>
+
+
+
+            <td>
+
+
+
+              ${c.paymentCodeUsed ? `<span class="badge-code">${c.paymentCodeUsed}</span>` : (c.txnNumber ? `<span class="badge-ctrl">${c.txnNumber}</span>` : '—')}
+
+
+
+            </td>
+
+
+
+            <td><b>${formatCurrency(c.amountPaid)}</b></td>
+
+
+
+            <td><small>${formatDateTime(c.issuedAt || c.createdAt)}</small></td>
+
+
+
+            <td><button class="btn-action" onclick="viewCouponDetail('${c._id}')">👁️ Details</button></td>
+
+
+
+          </tr>
+
+
+
+        `).join('');
+
+
+
+      }
+
+
+
+
+
+
+
+      // ── LOAD CODES ──
+
+
+
+      async function loadCodes() {
+
+
+
+        try {
+
+
+
+          const res = await fetch('/api/payment-codes');
+
+
+
+          const d = await res.json();
+
+
+
+          codesData = d.data || [];
+
+
+
+          $('#tabBadgeCodes').textContent = codesData.length;
+
+
+
+          renderCodesTable();
+
+
+
+        } catch (e) { console.error(e); }
+
+
+
+      }
+
+
+
+
+
+
+
+      function renderCodesTable() {
+
+
+
+        const q = ($('#codeSearch').value || '').trim().toLowerCase();
+
+
+
+        const sf = $('#codeStatusFilter').value;
+
+
+
+        const filtered = codesData.filter(c => {
+
+
+
+          const mS = !sf || (c.status === sf);
+
+
+
+          const mQ = !q || (c.code && c.code.toLowerCase().includes(q)) ||
+
+
+
+            (c.usedBy && c.usedBy.fullname && c.usedBy.fullname.toLowerCase().includes(q));
+
+
+
+          return mS && mQ;
+
+
+
+        });
+
+
+
+
+
+
+
+        const tbody = $('#codesTableBody');
+
+
+
+        if (filtered.length === 0) {
+
+
+
+          tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No authorization codes found.</td></tr>`;
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        tbody.innerHTML = filtered.map(c => {
+
+
+
+          let stBadge = `<span class="badge badge-active">Active</span>`;
+
+
+
+          if (c.status === 'used' || c.isUsed) stBadge = `<span class="badge badge-used">Claimed</span>`;
+
+
+
+          if (c.status === 'revoked') stBadge = `<span class="badge badge-revoked">Revoked</span>`;
+
+
+
+
+
+
+
+          const usedByText = (c.usedBy && c.usedBy.fullname)
+
+
+
+            ? `<b>${escapeHtml(c.usedBy.fullname)}</b><div class="guest-sub">${escapeHtml(c.usedBy.mobile || '')}</div>`
+
+
+
+            : '<span style="color:#aaa;">— Available —</span>';
+
+
+
+
+
+
+
+          return `
+
+
+
+            <tr>
+
+
+
+              <td>
+
+
+
+                <span class="badge-code">
+
+
+
+                  <span>${c.code}</span>
+
+
+
+                  <span class="copy-icon" onclick="copyCode('${c.code}')" title="Copy code">📋</span>
+
+
+
+                </span>
+
+
+
+              </td>
+
+
+
+              <td>${stBadge}</td>
+
+
+
+              <td>
+
+
+
+                <div style="font-weight:600;">${escapeHtml(c.description || 'Cashier Code')}</div>
+
+
+
+                <div class="guest-sub">${escapeHtml(c.branch || '')}</div>
+
+
+
+              </td>
+
+
+
+              <td>${usedByText}</td>
+
+
+
+              <td>${c.couponControlNo ? `<span class="badge-ctrl">${c.couponControlNo}</span>` : '—'}</td>
+
+
+
+              <td><small>${formatDateTime(c.usedAt)}</small></td>
+
+
+
+              <td>
+
+
+
+                <div class="action-btn-row">
+
+
+
+                  ${c.isUsed || c.status !== 'active' ? `
+
+
+
+                    <button class="btn-action" onclick="resetCode('${c._id}', '${c.code}')">🔄 Reset</button>
+
+
+
+                  ` : `
+
+
+
+                    <button class="btn-action danger" onclick="revokeCode('${c._id}', '${c.code}')">🚫 Revoke</button>
+
+
+
+                  `}
+
+
+
+                  <button class="btn-action danger" onclick="deleteCode('${c._id}', '${c.code}')">🗑️</button>
+
+
+
+                </div>
+
+
+
+              </td>
+
+
+
+            </tr>
+
+
+
+          `;
+
+
+
+        }).join('');
+
+
+
+      }
+
+
+
+
+
+
+
+      window.copyCode = (code) => {
+
+
+
+        const clean = String(code || '').trim();
+
+
+
+        const done = () => toast('Code "' + clean + '" copied!');
+
+
+
+        if (navigator.clipboard && window.isSecureContext) {
+
+
+
+          navigator.clipboard.writeText(clean).then(done).catch(() => {
+
+
+
+            if (fallbackExecCopyAdmin(clean)) done();
+
+
+
+            else toast('Code: ' + clean);
+
+
+
+          });
+
+
+
+        } else {
+
+
+
+          if (fallbackExecCopyAdmin(clean)) done();
+
+
+
+          else toast('Code: ' + clean);
+
+
+
+        }
+
+
+
+      };
+
+
+
+
+
+
+
+      function fallbackExecCopyAdmin(str) {
+
+
+
+        try {
+
+
+
+          const el = document.createElement('textarea');
+
+
+
+          el.value = str;
+
+
+
+          el.setAttribute('readonly', '');
+
+
+
+          el.style.position = 'fixed';
+
+
+
+          el.style.left = '-9999px';
+
+
+
+          el.style.top = '0';
+
+
+
+          el.style.opacity = '0';
+
+
+
+          document.body.appendChild(el);
+
+
+
+          el.focus();
+
+
+
+          el.select();
+
+
+
+          const ok = document.execCommand('copy');
+
+
+
+          document.body.removeChild(el);
+
+
+
+          return ok;
+
+
+
+        } catch (_) {
+
+
+
+          return false;
+
+
+
+        }
+
+
+
+      };
+
+
+
+
+
+
+
+      window.resetCode = async (id, code) => {
+
+
+
+        if (!confirm(`Reset code "${code}" to Active?`)) return;
+
+
+
+        const res = await fetch(`/api/admin/codes/${id}/reset`, { method: 'PATCH' });
+
+
+
+        const d = await res.json();
+
+
+
+        if (d.success) { toast(`Code "${code}" is now Active!`); loadAll(); }
+
+
+
+      };
+
+
+
+
+
+
+
+      window.revokeCode = async (id, code) => {
+
+
+
+        if (!confirm(`Revoke code "${code}"?`)) return;
+
+
+
+        const res = await fetch(`/api/admin/codes/${id}/revoke`, { method: 'PATCH' });
+
+
+
+        const d = await res.json();
+
+
+
+        if (d.success) { toast(`Code "${code}" revoked.`); loadAll(); }
+
+
+
+      };
+
+
+
+
+
+
+
+      window.deleteCode = async (id, code) => {
+
+
+
+        if (!confirm(`Delete code "${code}" permanently?`)) return;
+
+
+
+        const res = await fetch(`/api/admin/codes/${id}`, { method: 'DELETE' });
+
+
+
+        const d = await res.json();
+
+
+
+        if (d.success) { toast(`Code "${code}" deleted.`); loadAll(); }
+
+
+
+      };
+
+
+
+
+
+
+
+      window.viewCouponDetail = (id) => {
+
+
+
+        const item = couponsData.find(c => c._id === id);
+
+
+
+        if (!item) return;
+
+
+
+        $('#couponDetailBody').innerHTML = `
+
+
+
+          <div style="text-align:center;margin-bottom:14px;">
+
+
+
+            <span class="badge-ctrl" style="font-size:16px;padding:4px 14px;">${item.controlNo}</span>
+
+
+
+          </div>
+
+
+
+          <div class="detail-grid">
+
+
+
+            <div class="detail-box"><label>Guest Name</label><span>${escapeHtml(item.guestName)}</span></div>
+
+
+
+            <div class="detail-box"><label>Gmail</label><span class="email-cell">${escapeHtml(item.email || '—')}</span></div>
+
+
+
+            <div class="detail-box"><label>Mobile</label><span>${escapeHtml(item.mobile || '—')}</span></div>
+
+
+
+            <div class="detail-box"><label>Amount</label><span>${formatCurrency(item.amountPaid)}</span></div>
+
+
+
+            <div class="detail-box"><label>Payment Method</label><span>${item.paymentMethod === 'cash' ? 'Cash at Register' : 'QRPh Transfer'}</span></div>
+
+
+
+            <div class="detail-box"><label>Code / Txn</label><span>${escapeHtml(item.paymentCodeUsed || item.txnNumber || 'N/A')}</span></div>
+
+
+
+            <div class="detail-box"><label>Email Status</label><span>${item.emailSent ? '✅ Sent to Gmail' : '❌ Not Sent'}</span></div>
+
+
+
+            <div class="detail-box" style="grid-column:span 2;"><label>Address</label><span>${escapeHtml(item.address || '—')}</span></div>
+
+
+
+          </div>
+
+
+
+          ${item.email ? `
+
+
+
+            <div style="margin-top:16px;text-align:center;">
+
+
+
+              <button type="button" class="btn btn-primary" id="btnResendCouponEmail" onclick="resendCouponEmail('${item._id}')" style="width:100%;padding:10px 16px;">
+
+
+
+                <span>✉️</span> Resend E-Coupon &amp; Calendar Invite to Gmail
+
+
+
+              </button>
+
+
+
+            </div>
+
+
+
+          ` : ''}
+
+
+
+        `;
+
+
+
+        openModal('modalCouponDetail');
+
+
+
+      };
+
+
+
+
+
+
+
+      window.resendCouponEmail = async (id) => {
+
+
+
+        const btn = document.getElementById('btnResendCouponEmail');
+
+
+
+        if (btn) { btn.disabled = true; btn.textContent = 'Sending email...'; }
+
+
+
+        try {
+
+
+
+          const res = await fetch(`/api/admin/coupons/${id}/resend-email`, { method: 'POST' });
+
+
+
+          const d = await res.json();
+
+
+
+          if (d.success) {
+
+
+
+            toast(d.message || 'E-Coupon resent successfully!');
+
+
+
+            loadAll();
+
+
+
+          } else {
+
+
+
+            toast(d.message || 'Failed to resend email.');
+
+
+
+          }
+
+
+
+        } catch (err) {
+
+
+
+          toast('Network error while resending email.');
+
+
+
+        } finally {
+
+
+
+          if (btn) { btn.disabled = false; btn.innerHTML = '<span>✉️</span> Resend E-Coupon &amp; Calendar Invite to Gmail'; }
+
+
+
+        }
+
+
+
+      };
+
+
+
+
+
+
+
+      // Form Add Code
+
+
+
+      $('#formAddCode').addEventListener('submit', async (e) => {
+
+
+
+        e.preventDefault();
+
+
+
+        const code = $('#newCodeVal').value.trim();
+
+
+
+        const branch = $('#newCodeBranch').value.trim();
+
+
+
+        const description = $('#newCodeDesc').value.trim();
+
+
+
+        const res = await fetch('/api/payment-codes', {
+
+
+
+          method: 'POST',
+
+
+
+          headers: { 'Content-Type': 'application/json' },
+
+
+
+          body: JSON.stringify({ code, branch, description })
+
+
+
+        });
+
+
+
+        const d = await res.json();
+
+
+
+        if (d.success) { toast(`Code "${code}" added!`); closeModal('modalAddCode'); loadAll(); }
+
+
+
+        else toast(d.message || 'Error');
+
+
+
+      });
+
+
+
+
+
+
+
+      // Form Batch Code
+
+
+
+      $('#formBatchCode').addEventListener('submit', async (e) => {
+
+
+
+        e.preventDefault();
+
+
+
+        const count = parseInt($('#batchCount').value, 10) || 5;
+
+
+
+        const branch = $('#batchBranch').value.trim();
+
+
+
+        const description = $('#batchDesc').value.trim();
+
+
+
+        const res = await fetch('/api/admin/codes/batch', {
+
+
+
+          method: 'POST',
+
+
+
+          headers: { 'Content-Type': 'application/json' },
+
+
+
+          body: JSON.stringify({ count, branch, description })
+
+
+
+        });
+
+
+
+        const d = await res.json();
+
+
+
+        if (d.success) { toast(`Generated ${d.createdCount} codes!`); closeModal('modalBatchCode'); loadAll(); }
+
+
+
+      });
+
+
+
+
+
+
+
+      // Export CSV
+
+
+
+      $('#btnExportCoupons').addEventListener('click', () => {
+
+
+
+        if (!couponsData.length) return toast('No data to export.');
+
+
+
+        let csv = 'Control Number,Guest Name,Gmail,Mobile,Address,Payment Method,Auth Code / Txn,Amount,Issued At\r\n';
+
+
+
+        couponsData.forEach(c => {
+
+
+
+          csv += `"${c.controlNo}","${(c.guestName||'').replace(/"/g,'""')}","${c.email||''}","${c.mobile||''}","${(c.address||'').replace(/"/g,'""')}","${c.paymentMethod}","${c.paymentCodeUsed||c.txnNumber||''}","${c.amountPaid}","${c.issuedAt||c.createdAt||''}"\r\n`;
+
+
+
+        });
+
+
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+
+
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+
+
+
+        a.download = `goldilocks-coupons-${new Date().toISOString().slice(0, 10)}.csv`;
+
+
+
+        a.click(); a.remove();
+
+
+
+        toast('Exported to CSV!');
+
+
+
+      });
+
+
+
+
+
+
+
+      // Listeners
+
+
+
+      $('#pendingSearch').addEventListener('input', renderPendingTable);
+
+
+
+      $('#pendingStatusFilter').addEventListener('change', loadPending);
+
+
+
+      $('#couponSearch').addEventListener('input', renderCouponsTable);
+
+
+
+      $('#couponPayFilter').addEventListener('change', renderCouponsTable);
+
+
+
+      $('#codeSearch').addEventListener('input', renderCodesTable);
+
+
+
+      $('#codeStatusFilter').addEventListener('change', renderCodesTable);
+
+
+
+      $('#btnRefresh').addEventListener('click', () => { toast('Refreshing live data...'); loadAll(); });
+
+
+
+
+
+
+
+      function loadAll() {
+
+
+
+        loadStats();
+
+
+
+        loadPending();
+
+
+
+        loadCoupons();
+
+
+
+        loadCodes();
+
+
+
+      }
+
+
+
+
+
+
+
+      // ── LOGIN FORM SUBMISSION ──
+
+
+
+      $('#formAdminLogin').addEventListener('submit', async e => {
+
+
+
+        e.preventDefault();
+
+
+
+        const username = $('#adminUsernameInput').value.trim();
+
+
+
+        const password = $('#adminPasswordInput').value;
+
+
+
+        const remember = $('#adminRememberMe').checked;
+
+
+
+        const btn = $('#btnAdminLoginSubmit');
+
+
+
+        const errBox = $('#loginErrorAlert');
+
+
+
+        const errText = $('#loginErrorText');
+
+
+
+
+
+
+
+        if (!username || !password) {
+
+
+
+          errBox.style.display = 'flex';
+
+
+
+          errText.textContent = 'Please enter both username and password.';
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        btn.disabled = true;
+
+
+
+        btn.textContent = 'Verifying credentials...';
+
+
+
+        errBox.style.display = 'none';
+
+
+
+
+
+
+
+        try {
+
+
+
+          const res = await originalFetch('/api/admin/login', {
+
+
+
+            method: 'POST',
+
+
+
+            headers: { 'Content-Type': 'application/json' },
+
+
+
+            body: JSON.stringify({ username, password })
+
+
+
+          });
+
+
+
+          const data = await res.json();
+
+
+
+
+
+
+
+          btn.disabled = false;
+
+
+
+          btn.textContent = '🔐 Sign In to Admin Portal';
+
+
+
+
+
+
+
+          if (!res.ok || !data.success) {
+
+
+
+            errBox.style.display = 'flex';
+
+
+
+            errText.textContent = data.message || 'Invalid username or password.';
+
+
+
+            $('#adminPasswordInput').focus();
+
+
+
+            return;
+
+
+
+          }
+
+
+
+
+
+
+
+          if (remember) {
+
+
+
+            localStorage.setItem('goldilocks_admin_token', data.token);
+
+
+
+            localStorage.setItem('goldilocks_admin_user', data.user.username);
+
+
+
+          } else {
+
+
+
+            sessionStorage.setItem('goldilocks_admin_token', data.token);
+
+
+
+            sessionStorage.setItem('goldilocks_admin_user', data.user.username);
+
+
+
+          }
+
+
+
+
+
+
+
+          showAdminLogin(false);
+
+
+
+          toast('Welcome back, ' + data.user.username + '! Admin session active.');
+
+
+
+          loadAll();
+
+
+
+          if (!refreshIntervalId) {
+
+
+
+            refreshIntervalId = setInterval(() => {
+
+
+
+              if (getAdminToken()) loadAll();
+
+
+
+            }, 10000);
+
+
+
+          }
+
+
+
+        } catch (err) {
+
+
+
+          btn.disabled = false;
+
+
+
+          btn.textContent = '🔐 Sign In to Admin Portal';
+
+
+
+          errBox.style.display = 'flex';
+
+
+
+          errText.textContent = 'Connection error. Ensure the server is online.';
+
+
+
+        }
+
+
+
+      });
+
+
+
+
+
+
+
+      // Toggle Password Visibility
+
+
+
+      $('#btnToggleLoginPwd').addEventListener('click', () => {
+
+
+
+        const inp = $('#adminPasswordInput');
+
+
+
+        const isPwd = (inp.type === 'password');
+
+
+
+        inp.type = isPwd ? 'text' : 'password';
+
+
+
+        $('#btnToggleLoginPwd').textContent = isPwd ? '🙈' : '👁️';
+
+
+
+      });
+
+
+
+
+
+
+
+      // Admin Logout
+
+
+
+      $('#btnAdminLogout').addEventListener('click', async () => {
+
+
+
+        if (!confirm('Are you sure you want to log out of the Admin Portal?')) return;
+
+
+
+        try {
+
+
+
+          await fetch('/api/admin/logout', { method: 'POST' });
+
+
+
+        } catch (e) {}
+
+
+
+        localStorage.removeItem('goldilocks_admin_token');
+
+
+
+        localStorage.removeItem('goldilocks_admin_user');
+
+
+
+        sessionStorage.removeItem('goldilocks_admin_token');
+
+
+
+        sessionStorage.removeItem('goldilocks_admin_user');
+
+
+
+        showAdminLogin(true, 'You have been logged out.');
+
+
+
+        toast('Logged out successfully.');
+
+
+
+      });
+
+
+
+
+
+
+
+      let refreshIntervalId = null;
+
+
+
+      async function startDashboard() {
+
+
+
+        const authed = await checkInitialAuth();
+
+
+
+        if (authed) {
+
+
+
+          loadAll();
+
+
+
+          refreshIntervalId = setInterval(() => {
+
+
+
+            if (getAdminToken()) loadAll();
+
+
+
+          }, 10000);
+
+
+
+        }
+
+
+
+      }
+
+
+
+
+
+
+
+      startDashboard();
+
+
+
+    })();
+
+
+
+  </script>
+
+
+
+</body>
+
+
+
+</html>
+
+
+

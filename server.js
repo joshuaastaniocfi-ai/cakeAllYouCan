@@ -27,6 +27,22 @@ connectDB().then(() => {
 app.use(express.static(path.join(__dirname)));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// ── Ping & Health Heartbeat (Ultra-lightweight, instant response for cold-start detection & keep-alive) ──
+app.get('/api/ping', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.json({
+    status: 'warm',
+    service: 'Goldilocks Cake All You Can Backend',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Standalone Wake-up / Server Warming screen route
+app.get('/wake-up', (req, res) => {
+  res.sendFile(path.join(__dirname, 'wake-up.html'));
+});
+
 // ── API: Verify Cash Payment Authorization Code & Issue E-Coupon Immediately ──
 app.post('/api/verify-payment', async (req, res) => {
   try {

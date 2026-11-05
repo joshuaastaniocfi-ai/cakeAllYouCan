@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Waking Up Server | Goldilocks Cake All You Can</title>
+  <link rel="icon" type="image/png" href="Assets/cake%20icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="server-wakeup.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #fff6e0 0%, #ffeec2 45%, #ffd270 100%);
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+    .sw-standalone-wrap {
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
+    }
+    .sw-standalone-wrap .sw-card {
+      transform: none !important;
+      opacity: 1 !important;
+      margin: auto;
+    }
+    .btn-manual-retry {
+      margin-top: 16px;
+      background: linear-gradient(135deg, #ffc200, #ff9500);
+      color: #3b1f00;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-manual-retry:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="sw-standalone-wrap">
+    <div class="sw-card">
+      <!-- Brand Header -->
+      <div class="sw-brand-row">
+        <img src="Assets/goldilocks-logo.png" onerror="this.src='Assets/goldilocks logo.png';" alt="Goldilocks" class="sw-brand-logo">
+        <div class="sw-badge-freetier">
+          <span class="sw-pulse-dot" id="swPulseDot"></span>
+          <span id="swBadgeText">Free-Tier Cloud Instance</span>
+        </div>
+      </div>
+
+      <!-- Animated Cake Stage -->
+      <div class="sw-cake-stage">
+        <div class="sw-oven-glow"></div>
+        <div class="sw-sparkles-wrap">
+          <span class="sw-sparkle">✨</span>
+          <span class="sw-sparkle">⭐</span>
+          <span class="sw-sparkle">✨</span>
+          <span class="sw-sparkle">💛</span>
+          <span class="sw-sparkle">✨</span>
+        </div>
+        <svg class="sw-cake-svg" viewBox="0 0 160 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="80" cy="142" rx="68" ry="7" fill="#e6a800" opacity="0.3"/>
+          <ellipse cx="80" cy="138" rx="64" ry="6" fill="#fff" stroke="#f0c242" stroke-width="2"/>
+          <ellipse cx="80" cy="137" rx="58" ry="4" fill="#fff9e6"/>
+          <path d="M26 102 C26 96 34 94 80 94 C126 94 134 96 134 102 L134 126 C134 134 120 137 80 137 C40 137 26 134 26 126 Z" fill="#522b07"/>
+          <path d="M26 104 C32 108 38 102 44 106 C50 110 56 104 62 107 C68 111 74 103 80 106 C86 110 92 104 98 107 C104 111 110 103 116 106 C122 110 128 104 134 104 L134 101 C126 96 116 94 80 94 C44 94 34 96 26 101 Z" fill="#ffc200"/>
+          <circle cx="40" cy="120" r="3" fill="#ffda66"/>
+          <circle cx="65" cy="122" r="3" fill="#ffda66"/>
+          <circle cx="95" cy="122" r="3" fill="#ffda66"/>
+          <circle cx="120" cy="120" r="3" fill="#ffda66"/>
+          <path d="M38 68 C38 63 46 61 80 61 C114 61 122 63 122 68 L122 93 C122 99 110 102 80 102 C50 102 38 99 38 93 Z" fill="#6d8a40"/>
+          <path d="M38 71 C44 74 50 69 56 72 C62 75 68 70 74 73 C80 75 86 70 92 73 C98 75 104 70 110 73 C116 75 122 71 122 71 L122 68 C116 64 108 61 80 61 C52 61 44 64 38 68 Z" fill="#ffffff"/>
+          <circle cx="55" cy="82" r="2.5" fill="#88ab54"/>
+          <circle cx="80" cy="84" r="2.5" fill="#88ab54"/>
+          <circle cx="105" cy="82" r="2.5" fill="#88ab54"/>
+          <path d="M50 36 C50 32 58 30 80 30 C102 30 110 32 110 36 L110 60 C110 65 100 68 80 68 C60 68 50 65 50 60 Z" fill="#ff8da1"/>
+          <ellipse cx="80" cy="35" rx="30" ry="6" fill="#ffaec0"/>
+          <path d="M64 32 C62 26 68 24 70 29 Z" fill="#d91e36"/>
+          <path d="M96 32 C98 26 92 24 90 29 Z" fill="#d91e36"/>
+          <rect x="77" y="14" width="6" height="20" rx="3" fill="#fffaeb" stroke="#ffc200" stroke-width="1"/>
+          <path d="M78 19 L82 17 M78 25 L82 23 M78 31 L82 29" stroke="#ff9500" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="80" y1="14" x2="80" y2="10" stroke="#3b1f00" stroke-width="1.2"/>
+          <path class="sw-flame" d="M80 0 C76 5 75 9 80 11 C85 9 84 5 80 0 Z" fill="#ff7800"/>
+          <circle cx="80" cy="7" r="1.8" fill="#fff7d6"/>
+        </svg>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h2 class="sw-title">Waking Up Cloud Server... <span>🎂</span></h2>
+      <p class="sw-subtitle" id="swSubtitle">
+        Our Render cloud container is spinning up. The page will automatically open the moment the server is awake!
+      </p>
+
+      <!-- Live Elapsed Timer Pill -->
+      <div class="sw-timer-pill">
+        <span>⏱️ Elapsed:</span>
+        <span class="sw-timer-counter" id="swElapsed">0s</span>
+        <span style="opacity:0.6;font-size:11px;">(Avg. cold start: 30–50s)</span>
+      </div>
+
+      <!-- Progress Shimmer Bar -->
+      <div class="sw-progress-track">
+        <div class="sw-progress-fill"></div>
+      </div>
+
+      <!-- Stepped Timeline -->
+      <div class="sw-steps">
+        <div class="sw-step-item active" id="swStep1">
+          <span class="sw-step-icon">📡</span>
+          <span>Connecting</span>
+        </div>
+        <div class="sw-step-item" id="swStep2">
+          <span class="sw-step-icon">🍃</span>
+          <span>Waking DB</span>
+        </div>
+        <div class="sw-step-item" id="swStep3">
+          <span class="sw-step-icon">🎂</span>
+          <span>Ready</span>
+        </div>
+      </div>
+
+      <!-- Friendly Reassuring Note -->
+      <div class="sw-hint-box">
+        <strong>💤 Why the brief wait?</strong>
+        Render's free tier enters sleep mode after 15 minutes of inactivity to save energy. Once awake, all passes, registration, and downloads run at lightning speed!
+      </div>
+
+      <!-- Ready Badge Toast -->
+      <div class="sw-ready-banner" id="swReadyBanner">
+        <span>✨</span>
+        <span>Server is awake! Launching Goldilocks portal...</span>
+      </div>
+
+      <div>
+        <button type="button" class="btn-manual-retry" id="btnManualRetry">
+          <span>🔄</span>
+          <span>Check Status Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let sec = 0;
+      const elTimer = document.getElementById('swElapsed');
+      const elSubtitle = document.getElementById('swSubtitle');
+      const s1 = document.getElementById('swStep1');
+      const s2 = document.getElementById('swStep2');
+      const s3 = document.getElementById('swStep3');
+      const readyBanner = document.getElementById('swReadyBanner');
+      const pulseDot = document.getElementById('swPulseDot');
+      const badgeText = document.getElementById('swBadgeText');
+      const btnRetry = document.getElementById('btnManualRetry');
+
+      setInterval(() => {
+        sec += 1;
+        if (elTimer) elTimer.textContent = sec + 's';
+        if (sec < 9) {
+          if (s1) s1.className = 'sw-step-item active';
+          if (s2) s2.className = 'sw-step-item';
+          if (s3) s3.className = 'sw-step-item';
+          if (elSubtitle) elSubtitle.textContent = 'Connecting to secure cloud instance...';
+        } else if (sec < 26) {
+          if (s1) s1.className = 'sw-step-item completed';
+          if (s2) s2.className = 'sw-step-item active';
+          if (s3) s3.className = 'sw-step-item';
+          if (elSubtitle) elSubtitle.textContent = 'Waking MongoDB Atlas & verifying authorization codes...';
+        } else {
+          if (s1) s1.className = 'sw-step-item completed';
+          if (s2) s2.className = 'sw-step-item completed';
+          if (s3) s3.className = 'sw-step-item active';
+          if (elSubtitle) elSubtitle.textContent = 'Almost ready! Finalizing high-speed session...';
+        }
+      }, 1000);
+
+      let isAwake = false;
+      async function checkPing() {
+        if (isAwake) return;
+        try {
+          const res = await fetch('/api/ping', { cache: 'no-store' });
+          if (res.ok) {
+            isAwake = true;
+            if (readyBanner) readyBanner.style.display = 'inline-flex';
+            if (pulseDot) pulseDot.className = 'sw-pulse-dot ready';
+            if (badgeText) badgeText.textContent = 'Server Online!';
+            if (s3) s3.className = 'sw-step-item completed';
+            if (btnRetry) btnRetry.style.display = 'none';
+
+            setTimeout(() => {
+              const dest = (new URLSearchParams(window.location.search)).get('returnTo') || '/';
+              window.location.replace(dest);
+            }, 600);
+          }
+        } catch (e) {
+          // Still spinning up
+        }
+      }
+
+      // Check every 2.5 seconds
+      setInterval(checkPing, 2500);
+      checkPing();
+
+      if (btnRetry) {
+        btnRetry.addEventListener('click', () => {
+          btnRetry.innerHTML = '<span>⏳</span><span>Checking...</span>';
+          checkPing().finally(() => {
+            setTimeout(() => {
+              if (!isAwake) btnRetry.innerHTML = '<span>🔄</span><span>Check Status Now</span>';
+            }, 800);
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

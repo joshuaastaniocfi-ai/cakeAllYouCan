@@ -1,0 +1,385 @@
+/**
+ * Goldilocks Cake All You Can - Server Wake-up & Warmup Animation Overlay
+ * Specially designed for Render Free Tier spin-down cold starts.
+ */
+
+/* ── Fullscreen Overlay ── */
+#serverWakeupOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: radial-gradient(circle at center, rgba(255, 246, 224, 0.96) 0%, rgba(254, 228, 160, 0.94) 50%, rgba(65, 36, 0, 0.88) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+#serverWakeupOverlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Glassmorphic Modal Card ── */
+.sw-card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  background: linear-gradient(175deg, #ffffff 0%, #fffbf0 60%, #fff5d6 100%);
+  border-radius: 28px;
+  box-shadow: 0 25px 65px rgba(59, 31, 0, 0.32), 0 0 0 1.5px rgba(255, 194, 0, 0.5), 0 10px 30px rgba(255, 194, 0, 0.22);
+  padding: 32px 28px;
+  text-align: center;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+#serverWakeupOverlay.active .sw-card {
+  transform: translateY(0) scale(1);
+}
+
+/* Ambient Top Accent Bar */
+.sw-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #ff9900, #ffc200, #ff5e62, #ffc200, #ff9900);
+  background-size: 300% 100%;
+  animation: swBarShimmer 3s ease infinite;
+}
+
+@keyframes swBarShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Brand Header ── */
+.sw-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.sw-brand-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+.sw-badge-freetier {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff0c7;
+  border: 1px solid #ffd466;
+  color: #925400;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.sw-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fa8c16;
+  box-shadow: 0 0 0 0 rgba(250, 140, 22, 0.7);
+  animation: swPulseDot 1.4s infinite;
+}
+
+.sw-pulse-dot.ready {
+  background: #52c41a;
+  box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7);
+}
+
+@keyframes swPulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(250, 140, 22, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(250, 140, 22, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(250, 140, 22, 0); }
+}
+
+/* ── Animated Cake Stage ── */
+.sw-cake-stage {
+  position: relative;
+  width: 180px;
+  height: 150px;
+  margin: 12px auto 8px auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Warm Oven Halo */
+.sw-oven-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 194, 0, 0.4) 0%, rgba(255, 149, 0, 0.15) 50%, transparent 75%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  animation: swGlowPulse 2.4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes swGlowPulse {
+  0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+/* Floating Sparkles */
+.sw-sparkles-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sw-sparkle {
+  position: absolute;
+  color: #ffb700;
+  font-size: 14px;
+  opacity: 0;
+  animation: swSparkleFloat 2.6s infinite ease-in-out;
+}
+
+.sw-sparkle:nth-child(1) { left: 18%; bottom: 40%; animation-delay: 0.2s; font-size: 12px; }
+.sw-sparkle:nth-child(2) { right: 16%; bottom: 50%; animation-delay: 0.8s; font-size: 16px; }
+.sw-sparkle:nth-child(3) { left: 28%; bottom: 70%; animation-delay: 1.4s; font-size: 14px; color: #ff6b81; }
+.sw-sparkle:nth-child(4) { right: 30%; bottom: 65%; animation-delay: 1.9s; font-size: 13px; color: #ffb700; }
+.sw-sparkle:nth-child(5) { left: 50%; bottom: 85%; animation-delay: 0.6s; font-size: 11px; }
+
+@keyframes swSparkleFloat {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  40% { opacity: 1; }
+  80% { transform: translateY(-28px) scale(1.1); opacity: 0.8; }
+  100% { transform: translateY(-44px) scale(0.4); opacity: 0; }
+}
+
+/* Cake SVG Structure */
+.sw-cake-svg {
+  width: 140px;
+  height: 130px;
+  filter: drop-shadow(0 6px 14px rgba(65, 36, 0, 0.16));
+  animation: swCakeHover 3s ease-in-out infinite;
+}
+
+@keyframes swCakeHover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Candle Flame Flicker */
+.sw-flame {
+  transform-origin: center bottom;
+  animation: swFlameFlicker 0.9s infinite alternate ease-in-out;
+}
+
+@keyframes swFlameFlicker {
+  0% { transform: scale(1) rotate(-2deg); fill: #ff7800; }
+  50% { transform: scale(1.1, 1.15) rotate(3deg); fill: #ffbe0b; }
+  100% { transform: scale(0.95, 0.92) rotate(-1deg); fill: #ff5400; }
+}
+
+/* ── Typography & Messaging ── */
+.sw-title {
+  margin: 10px 0 4px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #3b1f00;
+  letter-spacing: -0.2px;
+}
+
+.sw-title span {
+  background: linear-gradient(135deg, #b86200, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sw-subtitle {
+  margin: 0 auto 14px auto;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #7a5023;
+  max-width: 380px;
+}
+
+/* ── Live Timer Pill & Status ── */
+.sw-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #fff8e6;
+  border: 1px solid #ffd591;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #873800;
+  margin-bottom: 16px;
+  box-shadow: inset 0 1px 2px rgba(255, 194, 0, 0.15);
+}
+
+.sw-timer-counter {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: #d46b08;
+}
+
+/* ── Animated Progress Bar ── */
+.sw-progress-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #f0e2c8;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.sw-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 30%;
+  background: linear-gradient(90deg, #ffc200, #fa8c16, #ff4d4f, #ffc200);
+  background-size: 200% 100%;
+  border-radius: 999px;
+  animation: swProgressPulse 2.2s infinite ease-in-out;
+  transition: width 0.4s ease;
+}
+
+@keyframes swProgressPulse {
+  0% { left: 0%; width: 25%; background-position: 0% 50%; }
+  50% { left: 45%; width: 50%; background-position: 100% 50%; }
+  100% { left: 85%; width: 15%; background-position: 0% 50%; }
+}
+
+/* ── Stepped Timeline Pills ── */
+.sw-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.sw-step-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  background: #fffaf0;
+  border: 1px solid #ffe7ba;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #8c5a2b;
+  transition: all 0.3s ease;
+}
+
+.sw-step-item.active {
+  background: #ffe7ba;
+  border-color: #ffa940;
+  color: #873800;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(250, 140, 22, 0.15);
+}
+
+.sw-step-item.completed {
+  background: #f6ffed;
+  border-color: #b7eb8f;
+  color: #389e0d;
+}
+
+.sw-step-icon {
+  font-size: 13px;
+}
+
+/* ── Helpful Note Accordion / Tip ── */
+.sw-hint-box {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px dashed #ffd591;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #8c6439;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.sw-hint-box strong {
+  color: #593200;
+}
+
+/* Ready State Toast Overlay */
+.sw-ready-banner {
+  display: none;
+  background: #f6ffed;
+  border: 1.5px solid #52c41a;
+  color: #237804;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  animation: swPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes swPopIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .sw-card {
+    padding: 24px 18px;
+    border-radius: 22px;
+  }
+  .sw-title {
+    font-size: 18px;
+  }
+  .sw-subtitle {
+    font-size: 12px;
+  }
+  .sw-cake-stage {
+    height: 135px;
+    margin: 8px auto 6px auto;
+  }
+  .sw-cake-svg {
+    width: 125px;
+    height: 115px;
+  }
+  .sw-step-item {
+    font-size: 9.5px;
+    padding: 5px 2px;
+  }
+}
