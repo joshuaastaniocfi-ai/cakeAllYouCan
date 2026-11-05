@@ -8,9 +8,10 @@ async function getTransporter() {
   if (transporter) return transporter;
 
   // If user configured GMAIL credentials in environment variables
-  if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
+  const gmailPass = process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
+  if (process.env.GMAIL_USER && gmailPass) {
     const cleanUser = process.env.GMAIL_USER.trim();
-    const cleanPass = process.env.GMAIL_PASS.replace(/\s+/g, '');
+    const cleanPass = gmailPass.replace(/\s+/g, '');
     transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

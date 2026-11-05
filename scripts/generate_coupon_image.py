@@ -13,13 +13,29 @@ def generate_coupon(guest_name, control_no, output_path):
     canvas = tpl.resize((2048, 930), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(canvas)
 
-    # Fonts
-    try:
-        font_tr = ImageFont.truetype('arialbd.ttf', 24)
-        font_stub = ImageFont.truetype('arialbd.ttf', 28)
-        font_name = ImageFont.truetype('arialbd.ttf', 24)
-    except:
-        font_tr = font_stub = font_name = ImageFont.load_default()
+    # Load high-quality font across Windows, macOS, and Linux Docker
+    def load_font(size):
+        candidates = [
+            'arialbd.ttf',
+            'Arial Bold.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf',
+            'DejaVuSans-Bold.ttf'
+        ]
+        for f in candidates:
+            try:
+                return ImageFont.truetype(f, size)
+            except Exception:
+                continue
+        try:
+            return ImageFont.load_default(size=size)
+        except Exception:
+            return ImageFont.load_default()
+
+    font_tr = load_font(24)
+    font_stub = load_font(28)
+    font_name = load_font(24)
 
     # 1. Overlay Top-Right Control Number (Native, smooth, transparent with subtle depth shadow)
     draw.text((1971, 31), f'CONTROL NUMBER: {control_no}', font=font_tr, fill=(180, 100, 0), anchor='ra')

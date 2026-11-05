@@ -11,7 +11,8 @@ function generateCouponImage(guestName, controlNo) {
     }
     const outputPath = path.join(outputDir, `coupon-${controlNo}.png`);
 
-    execFile('python', [scriptPath, guestName, controlNo, outputPath], (error, stdout, stderr) => {
+    const pythonBin = process.platform === 'win32' ? 'python' : (fs.existsSync('/usr/bin/python') ? 'python' : 'python3');
+    execFile(pythonBin, [scriptPath, guestName, controlNo, outputPath], (error, stdout, stderr) => {
       if (error) {
         console.error('Error generating coupon image:', error, stderr);
         return reject(error);
