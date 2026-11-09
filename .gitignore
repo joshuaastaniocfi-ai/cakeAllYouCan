@@ -19,6 +19,11 @@ uploads/*
 uploads/coupons/*
 !uploads/coupons/.gitkeep
 
+# Database Backups (Sensitive Customer Data)
+backups/
+backups/*
+!backups/.gitkeep
+
 # Temporary scratch and debug files
 scratch*
 current_form_dump.txt
