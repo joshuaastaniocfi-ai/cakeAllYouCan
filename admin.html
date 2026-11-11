@@ -2518,434 +2518,171 @@
 
 
 
-    /* ── ADMIN LOGIN GATEWAY MODAL ── */
-
-
-
+    /* ── DEDICATED FULL-PAGE ADMIN LOGIN SCREEN ── */
     .login-gate-overlay {
-
-
-
       position: fixed;
-
-
-
       inset: 0;
-
-
-
       z-index: 99999;
-
-
-
-      background: rgba(30, 16, 2, 0.78);
-
-
-
-      backdrop-filter: blur(14px);
-
-
-
-      -webkit-backdrop-filter: blur(14px);
-
-
-
+      min-height: 100vh;
+      width: 100%;
+      background: radial-gradient(circle at 50% 18%, #fffdf5 0%, #fff4d1 42%, #ffdd80 100%);
       display: flex;
-
-
-
       align-items: center;
-
-
-
       justify-content: center;
-
-
-
-      padding: 20px;
-
-
-
+      padding: 24px 20px;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
-
-
 
     .login-card {
-
-
-
       background: #ffffff;
-
-
-
-      border-radius: 24px;
-
-
-
+      border-radius: 26px;
       max-width: 440px;
-
-
-
       width: 100%;
-
-
-
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(245, 168, 0, 0.35);
-
-
-
+      box-shadow: 0 24px 60px rgba(210, 130, 0, 0.22), 0 4px 18px rgba(0, 0, 0, 0.05);
       border: 2px solid #ffd56b;
-
-
-
-      padding: 34px 30px 24px;
-
-
-
+      padding: 38px 34px 28px;
       position: relative;
-
-
-
-      animation: popIn .25s ease-out;
-
-
-
+      animation: popIn .3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-sizing: border-box;
     }
 
-
+    .login-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff8e2;
+      border: 1.5px solid #fed36c;
+      color: #7a3e00;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
 
     .login-header {
-
-
-
       text-align: center;
-
-
-
       margin-bottom: 22px;
-
-
-
     }
-
-
 
     .login-logo {
-
-
-
-      height: 48px;
-
-
-
+      height: 52px;
       width: auto;
-
-
-
       object-fit: contain;
-
-
-
       margin-bottom: 12px;
-
-
-
+      filter: drop-shadow(0 2px 6px rgba(245, 168, 0, 0.25));
     }
-
-
 
     .login-header h2 {
-
-
-
       font-family: var(--font-head);
-
-
-
-      font-size: 22px;
-
-
-
+      font-size: 24px;
       font-weight: 800;
-
-
-
       color: var(--brown);
-
-
-
-      margin: 0 0 4px;
-
-
-
+      margin: 0 0 6px;
+      letter-spacing: -0.3px;
     }
-
-
 
     .login-header p {
-
-
-
-      font-size: 13px;
-
-
-
+      font-size: 13.5px;
       color: var(--brown-muted);
-
-
-
       margin: 0;
-
-
-
       line-height: 1.4;
-
-
-
     }
-
-
 
     .login-error-alert {
-
-
-
       background: #fef2f2;
-
-
-
       border: 1.5px solid #fca5a5;
-
-
-
       color: #b91c1c;
-
-
-
       padding: 10px 14px;
-
-
-
       border-radius: 12px;
-
-
-
       font-size: 13px;
-
-
-
       font-weight: 600;
-
-
-
       margin-bottom: 16px;
-
-
-
       display: flex;
-
-
-
       align-items: center;
-
-
-
       gap: 8px;
-
-
-
       animation: shake .3s ease;
-
-
-
     }
-
-
 
     .input-with-icon {
-
-
-
       position: relative;
-
-
-
       display: flex;
-
-
-
       align-items: center;
-
-
-
     }
-
-
 
     .input-with-icon .input-icon {
-
-
-
       position: absolute;
-
-
-
       left: 14px;
-
-
-
       font-size: 15px;
-
-
-
       pointer-events: none;
-
-
-
       user-select: none;
-
-
-
     }
-
-
 
     .input-with-icon input {
-
-
-
       width: 100%;
-
-
-
-      padding: 12px 42px 12px 42px;
-
-
-
+      padding: 13px 44px 13px 44px;
       border: 1.5px solid var(--border);
-
-
-
       border-radius: 12px;
-
-
-
-      font-size: 14px;
-
-
-
+      font-size: 14.5px;
       font-family: inherit;
-
-
-
       color: var(--brown);
-
-
-
       background: #fffdf8;
-
-
-
-      transition: border-color .2s, box-shadow .2s;
-
-
-
+      transition: border-color .2s, box-shadow .2s, background-color .2s;
+      box-sizing: border-box;
     }
-
-
 
     .input-with-icon input:focus {
-
-
-
-      border-color: var(--gold);
-
-
-
+      border-color: #fca727;
       outline: none;
-
-
-
-      box-shadow: 0 0 0 3px rgba(245, 168, 0, 0.2);
-
-
-
+      box-shadow: 0 0 0 4px rgba(245, 168, 0, 0.22);
+      background: #ffffff;
     }
-
-
 
     .btn-toggle-pwd {
-
-
-
       position: absolute;
-
-
-
       right: 12px;
-
-
-
       background: transparent;
-
-
-
       border: none;
-
-
-
       cursor: pointer;
-
-
-
       font-size: 16px;
-
-
-
       color: var(--brown-muted);
-
-
-
       padding: 4px;
-
-
-
       line-height: 1;
-
-
-
     }
 
+    .btn-client-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      background: #fffbf0;
+      border: 1.5px solid #fed36c;
+      color: #783b00;
+      box-shadow: 0 2px 8px rgba(245, 168, 0, 0.12);
+      transition: all 0.2s ease;
+    }
 
+    .btn-client-link:hover {
+      background: #ffd500;
+      color: #4b2608;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 168, 0, 0.25);
+    }
 
     .login-footer {
-
-
-
       margin-top: 20px;
-
-
-
       padding-top: 14px;
-
-
-
       border-top: 1px dashed var(--border-light);
-
-
-
       text-align: center;
-
-
-
       font-size: 11.5px;
-
-
-
       color: var(--brown-muted);
-
-
-
     }
 
 
@@ -2999,6 +2736,7 @@
 
 
 <body>
+  <div id="adminAppView" style="display:none;">
 
 
 
@@ -3990,174 +3728,67 @@
 
 
 
+  </div>
+
   <!-- MODAL: ADMIN LOGIN GATEWAY -->
 
 
 
   <div class="login-gate-overlay" id="modalAdminLogin" style="display:flex;">
-
-
-
     <div class="login-card">
-
-
-
       <div class="login-header">
-
-
-
-        <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="login-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
-
-
-
-        <h2>Store Admin Portal</h2>
-
-
-
+        <div class="login-badge-pill">🔐 STORE ADMIN PORTAL</div>
+        <div>
+          <img src="Assets/goldilocks-logo.png" alt="Goldilocks" class="login-logo" onerror="this.onerror=null; this.src='Assets/goldilocks logo.png';" />
+        </div>
+        <h2>Sign In to Admin Portal</h2>
         <p>Cake All You Can Verification &amp; E-Coupon Management</p>
-
-
-
       </div>
-
-
 
       <form id="formAdminLogin" novalidate>
-
-
-
         <div id="loginErrorAlert" class="login-error-alert" style="display:none;">
-
-
-
           <span>⚠️</span> <span id="loginErrorText">Invalid username or password.</span>
-
-
-
         </div>
 
-
-
-        <div class="form-group" style="margin-bottom: 14px;">
-
-
-
+        <div class="form-group" style="margin-bottom: 16px;">
           <label for="adminUsernameInput">Manager Username *</label>
-
-
-
           <div class="input-with-icon">
-
-
-
             <span class="input-icon">👤</span>
-
-
-
-            <input type="text" id="adminUsernameInput" placeholder="e.g. admin" autocomplete="username" required />
-
-
-
+            <input type="text" id="adminUsernameInput" placeholder="e.g. admin@123" autocomplete="username" required />
           </div>
-
-
-
         </div>
 
-
-
-        <div class="form-group" style="margin-bottom: 14px;">
-
-
-
+        <div class="form-group" style="margin-bottom: 16px;">
           <label for="adminPasswordInput">Password *</label>
-
-
-
           <div class="input-with-icon">
-
-
-
             <span class="input-icon">🔒</span>
-
-
-
-            <input type="password" id="adminPasswordInput" placeholder="Enter manager password" autocomplete="current-password" required />
-
-
-
+            <input type="password" id="adminPasswordInput" placeholder="Enter password" autocomplete="current-password" required />
             <button type="button" class="btn-toggle-pwd" id="btnToggleLoginPwd" title="Show/Hide Password">👁️</button>
-
-
-
           </div>
-
-
-
         </div>
 
-
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-
-
-
-          <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--brown-muted);cursor:pointer;user-select:none;">
-
-
-
-            <input type="checkbox" id="adminRememberMe" checked style="accent-color:var(--gold);" />
-
-
-
-            <span>Remember me</span>
-
-
-
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--brown-muted); cursor:pointer; user-select:none;">
+            <input type="checkbox" id="adminRememberMe" checked style="accent-color:var(--gold); width:16px; height:16px;" />
+            <span>Stay signed in on this device</span>
           </label>
-
-
-
-          
-
-
-
         </div>
 
-
-
-        <button type="submit" class="btn btn-primary btn-full" id="btnAdminLoginSubmit" style="padding:13px;font-size:14.5px;font-weight:700;box-shadow:0 6px 18px rgba(245,168,0,0.35);">
-
-
-
+        <button type="submit" class="btn btn-primary btn-full" id="btnAdminLoginSubmit" style="padding:14px; font-family:var(--font-head); font-size:15px; font-weight:800; border-radius:14px; box-shadow:0 6px 18px rgba(245,168,0,0.35);">
           🔐 Sign In to Admin Portal
-
-
-
         </button>
-
-
-
       </form>
 
-
-
-      <div class="login-footer">
-
-
-
-        🔒 Authorized store managers &amp; cashiers only. All actions are logged.
-
-
-
+      <div style="text-align:center; margin-top:16px;">
+        <a href="/" class="btn-client-link" target="_blank" title="Open Customer E-Coupon Screen">
+          🎟️ Customer App ↗
+        </a>
       </div>
 
-
-
+      <div class="login-footer">
+        🔒 Authorized store managers &amp; cashiers only. All access is logged.
+      </div>
     </div>
-
-
-
   </div>
 
 
@@ -4915,109 +4546,37 @@
 
 
       function showAdminLogin(show, errorMsg = '') {
-
-
-
         const modal = $('#modalAdminLogin');
-
-
-
+        const appView = $('#adminAppView');
         const errBox = $('#loginErrorAlert');
-
-
-
         const errText = $('#loginErrorText');
-
-
-
         if (!modal) return;
 
-
-
         if (show) {
-
-
-
           modal.style.display = 'flex';
-
-
-
           modal.classList.add('open');
-
-
+          if (appView) appView.style.display = 'none';
 
           if (errorMsg) {
-
-
-
             errBox.style.display = 'flex';
-
-
-
             errText.textContent = errorMsg;
-
-
-
           } else {
-
-
-
             errBox.style.display = 'none';
-
-
-
           }
-
-
-
           $('#adminPasswordInput').value = '';
-
-
-
           setTimeout(() => $('#adminUsernameInput').focus(), 100);
-
-
-
           $('#adminUserPill').style.display = 'none';
-
-
-
           $('#btnAdminLogout').style.display = 'none';
-
-
-
         } else {
-
-
-
           modal.style.display = 'none';
-
-
-
           modal.classList.remove('open');
-
-
+          if (appView) appView.style.display = 'block';
 
           $('#adminUserPill').style.display = 'flex';
-
-
-
           $('#btnAdminLogout').style.display = 'inline-flex';
-
-
-
           const username = localStorage.getItem('goldilocks_admin_user') || sessionStorage.getItem('goldilocks_admin_user') || 'admin';
-
-
-
           $('#adminUsernameDisplay').textContent = username;
-
-
-
         }
-
-
-
       }
 
 
