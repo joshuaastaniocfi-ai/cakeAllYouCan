@@ -4649,7 +4649,7 @@
 
 
 
-      border-radius: 14px;
+      border-radius: 8px;
 
 
 
@@ -4729,7 +4729,7 @@
 
 
 
-      border-radius: 14px;
+      border-radius: 8px;
 
 
 
@@ -4933,7 +4933,7 @@
 
 
 
-      border-radius: 20px;
+      border-radius: 6px;
 
 
 
@@ -5502,41 +5502,16 @@
 
 
     .modal {
-
-
-
       width: 100%;
-
-
-
-      max-width: 420px;
-
-
-
-      background: #fffbe8;
-
-
-
-      border-radius: 28px;
-
-
-
-      padding: 24px 20px 22px;
-
-
-
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 28px 24px 24px;
       text-align: center;
-
-
-
-      box-shadow: 0 16px 36px rgba(0, 0, 0, .18);
-
-
-
-      border: 1.5px solid #fed36c
-
-
-
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 24px 50px -4px rgba(74, 44, 0, 0.22), 0 0 0 1px rgba(245, 168, 0, 0.35);
+      border: 1.5px solid #fed36c;
+      border-top: 4px solid #f5a800;
+      position: relative;
     }
 
 
@@ -6597,7 +6572,7 @@
 
 
 
-      border-radius: 12px;
+      border-radius: 8px;
 
 
 
@@ -6678,7 +6653,7 @@
     }
 
     .lockout-banner {
-      border-radius: 14px;
+      border-radius: 8px;
       padding: 12px 14px;
       font-size: 13px;
       line-height: 1.4;
@@ -6732,7 +6707,7 @@
       letter-spacing: 2.5px;
       background: #ffffff;
       padding: 6px 18px;
-      border-radius: 10px;
+      border-radius: 6px;
       border: 1.5px solid #ffccc7;
       margin: 4px 0;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
@@ -6862,7 +6837,7 @@
       padding: 11px 18px;
       font-size: 13.5px;
       font-weight: 750;
-      border-radius: 999px;
+      border-radius: 8px;
       box-sizing: border-box;
       display: inline-flex;
       align-items: center;
@@ -6935,7 +6910,7 @@
 
 
 
-      border-radius: 999px;
+      border-radius: 8px;
 
 
 
@@ -8539,7 +8514,7 @@
 
 
 
-      border-radius: 999px;
+      border-radius: 8px;
 
 
 
@@ -12108,7 +12083,7 @@
       #screen-form .field input[type=email] {
         width: 100%;
         border: 1.5px solid var(--border);
-        border-radius: 12px;
+        border-radius: 8px;
         background: #fff6cf;
         padding: 13px 16px;
         font-family: var(--font-body);
@@ -12550,15 +12525,10 @@
 
 
 
-        border-radius: 26px;
-
-
-
-        background: #fff8dc;
-
-
-
-        border: 0;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1.5px solid #fed36c;
+        border-top: 4px solid #f5a800;
 
 
 
@@ -12670,7 +12640,7 @@
 
 
 
-        border-radius: 999px;
+        border-radius: 8px;
 
 
 
@@ -12714,7 +12684,7 @@
 
 
 
-        border-radius: 999px;
+        border-radius: 8px;
 
 
 
@@ -12962,7 +12932,7 @@
 
 
 
-        border-radius: 12px;
+        border-radius: 8px;
 
 
 
@@ -15579,15 +15549,15 @@
 
 
 
-      <h3>Pay Cash at Store Register</h3>
+      <div style="display:inline-flex; align-items:center; gap:6px; background:#fff8e2; border:1.2px solid #fed36c; color:#7a3e00; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:12px;">
+        <span>💵</span> <span>In-Store Payment</span>
+      </div>
 
-
+      <h3 style="margin-top:0;">Pay Cash at Store Register</h3>
 
       <p class="lead">Show your details to the cashier. The cashier will give you a 6-digit code after payment.</p>
 
-
-
-      <p class="note">Note: This Code is for one time use only.</p>
+      <p class="note" style="display:inline-block; padding:5px 12px; background:#fff8e8; border:1px dashed #e2ba60; border-radius:6px; font-size:12px; color:#8f530e; font-weight:600; margin:6px auto 14px;">🔒 Note: This code is for one-time use only.</p>
 
 
 
@@ -15599,7 +15569,7 @@
         autocomplete="one-time-code" />
 
       <div id="cashLockoutBox" class="lockout-box" style="display:none;"></div>
-    </div>
+    
 
 
 
@@ -15622,6 +15592,7 @@
 
 
 
+      </div>
   </div>
 
 
@@ -15638,7 +15609,7 @@
 
 
 
-    <div class="modal" style="max-width: 490px; text-align: left; background: #fffbe8;">
+    <div class="modal" style="max-width: 490px; text-align: left; background: #ffffff;">
 
 
 
@@ -15844,7 +15815,7 @@
 
       <!-- Agree Button (enabled only upon scrolling to bottom) -->
       <div class="modal-btns" style="margin-top:14px;">
-        <button type="button" class="btn btn-yellow btn-full" id="btnConfirmPrivacy" disabled style="display:block; width:100%; font-size:14px; font-weight:800; padding:13px 18px; border-radius:12px; cursor:not-allowed; opacity:0.45; background:#e2c58a; color:#7d5622; border:none; box-shadow:none; pointer-events:none; transition:all .25s ease;">
+        <button type="button" class="btn btn-yellow btn-full" id="btnConfirmPrivacy" disabled style="display:block; width:100%; font-size:14px; font-weight:800; padding:13px 18px; border-radius:8px; cursor:not-allowed; opacity:0.45; background:#e2c58a; color:#7d5622; border:none; box-shadow:none; pointer-events:none; transition:all .25s ease;">
           🔒 I Agree and Confirm
         </button>
       </div>
